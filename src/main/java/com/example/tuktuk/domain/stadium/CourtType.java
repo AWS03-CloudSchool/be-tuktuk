@@ -1,6 +1,6 @@
-package com.example.tuktuk.domain.field;
+package com.example.tuktuk.domain.stadium;
 
-public enum FieldType {
+public enum CourtType {
 
     FIVE_FIVE(10,15),
     SIX_SIX(10,18);
@@ -8,7 +8,7 @@ public enum FieldType {
     private final int minParticipants;
     private final int maxParticipants;
 
-    FieldType(int minParticipants, int maxParticipants) {
+    CourtType(int minParticipants, int maxParticipants) {
         this.minParticipants = minParticipants;
         this.maxParticipants = maxParticipants;
     }
