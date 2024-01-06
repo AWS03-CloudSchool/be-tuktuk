@@ -1,6 +1,9 @@
 package com.example.tuktuk.domain.member;
 
 
+import lombok.Getter;
+
+@Getter
 public class Member {
 
     private String name;

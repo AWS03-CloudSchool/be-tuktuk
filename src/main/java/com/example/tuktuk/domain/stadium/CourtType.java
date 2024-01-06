@@ -1,5 +1,8 @@
 package com.example.tuktuk.domain.stadium;
 
+import lombok.Getter;
+
+@Getter
 public enum CourtType {
 
     FIVE_FIVE(10,15),

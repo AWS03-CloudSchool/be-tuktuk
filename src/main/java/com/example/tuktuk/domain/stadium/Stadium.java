@@ -1,10 +1,11 @@
 package com.example.tuktuk.domain.stadium;
 
 import com.example.tuktuk.domain.member.Member;
+import lombok.Getter;
 
 import java.util.List;
 
-
+@Getter
 public class Stadium {
 
     String Name;
