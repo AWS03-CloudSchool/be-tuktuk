@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "members")
+@Table(name = "member")
 public class Member {
 
     @Id
@@ -27,7 +27,7 @@ public class Member {
     @Column(name = "username", nullable = false, columnDefinition = "varchar(255)")
     private String username;
 
-    @Column(name = "nick_name",nullable = false, columnDefinition = "varchar(16)")
+    @Column(name = "nick_name", nullable = false, columnDefinition = "varchar(16)")
     private String nickName;
 
     @Column(name = "profile_birth", nullable = false, columnDefinition = "varchar(16)")
@@ -45,6 +45,7 @@ public class Member {
     @Embedded
     private Residence residence; //경기도 의왕시 내손동, 서울 특별시 중랑구
 
+    @Enumerated
     @Column(name = "role", nullable = false)
     private Role role;
 
