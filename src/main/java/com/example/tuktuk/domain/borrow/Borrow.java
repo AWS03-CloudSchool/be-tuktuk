@@ -11,11 +11,10 @@ import java.time.LocalTime;
 @Getter
 public class Borrow extends SliceTime {
 
-    private Court court;
-
     private BorrowStatus bookStatus;
 
-    public Borrow(LocalTime startTime, LocalTime endTime, SliceTimeStatus sliceTimeStatus) {
-        super(startTime, endTime, sliceTimeStatus);
+
+    public Borrow(Court court, LocalTime startTime, LocalTime endTime, SliceTimeStatus sliceTimeStatus) {
+        super(court, startTime, endTime, sliceTimeStatus);
     }
 }

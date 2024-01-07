@@ -10,21 +10,21 @@ import java.time.LocalTime;
 @Getter
 public class Game extends SliceTime {
 
-    private Court court;
     private GameStatus gameStatus;
     private int currentParticipants;
 
-    public Game(LocalTime startTime, LocalTime endTime, SliceTimeStatus sliceTimeStatus) {
-        super(startTime, endTime, sliceTimeStatus);
+    public Game(Court court, LocalTime startTime, LocalTime endTime, SliceTimeStatus sliceTimeStatus) {
+        super(court, startTime, endTime, sliceTimeStatus);
     }
 
+
     public void updateGameStatus() {
-        if (currentParticipants < court.getMinParticipants()) {
+        if (currentParticipants < super.getMinParticipants()) {
             this.gameStatus = GameStatus.NOT_ENOUGH_PLAYERS;
             return;
         }
 
-        if (currentParticipants < court.getMaxParticipants()) {
+        if (currentParticipants < super.getMaxParticipants()) {
             this.gameStatus = GameStatus.ENOUGH_PLAYERS;
             return;
         }
