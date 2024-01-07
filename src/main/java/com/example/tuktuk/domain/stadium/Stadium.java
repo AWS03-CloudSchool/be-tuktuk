@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.stadium;
 
-import com.example.tuktuk.domain.member.Member;
+import com.example.tuktuk.domain.court.Court;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,16 +17,14 @@ import java.util.List;
 @Table(name = "stadium")
 public class Stadium {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @EmbeddedId
+    private StadiumId stadiumId;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
     private String name;
 
-    @Column(name = "owner",nullable = false)
-    private long owner;
+    @Embedded
+    private Owner owner;
 
     @Embedded
     private Location location;

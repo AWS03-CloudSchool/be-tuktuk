@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.borrow;
+package com.example.tuktuk.domain.event.borrow;
 
 public enum BorrowStatus {
     AVAILABLE("예약 가능"),

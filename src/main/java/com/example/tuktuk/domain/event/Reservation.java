@@ -1,5 +1,6 @@
-package com.example.tuktuk.domain.global;
+package com.example.tuktuk.domain.event;
 
+import com.example.tuktuk.domain.global.Money;
 import com.example.tuktuk.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ public class Reservation {
 
     private final Member member;
     private final SliceTime sliceTime;
+    private final Money fee;
 
     //할인 내역
 

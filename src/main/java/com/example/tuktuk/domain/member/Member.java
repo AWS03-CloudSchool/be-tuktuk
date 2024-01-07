@@ -18,14 +18,15 @@ import java.time.LocalDateTime;
 @Table(name = "member")
 public class Member {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @EmbeddedId
+    private MemberId id;
 
     @Comment("이메일")
     @Column(name = "username", nullable = false, columnDefinition = "varchar(255)")
     private String username;
+
+    @Embedded
+    private Password password;
 
     @Column(name = "nick_name", nullable = false, columnDefinition = "varchar(16)")
     private String nickName;

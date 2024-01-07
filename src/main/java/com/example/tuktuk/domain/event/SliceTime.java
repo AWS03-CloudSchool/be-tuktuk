@@ -1,6 +1,6 @@
-package com.example.tuktuk.domain.global;
+package com.example.tuktuk.domain.event;
 
-import com.example.tuktuk.domain.stadium.Court;
+import com.example.tuktuk.domain.court.Court;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
