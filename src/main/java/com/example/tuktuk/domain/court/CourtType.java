@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.stadium;
+package com.example.tuktuk.domain.court;
 
 import lombok.Getter;
 

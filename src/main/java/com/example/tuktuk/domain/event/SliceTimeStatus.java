@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.global;
+package com.example.tuktuk.domain.event;
 
 public enum SliceTimeStatus {
 

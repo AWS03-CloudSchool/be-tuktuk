@@ -1,16 +1,18 @@
-package com.example.tuktuk.domain.gamematch;
+package com.example.tuktuk.domain.event.gamematch;
 
-import com.example.tuktuk.domain.global.SliceTime;
-import com.example.tuktuk.domain.global.SliceTimeStatus;
-import com.example.tuktuk.domain.stadium.Court;
+import com.example.tuktuk.domain.event.SliceTime;
+import com.example.tuktuk.domain.event.SliceTimeStatus;
+import com.example.tuktuk.domain.court.Court;
 import lombok.Getter;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 public class Game extends SliceTime {
 
     private GameStatus gameStatus;
+    private List<Participant> participants;
     private int currentParticipants;
 
     public Game(Court court, LocalTime startTime, LocalTime endTime, SliceTimeStatus sliceTimeStatus) {

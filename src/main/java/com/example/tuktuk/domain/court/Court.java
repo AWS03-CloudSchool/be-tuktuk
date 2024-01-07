@@ -1,5 +1,6 @@
-package com.example.tuktuk.domain.stadium;
+package com.example.tuktuk.domain.court;
 
+import com.example.tuktuk.domain.stadium.Stadium;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,11 +16,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "court")
 public class Court {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
+    @EmbeddedId
+    private CourtId courtId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stadium_id",nullable = false)
