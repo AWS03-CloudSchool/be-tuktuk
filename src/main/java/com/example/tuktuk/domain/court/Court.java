@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.court;
 
-import com.example.tuktuk.domain.stadium.Stadium;
+import com.example.tuktuk.domain.stadium.StadiumId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,9 +19,8 @@ public class Court {
     @EmbeddedId
     private CourtId courtId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stadium_id",nullable = false)
-    private Stadium stadium;
+    @Embedded
+    private StadiumId stadiumId;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
     private String Name;

@@ -13,7 +13,7 @@ public class DailySchedule {
     //에플리케이션이 최초로 시작할 때, 20일 어치를 한꺼번에 생성하고,
     //자정마다 20일 뒤의 DailySchedule을 하나씩 미리 만들어 놓기
 
-    private final LocalDate localDate;
+    private final LocalDate today;
     private final Court court;
     private final List<Slice> available;
 
