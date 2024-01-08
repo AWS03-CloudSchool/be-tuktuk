@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.global;
+package com.example.tuktuk.domain.reservation;
 
 import jakarta.persistence.Column;
 

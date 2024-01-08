@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.court;
+package com.example.tuktuk.domain.stadium;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

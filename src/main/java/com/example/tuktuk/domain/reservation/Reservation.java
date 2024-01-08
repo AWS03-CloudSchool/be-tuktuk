@@ -1,11 +1,9 @@
-package com.example.tuktuk.domain.global;
+package com.example.tuktuk.domain.reservation;
 
-import com.example.tuktuk.domain.event.SliceId;
+import com.example.tuktuk.domain.global.Money;
+import com.example.tuktuk.domain.slice.SliceId;
 import com.example.tuktuk.domain.member.MemberId;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +17,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "reservation")
 public class Reservation {
 
-    @EmbeddedId
-    private ReservationId reservationId;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Embedded
     private MemberId memberId;

@@ -1,6 +1,5 @@
-package com.example.tuktuk.domain.court;
+package com.example.tuktuk.domain.stadium;
 
-import com.example.tuktuk.domain.stadium.StadiumId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,11 +15,14 @@ import lombok.NoArgsConstructor;
 @Table(name = "court")
 public class Court {
 
-    @EmbeddedId
-    private CourtId courtId;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Embedded
-    private StadiumId stadiumId;
+    @ManyToOne
+    @JoinColumn(name = "stadium_id",nullable = false)
+    private Stadium stadium;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
     private String Name;

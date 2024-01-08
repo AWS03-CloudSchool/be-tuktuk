@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.event.gamematch;
+package com.example.tuktuk.domain.slice.gamematch;
 
 import com.example.tuktuk.domain.member.MemberId;
 import jakarta.persistence.AttributeOverride;

@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.event.borrow;
+package com.example.tuktuk.domain.slice.borrow;
 
 import com.example.tuktuk.domain.member.MemberId;
 import jakarta.persistence.AttributeOverride;

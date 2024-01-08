@@ -1,6 +1,6 @@
-package com.example.tuktuk.domain.event.gamematch;
+package com.example.tuktuk.domain.slice.gamematch;
 
-import com.example.tuktuk.domain.event.Slice;
+import com.example.tuktuk.domain.slice.Slice;
 import lombok.Getter;
 
 import java.util.List;
