@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.event.gamematch;
+package com.example.tuktuk.domain.slice.gamematch;
 
 public enum GameStatus {
     NOT_ENOUGH_PLAYERS,

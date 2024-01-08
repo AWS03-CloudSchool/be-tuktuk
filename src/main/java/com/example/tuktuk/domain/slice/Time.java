@@ -1,21 +1,25 @@
-package com.example.tuktuk.domain.event;
+package com.example.tuktuk.domain.slice;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
 @Embeddable
 public class Time {
 
+
+    @Column(name = "play_date")
+    private LocalDate playDate;
+
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private LocalTime endTime;
 
 
 }

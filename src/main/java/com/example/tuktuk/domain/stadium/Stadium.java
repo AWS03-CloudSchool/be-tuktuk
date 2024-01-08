@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.stadium;
 
-import com.example.tuktuk.domain.court.Court;
+import com.example.tuktuk.domain.member.MemberId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,15 +18,17 @@ import java.util.List;
 @Table(name = "stadium")
 public class Stadium {
 
-    @EmbeddedId
-    private StadiumId stadiumId;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
     private String name;
 
     @Embedded
     @AttributeOverride(name = "id", column = @Column(name = "owner_id"))
-    private OwnerId ownerId;
+    private MemberId ownerId;
 
     @Embedded
     private Location location;
@@ -34,8 +36,7 @@ public class Stadium {
     @Column(name = "specific_info", nullable = false, columnDefinition = "text")
     private String specificInfo; //주차 여부, 찾아 오는 상세한 길 같은 구단 등록주가 상세히 입력하는 폼.
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "stadium_id")
+    @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
     private List<Court> courts = new ArrayList<>();
 
     /**

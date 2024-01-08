@@ -1,7 +1,7 @@
-package com.example.tuktuk.domain.event.borrow;
+package com.example.tuktuk.domain.slice.borrow;
 
 
-import com.example.tuktuk.domain.event.Slice;
+import com.example.tuktuk.domain.slice.Slice;
 import lombok.Getter;
 
 

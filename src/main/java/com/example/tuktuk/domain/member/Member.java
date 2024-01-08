@@ -18,8 +18,10 @@ import java.time.LocalDateTime;
 @Table(name = "member")
 public class Member {
 
-    @EmbeddedId
-    private MemberId id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Comment("이메일")
     @Column(name = "username", nullable = false, columnDefinition = "varchar(255)")
