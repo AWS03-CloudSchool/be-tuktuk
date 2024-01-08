@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.event;
 
-public enum SliceTimeStatus {
+public enum SliceStatus {
 
     ACTIVATE,
     INACTIVATE;

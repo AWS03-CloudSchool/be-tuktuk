@@ -15,7 +15,7 @@ public class DailySchedule {
 
     private final LocalDate localDate;
     private final Court court;
-    private final List<SliceTime> available;
+    private final List<Slice> available;
 
 
     //구단주가 10시 ~ 16시를 등록해 놓는 상황

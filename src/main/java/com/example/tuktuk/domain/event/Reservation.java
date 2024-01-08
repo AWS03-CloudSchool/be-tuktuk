@@ -10,7 +10,7 @@ import lombok.Getter;
 public class Reservation {
 
     private final Member member;
-    private final SliceTime sliceTime;
+    private final Slice sliceTime;
     private final Money fee;
 
     //할인 내역

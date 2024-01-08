@@ -1,6 +1,7 @@
 package com.example.tuktuk.domain.stadium;
 
 import com.example.tuktuk.domain.court.Court;
+import com.example.tuktuk.domain.member.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,8 +24,9 @@ public class Stadium {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
     private String name;
 
-    @Embedded
-    private Owner owner;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id",nullable = false)
+    private Member owner;
 
     @Embedded
     private Location location;
