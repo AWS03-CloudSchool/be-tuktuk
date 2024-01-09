@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.member;
+package com.example.tuktuk.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

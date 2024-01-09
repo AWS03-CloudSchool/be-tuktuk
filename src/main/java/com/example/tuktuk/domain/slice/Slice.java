@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "slice")
-public abstract class Slice {
+public  class Slice {
 
     @Id
     @Column(name = "id")
@@ -27,7 +27,7 @@ public abstract class Slice {
     private Time time;
 
     @Enumerated
-    @Column(name = "status", nullable = false)
-    private SliceStatus sliceStatus;
+    @Column(name = "type", nullable = false)
+    private SliceType sliceType;
 
 }

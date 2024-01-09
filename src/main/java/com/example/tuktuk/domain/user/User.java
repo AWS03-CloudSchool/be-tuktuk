@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.member;
+package com.example.tuktuk.domain.user;
 
 
 import jakarta.persistence.*;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "member")
-public class Member {
+@Table(name = "user")
+public class User {
 
     @Id
     @Column(name = "id")
