@@ -24,23 +24,21 @@ public class Court {
     @JoinColumn(name = "stadium_id",nullable = false)
     private Stadium stadium;
 
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(64)")
+    @Column(name = "name", nullable = false, length = 64)
     private String Name;
 
     @Enumerated
-    @Column(name = "type",nullable = false)
+    @Column(name = "type", nullable = false)
     private CourtType courtType;
 
-    @Column(name = "hourly_rate",nullable = false)
+    @Column(name = "hourly_rate", nullable = false)
     private int hourlyRentFee;
 
-//    List<String> images;  // 이미지 데이터를 바이트 배열로 저장
+    /*
+        Court의 이미지를 제공하기 위해 S3에 저장된 Court의 엔드포인트 URL을 저장
 
-    /**
-     * image 3장씩 저장해야 하는데, s3 ?? 애는 어케 해야할지 정해야 함
-     *
-     */
-
+        List<String> images;
+    */
     public int getMinParticipants() {
         return courtType.getMinParticipants();
     }

@@ -23,39 +23,41 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Comment("이메일")
-    @Column(name = "username", nullable = false, columnDefinition = "varchar(255)")
-    private String username;
+    @Comment("This column is email address and is provided by SNS")
+    @Column(name = "mail", nullable = false, length = 255)
+    private String mail;
 
     @Embedded
     private Password password;
 
-    @Column(name = "nick_name", nullable = false, columnDefinition = "varchar(16)")
+    @Comment("This column is user name and is provided by SNS")
+    @Column(name = "nick_name", nullable = false, length = 16)
     private String nickName;
 
-    @Column(name = "profile_birth", nullable = false, columnDefinition = "varchar(16)")
+    @Comment("This column is user birthday and is provided by SNS")
+    @Column(name = "profile_birth", nullable = false, length = 16)
     private String profileBirth;
 
-    @Column(name = "gender", nullable = false, columnDefinition = "varchar(3)")
+    @Comment("This column is user gender and is provided by SNS")
+    @Column(name = "gender", nullable = false, length = 3)
     private String gender;
 
-    @Column(name = "tel_no", nullable = false, columnDefinition = "varchar(36)")
+    @Comment("This column is user phone number and is provided by SNS")
+    @Column(name = "tel_no", nullable = false, length = 36)
     private String telNo;
 
-    @Column(name = "created_at", nullable = false, columnDefinition = "datetime")
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
     @Embedded
-    private Residence residence; //경기도 의왕시 내손동, 서울 특별시 중랑구
+    private Residence residence;
 
     @Enumerated
     @Column(name = "role", nullable = false)
     private Role role;
 
 
-    @Comment("소셜 로그인시 갱신됨 (네이버, 카카오, 구글 중 하나)")
-    @Column(name = "provider", nullable = false, columnDefinition = "varchar(36)")
+    @Comment("This column is social login provider (kakao, google, naver)")
+    @Column(name = "provider", nullable = false, length = 36)
     private String provider;
-
-
 }
