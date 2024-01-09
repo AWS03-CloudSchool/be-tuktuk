@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
+import org.hibernate.annotations.Comment;
 
 @Getter
 @Embeddable
@@ -13,12 +14,12 @@ public class Location {
 
     @Enumerated
     @Column(name = "province")
-    private Province province;//도 또는 시
+    private Province province;
 
     @Enumerated
     @Column(name = "city")
-    private City city;//시, 군, 구 등
+    private City city;
 
     @Column(name = "road_address")
-    private String roadNameAddress;//도로명 주소
+    private String roadNameAddress;
 }

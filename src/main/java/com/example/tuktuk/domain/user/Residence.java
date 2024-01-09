@@ -10,12 +10,11 @@ import lombok.Getter;
 @Getter
 @Embeddable
 public class Residence {
-
     @Enumerated
     @Column(name = "province")
-    private Province province;//도 또는 시
+    private Province province;
 
     @Enumerated
     @Column(name = "city")
-    private City city;//시, 군, 구 등
+    private City city;
 }
