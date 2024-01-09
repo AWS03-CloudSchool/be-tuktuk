@@ -2,7 +2,7 @@ package com.example.tuktuk.domain.reservation;
 
 import com.example.tuktuk.domain.global.Money;
 import com.example.tuktuk.domain.slice.SliceId;
-import com.example.tuktuk.domain.member.MemberId;
+import com.example.tuktuk.domain.user.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +23,7 @@ public class Reservation {
     private Long id;
 
     @Embedded
-    private MemberId memberId;
+    private UserId memberId;
 
     @Embedded
     private SliceId sliceId;

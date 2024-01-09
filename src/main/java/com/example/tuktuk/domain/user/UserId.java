@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.member;
+package com.example.tuktuk.domain.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -6,12 +6,12 @@ import jakarta.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class MemberId implements Serializable {
+public class UserId implements Serializable {
 
-    @Column(name = "member_id")
+    @Column(name = "user_id")
     private long id;
 
-    protected MemberId() {
+    protected UserId() {
 
     }
 }

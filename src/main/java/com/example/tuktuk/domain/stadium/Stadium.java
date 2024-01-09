@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.stadium;
 
-import com.example.tuktuk.domain.member.MemberId;
+import com.example.tuktuk.domain.user.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class Stadium {
 
     @Embedded
     @AttributeOverride(name = "id", column = @Column(name = "owner_id"))
-    private MemberId ownerId;
+    private UserId ownerId;
 
     @Embedded
     private Location location;

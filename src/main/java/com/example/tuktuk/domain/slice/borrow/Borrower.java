@@ -1,6 +1,6 @@
 package com.example.tuktuk.domain.slice.borrow;
 
-import com.example.tuktuk.domain.member.MemberId;
+import com.example.tuktuk.domain.user.UserId;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
@@ -12,5 +12,5 @@ public class Borrower {
     @AttributeOverrides(
             @AttributeOverride(name = "id", column = @Column(name = "borrower_id"))
     )
-    private MemberId memberId;
+    private UserId userId;
 }

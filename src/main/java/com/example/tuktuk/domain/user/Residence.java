@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.member;
+package com.example.tuktuk.domain.user;
 
 import com.example.tuktuk.domain.global.City;
 import com.example.tuktuk.domain.global.Province;
