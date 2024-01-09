@@ -34,7 +34,7 @@ public class Stadium {
     private Location location;
 
     @Comment("This column is stadium officials wrote about the stadium in detail")
-    @Column(name = "specific_info", nullable = false, columnDefinition = "TEXT CHECK (LENGTH(specific_info) <= 500)")
+    @Column(name = "specific_info", nullable = false, columnDefinition = "text")
     private String specificInfo;
 
     @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
