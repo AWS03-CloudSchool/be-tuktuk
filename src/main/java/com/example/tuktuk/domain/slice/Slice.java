@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "slice")
-public  class Slice {
+public class Slice {
 
     @Id
     @Column(name = "id")

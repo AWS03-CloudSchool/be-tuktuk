@@ -30,8 +30,4 @@ public class Reservation {
 
     @Embedded
     private Money fee;
-
-    //할인 내역
-
-    //결게 금액 같은 정보 들어감
 }

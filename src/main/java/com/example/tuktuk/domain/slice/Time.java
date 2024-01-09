@@ -10,8 +10,6 @@ import java.time.LocalTime;
 @Getter
 @Embeddable
 public class Time {
-
-
     @Column(name = "play_date")
     private LocalDate playDate;
 
@@ -20,6 +18,4 @@ public class Time {
 
     @Column(name = "end_time")
     private LocalTime endTime;
-
-
 }

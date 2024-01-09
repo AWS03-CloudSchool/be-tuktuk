@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name = "game")
 public class Game {
-
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
