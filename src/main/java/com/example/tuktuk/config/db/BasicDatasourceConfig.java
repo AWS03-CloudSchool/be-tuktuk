@@ -17,9 +17,28 @@ public class BasicDatasourceConfig {
     }
 
     protected String getDriverClassName(final DataSourceType datasourceType) {
-        final String driverClassName = datasourceType.getDatasourceProperty() + ".driverClassName";
+        final String driverClassName = datasourceType.getDataSourceProperty() + ".driverClassName";
         return env.getProperty(driverClassName);
     }
 
-    protected String getJdbcUrl(final DataSourceType datasourceType,)
+    protected String getJdbcUrl(final DataSourceType dataSourceType, final DataSourceRole dataSourceRole) {
+
+        final String jdbcUrl = String.format(
+                "%s.%s.jdbc-url",
+                dataSourceType.getDataSourceProperty(),
+                dataSourceRole.getRole()
+        );
+
+        return env.getProperty(jdbcUrl);
+    }
+
+    protected String getUsername(final DataSourceType dataSourceType) {
+        final String username = dataSourceType.getDataSourceProperty() + ".username";
+        return env.getProperty(username);
+    }
+
+    protected String getPassword(final DataSourceType dataSourceType) {
+        final String password = dataSourceType.getDataSourceProperty() + ".password";
+        return env.getProperty(password);
+    }
 }

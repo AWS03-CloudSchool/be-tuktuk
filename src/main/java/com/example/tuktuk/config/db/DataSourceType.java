@@ -10,11 +10,11 @@ public enum DataSourceType {
 
     private final String dataSourceSchemaName;
 
-    private final String datasourceProperty;
+    private final String dataSourceProperty;
 
-    DataSourceType(String dataSourceSchemaName, String datasourceProperty) {
+    DataSourceType(String dataSourceSchemaName, String dataSourceProperty) {
         this.dataSourceSchemaName = dataSourceSchemaName;
-        this.datasourceProperty = datasourceProperty;
+        this.dataSourceProperty = dataSourceProperty;
     }
 
 }
