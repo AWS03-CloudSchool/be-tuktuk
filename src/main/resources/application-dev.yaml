@@ -1,0 +1,44 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+      encoding: utf-8
+
+app:
+  datasource:
+    #Galera - Stadium
+    stadium:
+      ddl-auto: update
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 1235
+
+      rw:
+        jdbc-url: jdbc:mysql://localhost:3306/stadium?useSSL=false&serverTimezone=UTC
+      ro:
+        jdbc-url: jdbc:mysql://localhost:3307/stadium?useSSL=false&serverTimezone=UTC
+
+    #Galera - Court
+    court:
+      ddl-auto: update
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 1235
+
+      rw:
+        jdbc-url: jdbc:mysql://localhost:3306/court?useSSL=false&serverTimezone=UTC
+      ro:
+        jdbc-url: jdbc:mysql://localhost:3307/court?useSSL=false&serverTimezone=UTC
+
+
+
+
+
