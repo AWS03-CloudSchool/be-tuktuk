@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
-public class BasicDatasourceConfig {
+public class BasicDataSourceConfig {
 
     protected final Environment env;
 
@@ -12,7 +12,7 @@ public class BasicDatasourceConfig {
     public static final String STADIUM = "stadium";
     public static final String COURT = "court";
 
-    public BasicDatasourceConfig(Environment env) {
+    public BasicDataSourceConfig(Environment env) {
         this.env = env;
     }
 

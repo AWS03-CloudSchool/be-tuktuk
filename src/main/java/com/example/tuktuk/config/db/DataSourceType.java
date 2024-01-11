@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum DataSourceType {
 
-    STADIUM(BasicDatasourceConfig.STADIUM, "app.datasource.stadium"),
-    COURT(BasicDatasourceConfig.COURT, "app.datasource.court");
+    STADIUM(BasicDataSourceConfig.STADIUM, "app.datasource.stadium"),
+    COURT(BasicDataSourceConfig.COURT, "app.datasource.court");
 
     private final String dataSourceSchemaName;
 
