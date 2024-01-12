@@ -1,3 +1,0 @@
--- CREATE DATABASE IF NOT EXISTS soccer1;
---
--- USE soccer1;
