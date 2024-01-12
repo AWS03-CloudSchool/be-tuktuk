@@ -1,9 +1,6 @@
-package com.example.tuktuk.config.db.stadium;
+package com.example.tuktuk.config.db;
 
 import com.example.tuktuk.config.AppProfile;
-import com.example.tuktuk.config.db.BasicDataSourceConfig;
-import com.example.tuktuk.config.db.DataSourceRole;
-import com.example.tuktuk.config.db.DataSourceType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,41 +14,41 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class StadiumDataSourceConfig extends BasicDataSourceConfig {
+public class SoccerDataSourceConfig extends BasicDataSourceConfig {
 
-    public static final String DATASOURCE = "stadiumDataSource";
-    public static final String ROUTE_DATASOURCE = "stadiumRouteDataSource";
-    public static final String RW_DATASOURCE = "stadiumRwDataSource";
-    public static final String RO_DATASOURCE = "stadiumRoDataSource";
-    public static final String TEST_DATASOURCE = "stadiumTestDataSource";
-    public static final DataSourceType dataSourceType = DataSourceType.STADIUM;
+    public static final String DATASOURCE = "soccerDataSource";
+    public static final String ROUTE_DATASOURCE = "soccerRouteDataSource";
+    public static final String RW_DATASOURCE = "soccerRwDataSource";
+    public static final String RO_DATASOURCE = "soccerRoDataSource";
+    public static final String TEST_DATASOURCE = "soccerTestDataSource";
+    public static final DataSourceType dataSourceType = DataSourceType.SOCCER;
 
-    public StadiumDataSourceConfig(Environment env) {
+    public SoccerDataSourceConfig(Environment env) {
         super(env);
     }
 
-    @Profile(AppProfile.NON_TEST)
+    @Profile(AppProfile.LOCAL)
     @Bean(name = DATASOURCE)
     public DataSource dataSource(
-            @Qualifier(StadiumDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
+            @Qualifier(SoccerDataSourceConfig.ROUTE_DATASOURCE) DataSource routeDataSource
     ) {
         return new LazyConnectionDataSourceProxy(routeDataSource);
     }
 
-    @Profile(AppProfile.NON_TEST)
+    @Profile(AppProfile.LOCAL)
     @Bean(name = ROUTE_DATASOURCE)
     public DataSource routingDataSource(
-            @Qualifier(StadiumDataSourceConfig.RW_DATASOURCE) DataSource rwDataSource,
-            @Qualifier(StadiumDataSourceConfig.RO_DATASOURCE) DataSource roDataSource
+            @Qualifier(SoccerDataSourceConfig.RW_DATASOURCE) DataSource rwDataSource,
+            @Qualifier(SoccerDataSourceConfig.RO_DATASOURCE) DataSource roDataSource
     ) {
         Map<Object, Object> dataSourceMap = new HashMap<>();
         dataSourceMap.put(DataSourceRole.READ_WRITE, rwDataSource);
         dataSourceMap.put(DataSourceRole.READ_ONLY, roDataSource);
 
-        return new StadiumRouteDataSource(dataSourceMap);
+        return new SoccerRouteDataSource(dataSourceMap);
     }
 
-    @Profile(AppProfile.NON_TEST)
+    @Profile(AppProfile.LOCAL)
     @Bean(name = RW_DATASOURCE)
     public DataSource rwDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -63,7 +60,7 @@ public class StadiumDataSourceConfig extends BasicDataSourceConfig {
         return dataSource;
     }
 
-    @Profile(AppProfile.NON_TEST)
+    @Profile(AppProfile.LOCAL)
     @Bean(name = RO_DATASOURCE)
     public DataSource roDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -76,17 +73,17 @@ public class StadiumDataSourceConfig extends BasicDataSourceConfig {
     }
 
 
-    @Profile(AppProfile.TEST)
-    @Bean(name = TEST_DATASOURCE)
-    public DataSource testDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setUrl(getJdbcUrl(dataSourceType, DataSourceRole.TEST_ONLY));
-        dataSource.setDriverClassName(getDriverClassName(dataSourceType));
-        dataSource.setUsername(getUsername(dataSourceType));
-        dataSource.setPassword(getPassword(dataSourceType));
-
-        return dataSource;
-    }
+//    @Profile(AppProfile.TEST)
+//    @Bean(name = TEST_DATASOURCE)
+//    public DataSource testDataSource() {
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//        dataSource.setUrl(getJdbcUrl(dataSourceType, DataSourceRole.TEST_ONLY));
+//        dataSource.setDriverClassName(getDriverClassName(dataSourceType));
+//        dataSource.setUsername(getUsername(dataSourceType));
+//        dataSource.setPassword(getPassword(dataSourceType));
+//
+//        return dataSource;
+//    }
 
 
 }

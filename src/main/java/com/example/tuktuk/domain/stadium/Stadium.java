@@ -38,5 +38,5 @@ public class Stadium {
     private String specificInfo;
 
     @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
-    private List<Court> courts = new ArrayList<>();
+    private final List<Court> courts = new ArrayList<>();
 }

@@ -3,10 +3,10 @@ package com.example.tuktuk.config.db;
 import lombok.Getter;
 
 @Getter
-public enum DataSourceType {
+public enum
+DataSourceType {
 
-    STADIUM(BasicDataSourceConfig.STADIUM, "app.datasource.stadium"),
-    COURT(BasicDataSourceConfig.COURT, "app.datasource.court");
+    SOCCER(BasicDataSourceConfig.SOCCER, "app.datasource.soccer");
 
     private final String dataSourceSchemaName;
 

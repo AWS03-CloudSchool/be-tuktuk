@@ -1,20 +1,30 @@
-server:
-  address: 0.0.0.0
-  port: 8080
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/tuktuk?useSSL=false&serverTimezone=UTC
-    username: root
-    password: 1235
   jpa:
-    hibernate:
-      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-  sql:
-    init:
-      mode: always
-      encoding: utf-8
+        show_sql: true
+
+app:
+  datasource:
+    #Galera - Soccer ???? ?? ??
+    soccer:
+      ddl-auto: update
+      driverClassName: com.mysql.cj.jdbc.Driver
+      username: root
+      password: 1235
+
+      rw:
+        jdbc-url: jdbc:mysql://172.20.1.2:3306/soccer?allowPublicKeyRetrieval=true
+      ro:
+        jdbc-url: jdbc:mysql://172.20.1.3:3306/soccer?allowPublicKeyRetrieval=true
+
+
+
+
+
+
+
+

@@ -9,15 +9,14 @@ public class BasicDataSourceConfig {
     protected final Environment env;
 
     //Multiple-Database 스키마 목록
-    public static final String STADIUM = "stadium";
-    public static final String COURT = "court";
+    public static final String SOCCER = "soccer";
 
     public BasicDataSourceConfig(Environment env) {
         this.env = env;
     }
 
-    protected String getDriverClassName(final DataSourceType datasourceType) {
-        final String driverClassName = datasourceType.getDataSourceProperty() + ".driverClassName";
+    protected String getDriverClassName(final DataSourceType dataSourceType) {
+        final String driverClassName = dataSourceType.getDataSourceProperty() + ".driverClassName";
         return env.getProperty(driverClassName);
     }
 
