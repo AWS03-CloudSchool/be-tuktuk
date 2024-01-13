@@ -9,11 +9,11 @@ spring:
 
 app:
   datasource:
-    soccer:
+    tuktuk:
       ddl-auto: update
       driverClassName: com.mysql.cj.jdbc.Driver
-      username: ${SPRING_DATASOURCE_USERNAME}
-      password: ${SPRING_DATASOURCE_PASSWORD}
+      username: ${DATABASE_ROOT_USERNAME}
+      password: ${DATABASE_ROOT_PASSWORD}
 
       #rw:
         #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RW}
