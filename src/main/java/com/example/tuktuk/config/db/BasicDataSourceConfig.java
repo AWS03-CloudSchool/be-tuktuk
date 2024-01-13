@@ -3,7 +3,7 @@ package com.example.tuktuk.config.db;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
-@Configuration
+//@Configuration
 public class BasicDataSourceConfig {
 
     protected final Environment env;

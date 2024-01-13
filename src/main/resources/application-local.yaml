@@ -9,17 +9,16 @@ spring:
 
 app:
   datasource:
-    # 나중에 도메인별로 Database replication을 해야 한다.
     soccer:
       ddl-auto: update
       driverClassName: com.mysql.cj.jdbc.Driver
       username: ${SPRING_DATASOURCE_USERNAME}
       password: ${SPRING_DATASOURCE_PASSWORD}
 
-      rw:
-        jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RW}
-      ro:
-        jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RO}
+      #rw:
+        #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RW}
+      #ro:
+        #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RO}
 
 
 

@@ -13,19 +13,18 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 public class SoccerDataSourceConfig extends BasicDataSourceConfig {
-
+    public SoccerDataSourceConfig(Environment env) {
+        super(env);
+    }
+    /*
     public static final String DATASOURCE = "soccerDataSource";
     public static final String ROUTE_DATASOURCE = "soccerRouteDataSource";
     public static final String RW_DATASOURCE = "soccerRwDataSource";
     public static final String RO_DATASOURCE = "soccerRoDataSource";
     public static final String TEST_DATASOURCE = "soccerTestDataSource";
     public static final DataSourceType dataSourceType = DataSourceType.SOCCER;
-
-    public SoccerDataSourceConfig(Environment env) {
-        super(env);
-    }
 
     @Profile(AppProfile.LOCAL)
     @Bean(name = DATASOURCE)
@@ -73,17 +72,16 @@ public class SoccerDataSourceConfig extends BasicDataSourceConfig {
     }
 
 
-//    @Profile(AppProfile.TEST)
-//    @Bean(name = TEST_DATASOURCE)
-//    public DataSource testDataSource() {
-//        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//        dataSource.setUrl(getJdbcUrl(dataSourceType, DataSourceRole.TEST_ONLY));
-//        dataSource.setDriverClassName(getDriverClassName(dataSourceType));
-//        dataSource.setUsername(getUsername(dataSourceType));
-//        dataSource.setPassword(getPassword(dataSourceType));
-//
-//        return dataSource;
-//    }
+    @Profile(AppProfile.TEST)
+    @Bean(name = TEST_DATASOURCE)
+    public DataSource testDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setUrl(getJdbcUrl(dataSourceType, DataSourceRole.TEST_ONLY));
+        dataSource.setDriverClassName(getDriverClassName(dataSourceType));
+        dataSource.setUsername(getUsername(dataSourceType));
+        dataSource.setPassword(getPassword(dataSourceType));
 
-
+        return dataSource;
+    }
+    */
 }

@@ -14,7 +14,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-
+/*
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
@@ -22,17 +22,16 @@ import javax.sql.DataSource;
         entityManagerFactoryRef = SoccerDatabaseConfig.entityManager,
         transactionManagerRef = SoccerDatabaseConfig.transactionManager
 )
+*/
 public class SoccerDatabaseConfig extends BasicDatabaseConfig {
-
+    public SoccerDatabaseConfig(Environment env) {
+        super(env);
+    }
+    /*
     public static final String entityManager = "soccerEntityManagerFactory";
     public static final String transactionManager = "soccerTransactionManager";
     public static final String entityPackage = "com.example.tuktuk";
     public static final DataSourceType dataSourceType = DataSourceType.SOCCER;
-
-    public SoccerDatabaseConfig(Environment env) {
-        super(env);
-    }
-
 
     @Profile(AppProfile.LOCAL)
     @Bean(name = entityManager)
@@ -50,20 +49,20 @@ public class SoccerDatabaseConfig extends BasicDatabaseConfig {
 
     }
 
-//    @Profile(AppProfile.TEST)
-//    @Bean(name = entityManager)
-//    public LocalContainerEntityManagerFactoryBean testEntityManagerFactory(
-//            @Qualifier(StadiumDataSourceConfig.TEST_DATASOURCE) DataSource testDataSource
-//    ) {
-//        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
-//        entityManager.setDataSource(testDataSource);
-//        entityManager.setJpaVendorAdapter(getJpaVendorAdaptor());
-//        entityManager.setJpaPropertyMap(getJpaPropertyMap(dataSourceType));
-//        entityManager.setPackagesToScan(StadiumDatabaseConfig.entityPackage);
-//        entityManager.setPersistenceUnitName(dataSourceType.getDataSourceSchemaName());
-//
-//        return entityManager;
-//    }
+    @Profile(AppProfile.TEST)
+    @Bean(name = entityManager)
+    public LocalContainerEntityManagerFactoryBean testEntityManagerFactory(
+            @Qualifier(StadiumDataSourceConfig.TEST_DATASOURCE) DataSource testDataSource
+    ) {
+        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        entityManager.setDataSource(testDataSource);
+        entityManager.setJpaVendorAdapter(getJpaVendorAdaptor());
+        entityManager.setJpaPropertyMap(getJpaPropertyMap(dataSourceType));
+        entityManager.setPackagesToScan(StadiumDatabaseConfig.entityPackage);
+        entityManager.setPersistenceUnitName(dataSourceType.getDataSourceSchemaName());
+
+        return entityManager;
+    }
 
     @Bean(name = transactionManager)
     public PlatformTransactionManager transactionManager(
@@ -73,5 +72,5 @@ public class SoccerDatabaseConfig extends BasicDatabaseConfig {
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;
     }
-
+     */
 }

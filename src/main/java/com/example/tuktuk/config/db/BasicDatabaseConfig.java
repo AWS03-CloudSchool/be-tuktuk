@@ -8,7 +8,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 public class BasicDatabaseConfig {
 
     protected final Environment env;
