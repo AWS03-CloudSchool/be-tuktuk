@@ -2,19 +2,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
 
-app:
   datasource:
-    tuktuk:
-      ddl-auto: update
+      url: ${DATABASE_URL}
       driverClassName: com.mysql.cj.jdbc.Driver
-      username: ${DATABASE_ROOT_USERNAME}
-      password: ${DATABASE_ROOT_PASSWORD}
-
+      username: ${MYSQL_ROOT_USERNAME}
+      password: ${MYSQL_ROOT_PASSWORD}
       #rw:
         #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RW}
       #ro:

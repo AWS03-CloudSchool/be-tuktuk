@@ -1,3 +1,3 @@
 FROM mysql:latest
 
-COPY create_database.sh /docker-entrypoint-initdb.d
+COPY create_database.sql /docker-entrypoint-initdb.d
