@@ -1,0 +1,24 @@
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+  datasource:
+      url: ${DATABASE_URL}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: ${MYSQL_ROOT_USERNAME}
+      password: ${MYSQL_ROOT_PASSWORD}
+      #rw:
+        #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RW}
+      #ro:
+        #jdbc-url: ${SPRING_DATASOURCE_URL_SOCCER_RO}
+
+
+
+
+
+
+
+
