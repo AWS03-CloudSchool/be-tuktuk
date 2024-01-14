@@ -37,6 +37,7 @@ services:
     networks:
       app-network:
         ipv4_address: 172.20.1.2
+    restart: always
 
 networks:
   app-network:
