@@ -2,10 +2,12 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
 
   datasource:
       url: ${DATABASE_URL}
-      driverClassName: com.mysql.cj.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       username: ${MYSQL_ROOT_USERNAME}
       password: ${MYSQL_ROOT_PASSWORD}
       #rw:

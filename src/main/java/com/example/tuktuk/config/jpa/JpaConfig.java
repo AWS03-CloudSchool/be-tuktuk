@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.orm.hibernate5.HibernateExceptionTranslator;
 /*
-@Configuration
-@EnableJpaAuditing
+//@Configuration
+//@EnableJpaAuditing
 */
 public class JpaConfig {
     //@Bean
