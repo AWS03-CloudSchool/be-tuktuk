@@ -1,7 +1,7 @@
 package com.example.tuktuk.domain.reservation;
 
 import com.example.tuktuk.domain.global.Money;
-import com.example.tuktuk.domain.slice.SliceId;
+import com.example.tuktuk.domain.courttimeslot.CourtTimeSlotId;
 import com.example.tuktuk.domain.user.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,7 @@ public class Reservation {
     private UserId memberId;
 
     @Embedded
-    private SliceId sliceId;
+    private CourtTimeSlotId sliceId;
 
     @Embedded
     private Money fee;
