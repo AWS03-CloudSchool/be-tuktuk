@@ -16,3 +16,4 @@ public enum CourtType {
         this.maxParticipants = maxParticipants;
     }
 }
+
