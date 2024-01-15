@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.slice;
+package com.example.tuktuk.domain.courttimeslot;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

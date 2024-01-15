@@ -1,4 +1,4 @@
-package com.example.tuktuk.domain.slice.gamematch;
+package com.example.tuktuk.domain.courttimeslot;
 
 import com.example.tuktuk.domain.user.UserId;
 import jakarta.persistence.*;
