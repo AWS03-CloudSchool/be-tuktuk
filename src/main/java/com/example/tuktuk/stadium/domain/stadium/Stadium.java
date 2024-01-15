@@ -39,6 +39,11 @@ public class Stadium {
     @Column(name = "specific_info", nullable = false, columnDefinition = "text")
     private String specificInfo;
 
+    @ElementCollection
+    @CollectionTable(name = "stadium_images",joinColumns = @JoinColumn(name = "stadium_id"))
+    @Column(name = "image_path")
+    private final List<String> images = new ArrayList<>();
+
     @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
     private final List<Court> courts = new ArrayList<>();
 }
