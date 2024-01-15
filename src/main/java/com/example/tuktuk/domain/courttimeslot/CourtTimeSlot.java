@@ -43,8 +43,7 @@ public class CourtTimeSlot {
     @Column(name = "reservation_status", nullable = false)
     private ReservationStatus reservationStatus;
 
-    //비즈니스 로직으로 계산해서 넣어야 하는 필드
     @Embedded
-    private Money matchFee;
+    private Money matchRegularFee;
 
 }
