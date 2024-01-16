@@ -18,7 +18,7 @@ public class StadiumCreateRequestDto {
 
     private List<String> imageUrl;
 
-    private Location location;
+    private LocationReqDto location;
 
     private String specificInfo;
 
@@ -26,7 +26,7 @@ public class StadiumCreateRequestDto {
         return Stadium.builder()
                 .name(name)
                 .ownerId(ownerId)
-                .location(location)
+                .location(location.toEntity())
                 .specificInfo(specificInfo)
                 .images(imageUrl)
                 .build();

@@ -23,7 +23,7 @@ public class StadiumCreateResponseDto {
 
     private final String specificInfo;
 
-    public static StadiumCreateResponseDto of(Stadium stadium) {
+    public static StadiumCreateResponseDto of (Stadium stadium) {
         return StadiumCreateResponseDto.builder()
                 .name(stadium.getName())
                 .roadAddress(convertLocationToString(stadium.getLocation()))
