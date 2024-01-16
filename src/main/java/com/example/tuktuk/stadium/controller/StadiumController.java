@@ -1,7 +1,8 @@
 package com.example.tuktuk.stadium.controller;
 
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumRegistrationRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.SimpleStadiumResponseDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.service.StadiumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,13 +19,13 @@ public class StadiumController {
     @Autowired
     private final StadiumService stadiumService;
 
-    @GetMapping("{stadiumId}")
-    public SimpleStadiumResponseDto getSimpleStadium(@PathVariable Long stadiumId){
+    @GetMapping("/{stadiumId}/info")
+    public StadiumReadResponseDto showStadiumById(@PathVariable Long stadiumId){
         return stadiumService.findByStadiumId(stadiumId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void registryStadium(@RequestBody StadiumRegistrationRequestDto request){
-        stadiumService.saveStadium(request);
+    public StadiumCreateResponseDto createStadium(@RequestBody StadiumCreateRequestDto request){
+        return stadiumService.saveStadium(request);
     }
 }

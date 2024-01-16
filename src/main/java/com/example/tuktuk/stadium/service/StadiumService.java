@@ -1,7 +1,8 @@
 package com.example.tuktuk.stadium.service;
 
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumRegistrationRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.SimpleStadiumResponseDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,14 @@ public class StadiumService {
     private final StadiumRepository stadiumRepository;
 
     @Transactional(readOnly = true)
-    public SimpleStadiumResponseDto findByStadiumId(Long id) {
+    public StadiumReadResponseDto findByStadiumId(Long id) {
         Stadium stadium = stadiumRepository.findById(id).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
-        return SimpleStadiumResponseDto.of(stadium);
+        return StadiumReadResponseDto.of(stadium);
     }
 
     @Transactional
-    public void saveStadium(StadiumRegistrationRequestDto request){
-        stadiumRepository.save(request.toEntity());
+    public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
+        Stadium savedStadium = stadiumRepository.save(request.toEntity());
+        return StadiumCreateResponseDto.of(savedStadium);
     }
 }

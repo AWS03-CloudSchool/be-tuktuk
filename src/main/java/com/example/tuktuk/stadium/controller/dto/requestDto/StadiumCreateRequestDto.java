@@ -3,16 +3,23 @@ package com.example.tuktuk.stadium.controller.dto.requestDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.user.domain.UserId;
+import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;
 
 @Getter
-public class StadiumRegistrationRequestDto {
+@Builder
+public class StadiumCreateRequestDto {
+
     private String name;
+
     private UserId ownerId;
+
     private List<String> imageUrl;
+
     private Location location;
+
     private String specificInfo;
 
     public Stadium toEntity(){
