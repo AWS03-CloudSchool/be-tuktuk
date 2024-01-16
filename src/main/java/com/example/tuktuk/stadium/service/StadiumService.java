@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -47,7 +46,7 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumUpdateResponseDto updateStadium(Long stadiumId,StadiumUpdateRequestDto request) {
+    public StadiumUpdateResponseDto updateStadium(Long stadiumId, StadiumUpdateRequestDto request) {
         //security로 권한 확인 후
         //Long userId = SecurityContextHolderUtil.getUserId();
         //권한 없으면 에러
@@ -56,6 +55,16 @@ public class StadiumService {
         stadium.update(request);
         Stadium updatedStadium = stadiumRepository.save(stadium);
         return StadiumUpdateResponseDto.from(updatedStadium);
+    }
+
+    @Transactional
+    public void deleteStadium(Long stadiumId) {
+        //security로 권한 확인 후
+        //Long userId = SecurityContextHolderUtil.getUserId();
+        //권한 없으면 에러
+
+        Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+        stadiumRepository.delete(stadium);
     }
 
 
