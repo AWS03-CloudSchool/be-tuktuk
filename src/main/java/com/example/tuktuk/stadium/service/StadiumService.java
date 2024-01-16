@@ -27,7 +27,8 @@ public class StadiumService {
 
     @Transactional
     public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
-        Stadium savedStadium = stadiumRepository.save(request.of());
+        Stadium savedStadium = stadiumRepository.save(Stadium.of(request));
         return StadiumCreateResponseDto.from(savedStadium);
     }
+
 }

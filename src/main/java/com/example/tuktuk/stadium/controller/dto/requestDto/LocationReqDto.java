@@ -1,13 +1,10 @@
 package com.example.tuktuk.stadium.controller.dto.requestDto;
 
-import com.example.tuktuk.global.City;
-import com.example.tuktuk.global.Province;
-import com.example.tuktuk.stadium.domain.Location;
-import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@NoArgsConstructor
 public class LocationReqDto {
 
     private String province;
@@ -16,11 +13,4 @@ public class LocationReqDto {
 
     private String roadNameAddress;
 
-    public Location of(){
-        return Location.builder()
-            .province(Province.valueOf(province))
-            .city(City.valueOf(city))
-            .roadNameAddress(roadNameAddress)
-            .build();
-    }
 }
