@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/stadium")
 @RequiredArgsConstructor
 @Slf4j
 public class StadiumController {
@@ -17,12 +18,12 @@ public class StadiumController {
     @Autowired
     private final StadiumService stadiumService;
 
-    @GetMapping(value = "/stadium/{stadiumId}")
+    @GetMapping("{stadiumId}")
     public SimpleStadiumResponseDto getSimpleStadium(@PathVariable Long stadiumId){
         return stadiumService.findByStadiumId(stadiumId);
     }
 
-    @PostMapping(value = "/stadium")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public StadiumRegistrationRequestDto registryStadium(@RequestBody StadiumRegistrationRequestDto stadiumRegistrationRequestDto){
         return stadiumRegistrationRequestDto;
     }
