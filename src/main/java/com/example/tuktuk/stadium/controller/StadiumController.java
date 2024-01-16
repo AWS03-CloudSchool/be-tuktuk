@@ -24,7 +24,7 @@ public class StadiumController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public StadiumRegistrationRequestDto registryStadium(@RequestBody StadiumRegistrationRequestDto stadiumRegistrationRequestDto){
-        return stadiumRegistrationRequestDto;
+    public void registryStadium(@RequestBody StadiumRegistrationRequestDto request){
+        stadiumService.saveStadium(request);
     }
 }

@@ -4,6 +4,7 @@ import com.example.tuktuk.global.City;
 import com.example.tuktuk.global.Province;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;
 
@@ -11,11 +12,11 @@ import lombok.Getter;
 @Embeddable
 public class Location {
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "province")
     private Province province;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "city")
     private City city;
 
