@@ -14,7 +14,7 @@ public class UserId implements Serializable {
     @Column(name = "user_id")
     private long id;
 
-    protected UserId(long id) {
+    public UserId(long id) {
         this.id = id;
     }
 }

@@ -44,21 +44,8 @@ public class Stadium {
     @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
     private List<Court> courts = new ArrayList<>();
 
-    public static Stadium of(StadiumCreateRequestDto requestDto) {
-        return Stadium.builder()
-                .name(requestDto.getName())
-                .ownerId(requestDto.getOwnerId())
-                .location(Location.of(requestDto.getLocationReqDto()))
-                .specificInfo(requestDto.getSpecificInfo())
-                .build();
-    }
-
-    public static Stadium of(StadiumUpdateRequestDto requestDto) {
-        return Stadium.builder()
-                .name(requestDto.getName())
-                .ownerId(requestDto.getOwnerId())
-                .location(Location.of(requestDto.getLocationReqDto()))
-                .specificInfo(requestDto.getSpecificInfo())
-                .build();
+    public void update(StadiumUpdateRequestDto requestDto){
+        this.name=requestDto.getName();
+        this.specificInfo=requestDto.getSpecificInfo();
     }
 }

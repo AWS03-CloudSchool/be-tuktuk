@@ -1,18 +1,16 @@
 package com.example.tuktuk.stadium.controller.dto.requestDto;
 
-import com.example.tuktuk.user.domain.UserId;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
+@NoArgsConstructor
 public class StadiumCreateRequestDto {
 
     private String name;
 
-    private UserId ownerId;
-
     private LocationReqDto locationReqDto;
 
     private String specificInfo;
-
 }

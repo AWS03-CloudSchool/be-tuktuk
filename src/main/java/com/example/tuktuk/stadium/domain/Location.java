@@ -7,7 +7,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Embeddable
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Location {
 
     @Enumerated(EnumType.STRING)
