@@ -16,7 +16,7 @@ public class LocationReqDto {
 
     private String roadNameAddress;
 
-    public Location toEntity(){
+    public Location of(){
         return Location.builder()
             .province(Province.valueOf(province))
             .city(City.valueOf(city))

@@ -1,6 +1,5 @@
 package com.example.tuktuk.stadium.controller.dto.requestDto;
 
-import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.user.domain.UserId;
 import lombok.Builder;
@@ -18,15 +17,15 @@ public class StadiumCreateRequestDto {
 
     private List<String> imageUrl;
 
-    private LocationReqDto location;
+    private LocationReqDto locationReqDto;
 
     private String specificInfo;
 
-    public Stadium toEntity(){
+    public Stadium of() {
         return Stadium.builder()
                 .name(name)
                 .ownerId(ownerId)
-                .location(location.toEntity())
+                .location(locationReqDto.of())
                 .specificInfo(specificInfo)
                 .images(imageUrl)
                 .build();

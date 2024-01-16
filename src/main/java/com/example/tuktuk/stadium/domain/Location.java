@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
@@ -24,4 +25,6 @@ public class Location {
 
     @Column(name = "road_address")
     private String roadNameAddress;
+    public Location() {
+    }
 }

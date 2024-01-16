@@ -21,7 +21,7 @@ public class StadiumReadResponseDto {
 
     private final String specificInfo;
 
-    public static StadiumReadResponseDto of(Stadium stadium) {
+    public static StadiumReadResponseDto from(Stadium stadium) {
         return StadiumReadResponseDto.builder()
                 .name(stadium.getName())
                 .roadAddress(convertLocationToString(stadium.getLocation()))

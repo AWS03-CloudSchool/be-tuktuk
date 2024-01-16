@@ -47,7 +47,7 @@ public class User {
     @Embedded
     private Residence residence;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 

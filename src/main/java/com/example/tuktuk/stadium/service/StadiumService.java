@@ -22,12 +22,12 @@ public class StadiumService {
     @Transactional(readOnly = true)
     public StadiumReadResponseDto findByStadiumId(Long id) {
         Stadium stadium = stadiumRepository.findById(id).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
-        return StadiumReadResponseDto.of(stadium);
+        return StadiumReadResponseDto.from(stadium);
     }
 
     @Transactional
     public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
-        Stadium savedStadium = stadiumRepository.save(request.toEntity());
-        return StadiumCreateResponseDto.of(savedStadium);
+        Stadium savedStadium = stadiumRepository.save(request.of());
+        return StadiumCreateResponseDto.from(savedStadium);
     }
 }

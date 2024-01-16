@@ -28,7 +28,7 @@ public class Court {
     @Column(name = "name", nullable = false, length = 64)
     private String Name;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private CourtType courtType;
 
