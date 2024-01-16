@@ -29,7 +29,7 @@ public class CourtTimeSlot {
     @Embedded
     private Time time;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private Type type;
 
@@ -39,7 +39,7 @@ public class CourtTimeSlot {
     @OrderColumn(name = "participant_idx")
     private List<Participant> participants;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status", nullable = false)
     private ReservationStatus reservationStatus;
 

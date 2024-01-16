@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Builder
@@ -28,13 +31,17 @@ public class Court {
     @Column(name = "name", nullable = false, length = 64)
     private String Name;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private CourtType courtType;
 
     @Column(name = "hourly_rate", nullable = false)
     private int hourlyRentFee;
 
+    @ElementCollection
+    @CollectionTable(name = "court_images", joinColumns = @JoinColumn(name = "court_id"))
+    @Column(name = "image_path")
+    private List<String> images = new ArrayList<>();
     public int getMinParticipants() {
         return courtType.getMinParticipants();
     }

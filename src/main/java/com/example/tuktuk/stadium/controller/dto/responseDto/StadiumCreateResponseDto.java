@@ -5,22 +5,25 @@ import lombok.Builder;
 import lombok.Getter;
 
 
-import static com.example.tuktuk.stadium.util.LocationToStringConverter.*;
+import static com.example.tuktuk.stadium.util.LocationToStringConverter.convertLocationToString;
 
 @Getter
 @Builder
-public class StadiumReadResponseDto {
+public class StadiumCreateResponseDto {
 
     private final String name;
 
     private final String roadAddress;
 
+    private final String ownerName;
+
     private final String specificInfo;
 
-    public static StadiumReadResponseDto from(Stadium stadium) {
-        return StadiumReadResponseDto.builder()
+    public static StadiumCreateResponseDto from(Stadium stadium) {
+        return StadiumCreateResponseDto.builder()
                 .name(stadium.getName())
                 .roadAddress(convertLocationToString(stadium.getLocation()))
+                .ownerName(stadium.getName())
                 .specificInfo(stadium.getSpecificInfo())
                 .build();
     }

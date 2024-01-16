@@ -1,5 +1,7 @@
 package com.example.tuktuk.stadium.domain.stadium;
 
+import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.user.domain.UserId;
@@ -39,11 +41,11 @@ public class Stadium {
     @Column(name = "specific_info", nullable = false, columnDefinition = "text")
     private String specificInfo;
 
-    @ElementCollection
-    @CollectionTable(name = "stadium_images",joinColumns = @JoinColumn(name = "stadium_id"))
-    @Column(name = "image_path")
-    private final List<String> images = new ArrayList<>();
-
     @OneToMany(mappedBy = "stadium", cascade = CascadeType.ALL)
-    private final List<Court> courts = new ArrayList<>();
+    private List<Court> courts = new ArrayList<>();
+
+    public void update(StadiumUpdateRequestDto requestDto){
+        this.name=requestDto.getName();
+        this.specificInfo=requestDto.getSpecificInfo();
+    }
 }
