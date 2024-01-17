@@ -1,11 +1,11 @@
 package com.example.tuktuk.stadium.controller;
 
 import com.example.tuktuk.global.Message;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumCreateResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumReadResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumUpdateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.service.StadiumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

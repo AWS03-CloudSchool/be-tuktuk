@@ -1,5 +1,6 @@
-package com.example.tuktuk.stadium.controller.dto.requestDto;
+package com.example.tuktuk.stadium.controller.dto.requestDto.stadium;
 
+import com.example.tuktuk.stadium.controller.dto.requestDto.LocationReqDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

@@ -1,10 +1,10 @@
 package com.example.tuktuk.stadium.service;
 
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumCreateResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumReadResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumUpdateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
