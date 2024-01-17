@@ -15,7 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/stadium")
+@RequestMapping("/stadiums")
 @RequiredArgsConstructor
 @Slf4j
 public class StadiumController {
@@ -23,8 +23,8 @@ public class StadiumController {
     @Autowired
     private final StadiumService stadiumService;
 
-    @GetMapping("/{stadiumId}/info")
-    public StadiumReadResponseDto showStadiumById(@PathVariable Long stadiumId) {
+    @GetMapping("/{stadiumId}")
+    public StadiumReadResponseDto getStadiumById(@PathVariable Long stadiumId) {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
