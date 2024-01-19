@@ -32,7 +32,10 @@ public class StadiumService {
     @Transactional
     public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
         //security로 권한 확인 후
-        //Long userId = SecurityContextHolderUtil.getUserId();
+        //Long userId = keyclock.getUserId();
+        //list<Role> roles = keyclock.getRoles();
+
+
         //권한 없으면 에러
         Stadium stadium = Stadium.builder()
                 .name(request.getName())
