@@ -29,7 +29,7 @@ public class Court {
     private Stadium stadium;
 
     @Column(name = "name", nullable = false, length = 64)
-    private String Name;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
