@@ -43,8 +43,8 @@ public class CourtController {
     return courtService.updateCourt(courtId, request);
   }
 
-  @DeleteMapping("/{stadiumId}")
-  public void deleteCourt(){
-
+  @DeleteMapping(value = "/{courtId}")
+  public void deleteCourt(@PathVariable(name = "courtId") long courtId){
+    courtService.deleteCourt(courtId);
   }
 }

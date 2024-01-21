@@ -86,7 +86,11 @@ public class CourtService {
     return CourtUpdateResponseDto.from(updatedCourt);
   }
 
-  public void deleteCourt(){
+  @Transactional
+  public void deleteCourt(long courtId){
 
+    Court court = courtRepository.findById(courtId).orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+
+    courtRepository.delete(court);
   }
 }
