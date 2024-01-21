@@ -24,7 +24,7 @@ public class StadiumController {
     private final StadiumService stadiumService;
 
     @GetMapping("/{stadiumId}")
-    public StadiumReadResponseDto getStadiumById(@PathVariable Long stadiumId) {
+    public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
@@ -34,12 +34,13 @@ public class StadiumController {
     }
 
     @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public StadiumUpdateResponseDto updateStadium(@PathVariable Long stadiumId, @RequestBody StadiumUpdateRequestDto requestDto) {
+    public StadiumUpdateResponseDto updateStadium(@PathVariable(name = "stadiumId") long stadiumId,
+                                                  @RequestBody StadiumUpdateRequestDto requestDto) {
         return stadiumService.updateStadium(stadiumId, requestDto);
     }
 
     @DeleteMapping("/{stadiumId}")
-    public Message deleteStadium(@PathVariable Long stadiumId) {
+    public Message deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
         stadiumService.deleteStadium(stadiumId);
 
         return Message.builder()

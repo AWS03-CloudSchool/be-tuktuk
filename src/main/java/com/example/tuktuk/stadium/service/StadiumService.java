@@ -24,8 +24,8 @@ public class StadiumService {
     private final StadiumRepository stadiumRepository;
 
     @Transactional(readOnly = true)
-    public StadiumReadResponseDto findByStadiumId(Long id) {
-        Stadium stadium = stadiumRepository.findById(id).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+    public StadiumReadResponseDto findByStadiumId(long stadiumId) {
+        Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         return StadiumReadResponseDto.from(stadium);
     }
 
@@ -46,7 +46,7 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumUpdateResponseDto updateStadium(Long stadiumId, StadiumUpdateRequestDto request) {
+    public StadiumUpdateResponseDto updateStadium(long stadiumId, StadiumUpdateRequestDto request) {
         //security로 권한 확인 후
         //Long userId = SecurityContextHolderUtil.getUserId();
         //권한 없으면 에러
@@ -58,7 +58,7 @@ public class StadiumService {
     }
 
     @Transactional
-    public void deleteStadium(Long stadiumId) {
+    public void deleteStadium(long stadiumId) {
         //security로 권한 확인 후
         //Long userId = SecurityContextHolderUtil.getUserId();
         //권한 없으면 에러

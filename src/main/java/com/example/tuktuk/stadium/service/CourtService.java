@@ -1,8 +1,10 @@
 package com.example.tuktuk.stadium.service;
 
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.domain.court.CourtType;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
@@ -16,9 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,8 +63,27 @@ public class CourtService {
     return CourtCreateResponseDto.from(savedCourt);
   }
 
-  public void updateCourt(){
+  @Transactional
+  public CourtUpdateResponseDto updateCourt(Long courtId, CourtUpdateRequestDto request){
+    Court oldCourt = courtRepository.findById(courtId)
+            .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
+    /*
+      To do : 이미지 수정 기능 구현
+    */
+
+    Court newCourt = Court.builder()
+            .id(oldCourt.getId())
+            .name(request.getName())
+            .courtType(CourtType.valueOf(request.getCourtType()))
+            .hourlyRentFee(request.getHourlyRentFee())
+            .stadium(oldCourt.getStadium())
+            .images(oldCourt.getImages())
+            .build();
+
+    Court updatedCourt = courtRepository.save(newCourt);
+
+    return CourtUpdateResponseDto.from(updatedCourt);
   }
 
   public void deleteCourt(){

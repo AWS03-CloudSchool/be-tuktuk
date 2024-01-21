@@ -1,8 +1,10 @@
 package com.example.tuktuk.stadium.controller;
 
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateResponseDto;
 import com.example.tuktuk.stadium.service.CourtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,7 @@ public class CourtController {
   private CourtService courtService;
 
   @GetMapping("/{courtId}")
-  public CourtReadResponseDto getCourtById(@PathVariable Long courtId){
+  public CourtReadResponseDto getCourtById(@PathVariable(name = "courtId") long courtId){
     return courtService.findByCourtId(courtId);
   }
 
@@ -32,9 +34,13 @@ public class CourtController {
     return courtService.saveCourt(request, images);
   }
 
-  @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void updateCourt(){
-
+  /*
+    To do : 이미지 수정 기능 구현
+  */
+  @PatchMapping(value = "/{courtId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  public CourtUpdateResponseDto updateCourt(@PathVariable(name = "courtId") long courtId,
+                                            @RequestPart("courtUpdateRequest") CourtUpdateRequestDto request){
+    return courtService.updateCourt(courtId, request);
   }
 
   @DeleteMapping("/{stadiumId}")

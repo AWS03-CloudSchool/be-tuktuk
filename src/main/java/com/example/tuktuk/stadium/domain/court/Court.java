@@ -42,6 +42,7 @@ public class Court {
     @CollectionTable(name = "court_images", joinColumns = @JoinColumn(name = "court_id"))
     @Column(name = "image_path")
     private List<String> images = new ArrayList<>();
+
     public int getMinParticipants() {
         return courtType.getMinParticipants();
     }
