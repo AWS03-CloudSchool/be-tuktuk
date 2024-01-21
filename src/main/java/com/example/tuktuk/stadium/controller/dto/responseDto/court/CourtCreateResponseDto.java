@@ -10,6 +10,8 @@ import java.util.List;
 @Builder
 public class CourtCreateResponseDto {
 
+    private final long courtId;
+
     private final String courtName;
 
     private final String stadiumName;
@@ -20,8 +22,9 @@ public class CourtCreateResponseDto {
 
     private List<String> images;
 
-    public static CourtCreateResponseDto from(Court court){
+    public static CourtCreateResponseDto from(Court court) {
         return CourtCreateResponseDto.builder()
+                .courtId(court.getId())
                 .courtName(court.getName())
                 .stadiumName(court.getStadium().getName())
                 .courtType(court.getCourtType().name())

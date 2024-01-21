@@ -11,6 +11,8 @@ import static com.example.tuktuk.stadium.util.LocationToStringConverter.*;
 @Builder
 public class StadiumReadResponseDto {
 
+    private final long stadiumId;
+
     private final String name;
 
     private final String roadAddress;
@@ -19,6 +21,7 @@ public class StadiumReadResponseDto {
 
     public static StadiumReadResponseDto from(Stadium stadium) {
         return StadiumReadResponseDto.builder()
+                .stadiumId(stadium.getId())
                 .name(stadium.getName())
                 .roadAddress(convertLocationToString(stadium.getLocation()))
                 .specificInfo(stadium.getSpecificInfo())

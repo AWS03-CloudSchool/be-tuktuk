@@ -8,14 +8,17 @@ import lombok.Getter;
 @Builder
 public class CourtUpdateResponseDto {
 
-    private String name;
+    private final long courtId;
 
-    private String courtType;
+    private final String name;
 
-    private int hourlyRentFee;
+    private final String courtType;
+
+    private final int hourlyRentFee;
 
     public static CourtUpdateResponseDto from(Court court){
         return CourtUpdateResponseDto.builder()
+                .courtId(court.getId())
                 .name(court.getName())
                 .courtType(court.getCourtType().name())
                 .hourlyRentFee(court.getHourlyRentFee())

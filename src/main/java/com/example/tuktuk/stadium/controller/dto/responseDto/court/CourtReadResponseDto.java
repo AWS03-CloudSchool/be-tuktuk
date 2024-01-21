@@ -1,7 +1,9 @@
 package com.example.tuktuk.stadium.controller.dto.responseDto.court;
 
 import com.example.tuktuk.stadium.domain.court.Court;
+
 import java.util.List;
+
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,23 +11,26 @@ import lombok.Getter;
 @Builder
 public class CourtReadResponseDto {
 
-  private final String stadiumName;
+    private final long courtId;
 
-  private final String courtName;
+    private final String stadiumName;
 
-  private final String courtType;
+    private final String courtName;
 
-  private final int hourlyRentFee;
+    private final String courtType;
 
-  private final List<String> images;
+    private final int hourlyRentFee;
 
-  public static CourtReadResponseDto from(Court court){
-    return CourtReadResponseDto.builder()
-        .stadiumName(court.getStadium().getName())
-        .courtName(court.getName())
-        .courtType(court.getCourtType().toString())
-        .hourlyRentFee(court.getHourlyRentFee())
-        .images(court.getImages())
-        .build();
-  }
+    private final List<String> images;
+
+    public static CourtReadResponseDto from(Court court) {
+        return CourtReadResponseDto.builder()
+                .courtId(court.getId())
+                .stadiumName(court.getStadium().getName())
+                .courtName(court.getName())
+                .courtType(court.getCourtType().toString())
+                .hourlyRentFee(court.getHourlyRentFee())
+                .images(court.getImages())
+                .build();
+    }
 }

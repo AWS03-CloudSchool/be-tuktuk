@@ -40,14 +40,7 @@ public class StadiumController {
     }
 
     @DeleteMapping("/{stadiumId}")
-    public Message deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
+    public void deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
         stadiumService.deleteStadium(stadiumId);
-
-        return Message.builder()
-                .message("성공")
-                .status(HttpStatus.OK)
-                .code(0)
-                .build();
     }
-
 }

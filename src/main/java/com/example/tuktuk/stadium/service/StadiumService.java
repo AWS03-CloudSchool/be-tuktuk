@@ -31,9 +31,7 @@ public class StadiumService {
 
     @Transactional
     public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
-        //security로 권한 확인 후
-        //Long userId = SecurityContextHolderUtil.getUserId();
-        //권한 없으면 에러
+
         Stadium stadium = Stadium.builder()
                 .name(request.getName())
                 .ownerId(new UserId(1L))
@@ -47,9 +45,6 @@ public class StadiumService {
 
     @Transactional
     public StadiumUpdateResponseDto updateStadium(long stadiumId, StadiumUpdateRequestDto request) {
-        //security로 권한 확인 후
-        //Long userId = SecurityContextHolderUtil.getUserId();
-        //권한 없으면 에러
 
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         stadium.update(request);
@@ -59,13 +54,8 @@ public class StadiumService {
 
     @Transactional
     public void deleteStadium(long stadiumId) {
-        //security로 권한 확인 후
-        //Long userId = SecurityContextHolderUtil.getUserId();
-        //권한 없으면 에러
 
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         stadiumRepository.delete(stadium);
     }
-
-
 }
