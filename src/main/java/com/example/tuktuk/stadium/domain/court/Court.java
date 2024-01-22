@@ -22,14 +22,14 @@ public class Court {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "stadium_id", nullable = false)
     private Stadium stadium;
 
     @Column(name = "name", nullable = false, length = 64)
-    private String Name;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
@@ -42,6 +42,7 @@ public class Court {
     @CollectionTable(name = "court_images", joinColumns = @JoinColumn(name = "court_id"))
     @Column(name = "image_path")
     private List<String> images = new ArrayList<>();
+
     public int getMinParticipants() {
         return courtType.getMinParticipants();
     }

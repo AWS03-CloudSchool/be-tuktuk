@@ -17,4 +17,8 @@ public class UserId implements Serializable {
     public UserId(long id) {
         this.id = id;
     }
+
+    public long getUserId(){
+        return this.id;
+    }
 }

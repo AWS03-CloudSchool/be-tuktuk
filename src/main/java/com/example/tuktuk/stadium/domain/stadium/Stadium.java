@@ -1,7 +1,6 @@
 package com.example.tuktuk.stadium.domain.stadium;
 
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumUpdateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.user.domain.UserId;
@@ -14,6 +13,7 @@ import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @Builder
@@ -25,7 +25,7 @@ public class Stadium {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(name = "name", nullable = false, length = 64)
     private String name;

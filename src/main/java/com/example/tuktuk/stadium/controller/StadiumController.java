@@ -1,11 +1,12 @@
 package com.example.tuktuk.stadium.controller;
 
 import com.example.tuktuk.global.Message;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumCreateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.requestDto.StadiumUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumCreateResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumReadResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumUpdateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.service.StadiumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,38 +16,32 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/stadium")
+@RequestMapping("/stadiums")
 @RequiredArgsConstructor
 @Slf4j
 public class StadiumController {
 
-    @Autowired
-    private final StadiumService stadiumService;
+  @Autowired
+  private final StadiumService stadiumService;
 
-    @GetMapping("/{stadiumId}/info")
-    public StadiumReadResponseDto showStadiumById(@PathVariable Long stadiumId) {
-        return stadiumService.findByStadiumId(stadiumId);
-    }
+  @GetMapping("/{stadiumId}")
+  public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
+    return stadiumService.findByStadiumId(stadiumId);
+  }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public StadiumCreateResponseDto createStadium(@RequestBody StadiumCreateRequestDto request) {
-        return stadiumService.saveStadium(request);
-    }
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public StadiumCreateResponseDto createStadium(@RequestBody StadiumCreateRequestDto request) {
+    return stadiumService.saveStadium(request);
+  }
 
-    @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public StadiumUpdateResponseDto updateStadium(@PathVariable Long stadiumId, @RequestBody StadiumUpdateRequestDto requestDto) {
-        return stadiumService.updateStadium(stadiumId, requestDto);
-    }
+  @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public StadiumUpdateResponseDto updateStadium(@PathVariable(name = "stadiumId") long stadiumId,
+      @RequestBody StadiumUpdateRequestDto requestDto) {
+    return stadiumService.updateStadium(stadiumId, requestDto);
+  }
 
-    @DeleteMapping("/{stadiumId}")
-    public Message deleteStadium(@PathVariable Long stadiumId) {
-        stadiumService.deleteStadium(stadiumId);
-
-        return Message.builder()
-                .message("성공")
-                .status(HttpStatus.OK)
-                .code(0)
-                .build();
-    }
-
+  @DeleteMapping("/{stadiumId}")
+  public StadiumDeleteResponseDto deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
+    return stadiumService.deleteStadium(stadiumId);
+  }
 }
