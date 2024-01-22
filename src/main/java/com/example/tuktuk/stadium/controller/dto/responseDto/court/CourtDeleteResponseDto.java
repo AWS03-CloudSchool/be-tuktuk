@@ -1,14 +1,13 @@
 package com.example.tuktuk.stadium.controller.dto.responseDto.court;
 
 import com.example.tuktuk.stadium.domain.court.Court;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @Builder
-public class CourtCreateResponseDto {
+public class CourtDeleteResponseDto {
 
   private final long courtId;
 
@@ -20,16 +19,13 @@ public class CourtCreateResponseDto {
 
   private int hourlyRentFee;
 
-  private List<String> images;
-
-  public static CourtCreateResponseDto from(Court court) {
-    return CourtCreateResponseDto.builder()
+  public static CourtDeleteResponseDto from(Court court) {
+    return CourtDeleteResponseDto.builder()
         .courtId(court.getId())
         .courtName(court.getName())
         .stadiumName(court.getStadium().getName())
         .courtType(court.getCourtType().name())
         .hourlyRentFee(court.getHourlyRentFee())
-        .images(court.getImages())
         .build();
   }
 }

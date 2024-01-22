@@ -3,6 +3,7 @@ package com.example.tuktuk.stadium.service;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtCreateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.court.Court;
@@ -35,28 +36,29 @@ public class CourtService {
   private StadiumRepository stadiumRepository;
 
   @Transactional(readOnly = true)
-  public CourtReadResponseDto findByCourtId(Long courtId){
+  public CourtReadResponseDto findByCourtId(Long courtId) {
     return CourtReadResponseDto.from(courtRepository.findById(courtId).get());
   }
 
   @Transactional
-  public CourtCreateResponseDto saveCourt(CourtCreateRequestDto request, List<MultipartFile> images){
+  public CourtCreateResponseDto saveCourt(CourtCreateRequestDto request,
+      List<MultipartFile> images) {
     Stadium parentStadium = stadiumRepository.findById(request.getStadiumId())
-            .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+        .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
     List<String> imagePaths = new ArrayList<>();
 
-    if(images != null && images.isEmpty()) {
+    if (images != null && images.isEmpty()) {
       imagePaths = images.stream().map(image -> localStorageManger.put(image)).toList();
     }
 
     Court court = Court.builder()
-            .stadium(parentStadium)
-            .name(request.getName())
-            .courtType(CourtType.valueOf(request.getCourtType()))
-            .hourlyRentFee(request.getHourlyRentFee())
-            .images(imagePaths)
-            .build();
+        .stadium(parentStadium)
+        .name(request.getName())
+        .courtType(CourtType.valueOf(request.getCourtType()))
+        .hourlyRentFee(request.getHourlyRentFee())
+        .images(imagePaths)
+        .build();
 
     Court savedCourt = courtRepository.save(court);
 
@@ -64,22 +66,25 @@ public class CourtService {
   }
 
   @Transactional
-  public CourtUpdateResponseDto updateCourt(Long courtId, CourtUpdateRequestDto request){
+  public CourtUpdateResponseDto updateCourt(Long courtId,
+      CourtUpdateRequestDto request,
+      List<MultipartFile> images
+  ) {
     Court oldCourt = courtRepository.findById(courtId)
-            .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+        .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
     /*
       To do : 이미지 수정 기능 구현
     */
 
     Court newCourt = Court.builder()
-            .id(oldCourt.getId())
-            .name(request.getName())
-            .courtType(CourtType.valueOf(request.getCourtType()))
-            .hourlyRentFee(request.getHourlyRentFee())
-            .stadium(oldCourt.getStadium())
-            .images(oldCourt.getImages())
-            .build();
+        .id(oldCourt.getId())
+        .name(request.getName())
+        .courtType(CourtType.valueOf(request.getCourtType()))
+        .hourlyRentFee(request.getHourlyRentFee())
+        .stadium(oldCourt.getStadium())
+        .images(oldCourt.getImages())
+        .build();
 
     Court updatedCourt = courtRepository.save(newCourt);
 
@@ -87,10 +92,13 @@ public class CourtService {
   }
 
   @Transactional
-  public void deleteCourt(long courtId){
+  public CourtDeleteResponseDto deleteCourt(long courtId) {
 
-    Court court = courtRepository.findById(courtId).orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+    Court court = courtRepository.findById(courtId)
+        .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
 
     courtRepository.delete(court);
+
+    return CourtDeleteResponseDto.from(court);
   }
 }

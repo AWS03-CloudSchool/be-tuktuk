@@ -11,23 +11,23 @@ import static com.example.tuktuk.stadium.util.LocationToStringConverter.convertL
 @Builder
 public class StadiumCreateResponseDto {
 
-    private final long stadiumId;
+  private final long stadiumId;
 
-    private final String name;
+  private final String name;
 
-    private final String roadAddress;
+  private final String roadAddress;
 
-    private final String ownerName;
+  private final long ownerId;
 
-    private final String specificInfo;
+  private final String specificInfo;
 
-    public static StadiumCreateResponseDto from(Stadium stadium) {
-        return StadiumCreateResponseDto.builder()
-                .stadiumId(stadium.getId())
-                .name(stadium.getName())
-                .roadAddress(convertLocationToString(stadium.getLocation()))
-                .ownerName(stadium.getName())
-                .specificInfo(stadium.getSpecificInfo())
-                .build();
-    }
+  public static StadiumCreateResponseDto from(Stadium stadium) {
+    return StadiumCreateResponseDto.builder()
+        .stadiumId(stadium.getId())
+        .name(stadium.getName())
+        .roadAddress(convertLocationToString(stadium.getLocation()))
+        .ownerId(stadium.getOwnerId().getUserId())
+        .specificInfo(stadium.getSpecificInfo())
+        .build();
+  }
 }

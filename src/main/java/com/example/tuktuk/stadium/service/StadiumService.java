@@ -3,6 +3,7 @@ package com.example.tuktuk.stadium.service;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.Location;
@@ -53,9 +54,10 @@ public class StadiumService {
     }
 
     @Transactional
-    public void deleteStadium(long stadiumId) {
-
+    public StadiumDeleteResponseDto deleteStadium(long stadiumId) {
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         stadiumRepository.delete(stadium);
+
+        return StadiumDeleteResponseDto.from(stadium);
     }
 }
