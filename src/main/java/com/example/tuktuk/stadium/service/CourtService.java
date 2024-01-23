@@ -11,8 +11,7 @@ import com.example.tuktuk.stadium.domain.court.CourtType;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.CourtRepository;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
-import com.example.tuktuk.stadium.util.LocalStorageManger;
-import com.example.tuktuk.stadium.util.StorageManger;
+import com.example.tuktuk.stadium.util.image.LocalImageStorageManger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,8 @@ public class CourtService {
   @Autowired
   private CourtRepository courtRepository;
 
-  StorageManger localStorageManger = new LocalStorageManger();
+  @Autowired
+  private LocalImageStorageManger LocalStorageManager;
 
   @Autowired
   private StadiumRepository stadiumRepository;
@@ -49,7 +49,7 @@ public class CourtService {
     List<String> imagePaths = new ArrayList<>();
 
     if (images != null && images.isEmpty()) {
-      imagePaths = images.stream().map(image -> localStorageManger.put(image)).toList();
+      imagePaths = images.stream().map(image -> LocalStorageManager.putImage(image)).toList();
     }
 
     Court court = Court.builder()

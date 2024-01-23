@@ -13,14 +13,13 @@ import org.hibernate.annotations.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "stadium")
+@Table(name = "stadiums")
 public class Stadium {
     @Id
     @Column(name = "id")
