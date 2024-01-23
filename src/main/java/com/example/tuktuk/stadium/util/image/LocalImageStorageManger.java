@@ -1,5 +1,7 @@
-package com.example.tuktuk.stadium.util;
+package com.example.tuktuk.stadium.util.image;
 
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,10 +12,19 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Component
-public class LocalStorageManger extends StorageManger{
+@Getter
+public class LocalImageStorageManger extends ImageStorageManger {
+
+    private final String storageDestination;
+
+    public LocalImageStorageManger(@Value("$(app.image-base-path}") String baseImagePath){
+        super(baseImagePath);
+        this.storageDestination = baseImagePath;
+    }
+
     @Override
-    public String put(MultipartFile image){
-        StringBuilder saveImagePathString = new StringBuilder(this.getStorageDestination())
+    public String putImage(MultipartFile image) {
+        StringBuilder saveImagePathString = new StringBuilder(storageDestination)
                 .append(File.separator)
                 .append(UUID.randomUUID())
                 .append("_")
@@ -31,5 +42,7 @@ public class LocalStorageManger extends StorageManger{
     }
 
     @Override
-    public MultipartFile get(String imageDestination){ return null; }
+    public MultipartFile getImage(String imageDestination) {
+        return null;
+    }
 }
