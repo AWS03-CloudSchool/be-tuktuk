@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +28,17 @@ public class StadiumService {
     private final StadiumRepository stadiumRepository;
 
     @Transactional(readOnly = true)
-    public StadiumReadResponseDto findByStadiumId(long stadiumId) {
+    public StadiumReadResponseDto findByStadiumId(final long stadiumId) {
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         return StadiumReadResponseDto.from(stadium);
+    }
+
+    @Transactional(readOnly = true)
+    public List<StadiumReadResponseDto> findByOwnerId(final long ownerId) {
+        List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
+        return stadiums.stream()
+                .map(StadiumReadResponseDto::from)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -45,7 +56,7 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumUpdateResponseDto updateStadium(long stadiumId, StadiumUpdateRequestDto request) {
+    public StadiumUpdateResponseDto updateStadium(final long stadiumId, StadiumUpdateRequestDto request) {
 
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         stadium.update(request);
@@ -54,7 +65,7 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumDeleteResponseDto deleteStadium(long stadiumId) {
+    public StadiumDeleteResponseDto deleteStadium(final long stadiumId) {
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
         stadiumRepository.delete(stadium);
 
