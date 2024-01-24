@@ -70,3 +70,41 @@ jobs:
       id: push-image
       run: |
         docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
+
+
+  cd:
+    needs: [ ci ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Target Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: AWS03-CloudSchool/dev_be_gitops
+          ref: main
+          lfs: true
+          token: ${{ secrets.CICD }}
+
+      - name: Replace image tag in helm values (LOCAL)
+        uses: mikefarah/yq@master
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+        with:
+          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+
+      - name: Commit helm chart changes
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+        run: |
+          cd demo
+          git config --global user.email "yeoncomp@gmail.com"
+          git config --global user.name "KM-Yeon"
+
+          git add values.yaml
+          git commit --message "ci: Update demo image tag to $IMAGE_TAG"
+
+      - name: Push commit
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CICD }}
+          repository: AWS03-CloudSchool/dev_be_gitops
