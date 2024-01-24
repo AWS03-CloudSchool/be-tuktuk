@@ -57,7 +57,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        ./gradlew clean build -x test
+        ./gradlew clean bootJar --no-daemon
       shell: bash
 
     - name: Docker image Build
