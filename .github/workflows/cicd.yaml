@@ -96,12 +96,12 @@ jobs:
         env:
           IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
         run: |
-          cd demo
+          cd backtukktukk
           git config --global user.email "yeoncomp@gmail.com"
           git config --global user.name "KM-Yeon"
 
           git add values.yaml
-          git commit --message "ci: Update demo image tag to $IMAGE_TAG"
+          git commit --message "ci: Update backtukktukk image tag to $IMAGE_TAG"
 
       - name: Push commit
         uses: ad-m/github-push-action@master
