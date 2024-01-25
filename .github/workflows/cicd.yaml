@@ -40,7 +40,7 @@ jobs:
 
     - name: Set Spring active profile to dev
       run: |
-        sed -i 's/spring.profiles.active: local/spring.profiles.active: dev/' src/main/java/resources/application.yaml
+        sed -i 's/spring.profiles.active: local/spring.profiles.active: dev/' src/main/resources/application.yaml
 
     - name: JDK setting
       uses: actions/setup-java@v2
