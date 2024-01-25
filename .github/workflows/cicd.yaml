@@ -36,7 +36,7 @@ jobs:
       run: |
         echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
         echo ::set-output name=ECR_REPOSITORY::dev-tukktukk
-        echo ::set-output name=IMAGE_TAG::$(date +'%Y%m%d%H%M%S')
+        echo ::set-output name=IMAGE_TAG::"v$(date +'%Y%m%d%H%M%S')"
 
     - name: Set Spring active profile to dev
       run: |
