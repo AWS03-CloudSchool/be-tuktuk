@@ -2,13 +2,13 @@ name: CI/CD
 
 on:
   push:
-    branches: [ 29-feat-ci-workflows ]
+    branches: [ 29-feat-ci-workflows, dev ]
     paths-ignore:
      - '.gitignore'
      - '.dockerignore'
      - 'README.md'
     pull_request:
-      branches: [ 29-feat-ci-workflows ]
+      branches: [ 29-feat-ci-workflows, dev ]
 
 jobs:
   ci:
@@ -36,7 +36,11 @@ jobs:
       run: |
         echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
         echo ::set-output name=ECR_REPOSITORY::dev-tukktukk
-        echo ::set-output name=IMAGE_TAG::$(cat VERSION)
+        echo ::set-output name=IMAGE_TAG::$(date +'%Y%m%d%H%M%S')
+
+    - name: Set Spring active profile to dev
+      run: |
+        sed -i 's/spring.profiles.active: local/spring.profiles.active: dev/' src/main/java/resources/application.yaml
 
     - name: JDK setting
       uses: actions/setup-java@v2
