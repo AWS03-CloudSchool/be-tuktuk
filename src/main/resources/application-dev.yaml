@@ -6,10 +6,15 @@ spring:
       ddl-auto: create-drop
 
   datasource:
-      url: ${DATABASE_URL}
-      driver-class-name: com.mysql.cj.jdbc.Driver
-      username: ${MYSQL_ROOT_USERNAME}
-      password: ${MYSQL_ROOT_PASSWORD}
+    url: ${DATABASE_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
 
 app:
   image-base-path: ${LOCAL_IMAGE_STORAGE}
+
+logging:
+  level:
+    root: DEBUG
+
