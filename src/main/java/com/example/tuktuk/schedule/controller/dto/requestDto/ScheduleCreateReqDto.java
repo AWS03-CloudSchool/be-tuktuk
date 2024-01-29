@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot.controller.dto.requestDto;
+package com.example.tuktuk.schedule.controller.dto.requestDto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +8,7 @@ import java.time.LocalTime;
 
 @Getter
 @NoArgsConstructor
-public class CourtTimeSlotCreateReqDto {
+public class ScheduleCreateReqDto {
 
     private long courtId;
 

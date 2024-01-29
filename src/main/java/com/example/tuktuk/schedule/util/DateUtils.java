@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot.util;
+package com.example.tuktuk.schedule.util;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

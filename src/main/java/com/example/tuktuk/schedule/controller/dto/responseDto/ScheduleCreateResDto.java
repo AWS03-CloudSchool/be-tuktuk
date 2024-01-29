@@ -1,6 +1,6 @@
-package com.example.tuktuk.courttimeslot.controller.dto.responseDto;
+package com.example.tuktuk.schedule.controller.dto.responseDto;
 
-import com.example.tuktuk.courttimeslot.domain.CourtTimeSlot;
+import com.example.tuktuk.schedule.domain.Schedule;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class CourtTimeSlotCreateResDto {
+public class ScheduleCreateResDto {
 
     private final long courtId;
 
@@ -24,8 +24,8 @@ public class CourtTimeSlotCreateResDto {
     private final int matchRegularFee;
 
 
-    public static CourtTimeSlotCreateResDto from(CourtTimeSlot courtTimeSlot) {
-        return CourtTimeSlotCreateResDto.builder()
+    public static ScheduleCreateResDto from(Schedule courtTimeSlot) {
+        return ScheduleCreateResDto.builder()
                 .courtId(courtTimeSlot.getCourtId().getValue())
                 .playDate(courtTimeSlot.getTime().getPlayDate())
                 .startTime(courtTimeSlot.getTime().getStartTime())

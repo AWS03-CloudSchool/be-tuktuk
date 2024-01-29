@@ -1,6 +1,6 @@
-package com.example.tuktuk.courttimeslot.util;
+package com.example.tuktuk.schedule.util;
 
-import com.example.tuktuk.courttimeslot.domain.Time;
+import com.example.tuktuk.schedule.domain.Time;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

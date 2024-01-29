@@ -1,8 +1,8 @@
-package com.example.tuktuk.courttimeslot.domain;
+package com.example.tuktuk.schedule.domain;
 
 import com.example.tuktuk.global.Province;
 
-import static com.example.tuktuk.courttimeslot.domain.DayType.*;
+import static com.example.tuktuk.schedule.domain.DayType.*;
 import static com.example.tuktuk.global.Province.*;
 import static com.example.tuktuk.global.Province.SEOUL;
 

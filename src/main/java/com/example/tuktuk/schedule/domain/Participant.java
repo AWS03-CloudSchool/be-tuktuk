@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot.domain;
+package com.example.tuktuk.schedule.domain;
 
 import com.example.tuktuk.user.domain.UserId;
 import jakarta.persistence.*;

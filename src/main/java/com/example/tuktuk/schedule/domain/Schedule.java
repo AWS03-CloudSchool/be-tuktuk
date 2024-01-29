@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot.domain;
+package com.example.tuktuk.schedule.domain;
 
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.stadium.domain.court.CourtId;
@@ -16,8 +16,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "court_time_slots")
-public class CourtTimeSlot {
+@Table(name = "schedules")
+public class Schedule {
 
     @Id
     @Column(name = "id")

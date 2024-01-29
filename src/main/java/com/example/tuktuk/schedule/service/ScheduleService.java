@@ -1,14 +1,11 @@
-package com.example.tuktuk.courttimeslot.service;
+package com.example.tuktuk.schedule.service;
 
 
-import com.example.tuktuk.courttimeslot.controller.dto.requestDto.CourtTimeSlotCreateReqDto;
-import com.example.tuktuk.courttimeslot.controller.dto.responseDto.CourtTimeSlotCreateResDto;
-import com.example.tuktuk.courttimeslot.domain.CourtTimeSlot;
-import com.example.tuktuk.courttimeslot.domain.MatchRegularFeeManager;
-import com.example.tuktuk.courttimeslot.domain.Time;
-import com.example.tuktuk.courttimeslot.domain.Type;
-import com.example.tuktuk.courttimeslot.repository.CourtTimeSlotRepository;
-import com.example.tuktuk.courttimeslot.util.TimeInfoToDomainConverter;
+import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.domain.*;
+import com.example.tuktuk.schedule.repository.ScheduleRepository;
+import com.example.tuktuk.schedule.util.TimeInfoToDomainConverter;
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.global.Province;
 import com.example.tuktuk.stadium.domain.court.Court;
@@ -20,37 +17,39 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.tuktuk.schedule.domain.ReservationStatus.AVAILABLE;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CourtTimeSlotService {
+public class ScheduleService {
 
-    private final CourtTimeSlotRepository courtTimeSlotRepository;
+    private final ScheduleRepository courtTimeSlotRepository;
 
     private final CourtRepository courtRepository;
 
     @Transactional
-    public CourtTimeSlotCreateResDto saveCourtTimeSlot(CourtTimeSlotCreateReqDto requestDto) {
+    public ScheduleCreateResDto saveCourtTimeSlot(ScheduleCreateReqDto requestDto) {
 
         long courtId = requestDto.getCourtId();
         Court court = courtRepository.findById(courtId).orElseThrow(() -> new IllegalStateException("잘못된 코트 참조입니다."));
         Stadium stadium = court.getStadium();
         Province province = stadium.getLocation().getProvince();
         //stadium까지 조회하는 문제가 생김..
-
         int matchRegularFee = MatchRegularFeeManager.calculateRegularFee(province, requestDto.getPlayDate());
 
         Time time = TimeInfoToDomainConverter.convertTimeInfoToDomain(requestDto.getPlayDate(),
                 requestDto.getStartTime(), requestDto.getEndTime());
 
-        CourtTimeSlot courtTimeSlot = CourtTimeSlot.builder()
+        Schedule courtTimeSlot = Schedule.builder()
                 .courtId(new CourtId(courtId))
                 .time(time)
                 .type(Type.valueOf(requestDto.getType()))
+                .reservationStatus(AVAILABLE)
                 .matchRegularFee(new Money(matchRegularFee))
                 .build();
 
-        CourtTimeSlot savedCourtTimeSlot = courtTimeSlotRepository.save(courtTimeSlot);
-        return CourtTimeSlotCreateResDto.from(savedCourtTimeSlot);
+        Schedule savedCourtTimeSlot = courtTimeSlotRepository.save(courtTimeSlot);
+        return ScheduleCreateResDto.from(savedCourtTimeSlot);
     }
 }
