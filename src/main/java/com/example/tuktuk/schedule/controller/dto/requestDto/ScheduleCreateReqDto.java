@@ -3,20 +3,17 @@ package com.example.tuktuk.schedule.controller.dto.requestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 @Getter
 @NoArgsConstructor
 public class ScheduleCreateReqDto {
 
     private long courtId;
 
-    private LocalDate playDate;
+    private String playDate;
 
-    private LocalTime startTime;
+    private String startTime;
 
-    private LocalTime endTime;
+    private String endTime;
 
     private String type;//매치 or 대여 or both
 }

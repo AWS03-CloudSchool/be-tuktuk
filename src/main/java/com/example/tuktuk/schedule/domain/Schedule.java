@@ -1,6 +1,7 @@
 package com.example.tuktuk.schedule.domain;
 
 import com.example.tuktuk.global.Money;
+import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.stadium.domain.court.CourtId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,5 +47,9 @@ public class Schedule {
 
     @Embedded
     private Money matchRegularFee;
+
+    public void update(ScheduleUpdateReqDto reqDto){
+        this.type = Type.valueOf(reqDto.getType());
+    }
 
 }
