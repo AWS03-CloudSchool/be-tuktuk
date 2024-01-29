@@ -1,7 +1,7 @@
 package com.example.tuktuk.reservation;
 
 import com.example.tuktuk.global.Money;
-import com.example.tuktuk.courttimeslot.CourtTimeSlotId;
+import com.example.tuktuk.courttimeslot.domain.CourtTimeSlotId;
 import com.example.tuktuk.user.domain.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

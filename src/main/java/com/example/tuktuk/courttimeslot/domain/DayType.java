@@ -1,4 +1,4 @@
-package com.example.tuktuk.global;
+package com.example.tuktuk.courttimeslot.domain;
 
 public enum DayType {
 

@@ -9,7 +9,6 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateRe
 import com.example.tuktuk.stadium.service.CourtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +21,7 @@ import java.util.List;
 @Slf4j
 public class CourtController {
 
-  @Autowired
-  private CourtService courtService;
+  private final CourtService courtService;
 
   @GetMapping("/{courtId}")
   public CourtReadResponseDto getCourtById(@PathVariable(name = "courtId") long courtId) {

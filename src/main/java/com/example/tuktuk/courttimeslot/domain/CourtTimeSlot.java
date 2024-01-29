@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot;
+package com.example.tuktuk.courttimeslot.domain;
 
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.stadium.domain.court.CourtId;
@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,7 +38,7 @@ public class CourtTimeSlot {
     @CollectionTable(name = "participants",
             joinColumns = @JoinColumn(name = "id"))
     @OrderColumn(name = "participant_idx")
-    private List<Participant> participants;
+    private List<Participant> participants = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status", nullable = false)
