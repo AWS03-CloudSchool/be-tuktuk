@@ -25,9 +25,9 @@ public class Time {
     @Column(name = "play_date")
     private LocalDate playDate;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time", columnDefinition = "TIME")
     private LocalTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time", columnDefinition = "TIME")
     private LocalTime endTime;
 }

@@ -1,6 +1,7 @@
 package com.example.tuktuk.schedule.service;
 
 
+import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
@@ -15,12 +16,10 @@ import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.CourtRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static com.example.tuktuk.schedule.domain.ReservationStatus.AVAILABLE;
 
@@ -43,9 +42,9 @@ public class ScheduleService {
         //stadium까지 조회하는 문제가 생김..
 
         Time time = Time.builder()
-                .playDate(LocalDate.parse(requestDto.getPlayDate()))
-                .startTime(LocalTime.parse(requestDto.getStartTime()))
-                .endTime(LocalTime.parse(requestDto.getEndTime()))
+                .playDate(requestDto.getPlayDate())
+                .startTime(requestDto.getStartTime())
+                .endTime(requestDto.getEndTime())
                 .build();
 
         int matchRegularFee = MatchRegularFeeManager.calculateRegularFee(province, time.getPlayDate());
@@ -56,6 +55,7 @@ public class ScheduleService {
                 .type(Type.valueOf(requestDto.getType()))
                 .reservationStatus(AVAILABLE)
                 .matchRegularFee(new Money(matchRegularFee))
+                .isDeleted(false)
                 .build();
 
         Schedule savedCourtTimeSlot = scheduleRepository.save(courtTimeSlot);
@@ -68,5 +68,18 @@ public class ScheduleService {
         schedule.update(requestDto);
         Schedule updatedSchedule = scheduleRepository.save(schedule);
         return ScheduleUpdateResDto.from(updatedSchedule);
+    }
+
+    @Transactional
+    public Message deleteSchedule(long scheduleId){
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
+        schedule.delete();
+        Schedule saved = scheduleRepository.save(schedule);
+
+        return Message.builder()
+                .code(0)
+                .status(HttpStatus.OK)
+                .message("정상 삭제되었습니다.")
+                .build();
     }
 }

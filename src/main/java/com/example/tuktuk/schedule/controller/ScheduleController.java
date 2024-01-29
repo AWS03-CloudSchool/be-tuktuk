@@ -1,12 +1,11 @@
 package com.example.tuktuk.schedule.controller;
 
+import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.service.ScheduleService;
-import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -29,5 +28,10 @@ public class ScheduleController {
     public ScheduleUpdateResDto updateSchedule(@PathVariable(name = "scheduleId") long scheduleId,
                                                @RequestBody ScheduleUpdateReqDto requestDto) {
         return scheduleService.updateSchedule(scheduleId, requestDto);
+    }
+
+    @DeleteMapping(value = "/{scheduleId}")
+    public Message deleteSchedule(@PathVariable(name = "scheduleId") long scheduleId) {
+        return scheduleService.deleteSchedule(scheduleId);
     }
 }

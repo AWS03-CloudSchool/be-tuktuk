@@ -48,8 +48,15 @@ public class Schedule {
     @Embedded
     private Money matchRegularFee;
 
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
     public void update(ScheduleUpdateReqDto reqDto){
         this.type = Type.valueOf(reqDto.getType());
+    }
+
+    public void delete(){
+        this.isDeleted=true;
     }
 
 }
