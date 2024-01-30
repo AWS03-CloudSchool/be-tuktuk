@@ -17,4 +17,8 @@ public class CourtId implements Serializable {
     public CourtId(long id) {
         this.id = id;
     }
+
+    public long getValue(){
+        return id;
+    }
 }

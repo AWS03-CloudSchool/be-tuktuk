@@ -1,6 +1,7 @@
-package com.example.tuktuk.courttimeslot;
+package com.example.tuktuk.schedule.domain;
 
 import com.example.tuktuk.global.Money;
+import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.stadium.domain.court.CourtId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,8 +17,8 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "court_time_slots")
-public class CourtTimeSlot {
+@Table(name = "schedules")
+public class Schedule {
 
     @Id
     @Column(name = "id")
@@ -37,7 +39,7 @@ public class CourtTimeSlot {
     @CollectionTable(name = "participants",
             joinColumns = @JoinColumn(name = "id"))
     @OrderColumn(name = "participant_idx")
-    private List<Participant> participants;
+    private List<Participant> participants = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status", nullable = false)
@@ -45,5 +47,16 @@ public class CourtTimeSlot {
 
     @Embedded
     private Money matchRegularFee;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
+
+    public void update(ScheduleUpdateReqDto reqDto){
+        this.type = Type.valueOf(reqDto.getType());
+    }
+
+    public void delete(){
+        this.isDeleted=true;
+    }
 
 }

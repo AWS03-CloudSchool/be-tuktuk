@@ -1,7 +1,5 @@
 package com.example.tuktuk.global;
 
-import lombok.Getter;
-
 public enum Province {
     SEOUL("서울"),
     GYEONGGI("경기"),
