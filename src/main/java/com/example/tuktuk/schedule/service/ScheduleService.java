@@ -5,6 +5,7 @@ import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.domain.*;
 import com.example.tuktuk.schedule.repository.ScheduleRepository;
@@ -31,6 +32,12 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
 
     private final CourtRepository courtRepository;
+
+    @Transactional(readOnly = true)
+    public ScheduleReadResponseDto findByScheduleId(long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("존재하지 않는 경기입니다."));
+        return ScheduleReadResponseDto.from(schedule);
+    }
 
     @Transactional
     public ScheduleCreateResDto saveSchedule(ScheduleCreateReqDto requestDto) {
@@ -71,7 +78,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public Message deleteSchedule(long scheduleId){
+    public Message deleteSchedule(long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
         schedule.delete();
         Schedule saved = scheduleRepository.save(schedule);

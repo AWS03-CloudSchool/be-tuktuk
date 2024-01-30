@@ -4,6 +4,7 @@ import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+
+    @GetMapping(value = "/{scheduleId}")
+    public ScheduleReadResponseDto findByScheduleId(@PathVariable(name = "scheduleId") long scheduleId) {
+        return scheduleService.findByScheduleId(scheduleId);
+    }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ScheduleCreateResDto createSchedule(@RequestBody ScheduleCreateReqDto requestDto) {
