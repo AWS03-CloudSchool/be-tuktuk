@@ -3,7 +3,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
 
   datasource:
     url: ${DATABASE_URL}
@@ -11,10 +11,18 @@ spring:
     username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
 
-app:
-  image-base-path: ${LOCAL_IMAGE_STORAGE}
-
 logging:
   level:
-    root: DEBUG
+    root: INFO
 
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_SERVICE_REGION}
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    stack:
+      auto: false
