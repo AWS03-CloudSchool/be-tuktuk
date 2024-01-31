@@ -11,7 +11,7 @@ import com.example.tuktuk.stadium.domain.court.CourtType;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.CourtRepository;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
-import com.example.tuktuk.stadium.util.image.LocalImageStorageManger;
+import com.example.tuktuk.stadium.util.image.ObjectStorageFunction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,15 @@ import java.util.List;
 @Slf4j
 public class CourtService {
 
-    @Autowired
-    private CourtRepository courtRepository;
+
+  @Autowired
+  private CourtRepository courtRepository;
+
+  @Autowired
+  ObjectStorageFunction storageManager;
 
     @Autowired
-    private LocalImageStorageManger LocalStorageManager;
+    private CourtRepository courtRepository;
 
     @Autowired
     private StadiumRepository stadiumRepository;
@@ -41,6 +45,7 @@ public class CourtService {
         return CourtReadResponseDto.from(courtRepository.findById(courtId).get());
     }
 
+
     @Transactional(readOnly = true)
     public List<CourtReadResponseDto> findByStadiumId(Long stadiumId) {
         List<Court> courts = courtRepository.findByStadiumId(stadiumId);
@@ -48,6 +53,7 @@ public class CourtService {
         return courts.stream()
                 .map(CourtReadResponseDto::from)
                 .toList();
+
     }
 
     @Transactional
@@ -56,12 +62,21 @@ public class CourtService {
         Stadium parentStadium = stadiumRepository.findById(request.getStadiumId())
                 .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
-        List<String> imagePaths = new ArrayList<>();
+        
+    List<String> imagePaths;
 
-        if (images != null && images.isEmpty()) {
-            imagePaths = images.stream().map(image -> LocalStorageManager.putImage(image)).toList();
-        }
-
+    if(images != null && !images.isEmpty()){
+      /*
+        이미지를 S3에 저장하고, 저장된 이미지의 HTTPS URL을 반환
+      */
+      imagePaths = images.stream().map(image -> {
+            String savedObjectName = storageManager.putObject(image);
+            return storageManager.getObject(savedObjectName);
+          }
+      ).toList();
+    } else {
+      imagePaths = new ArrayList<>();
+    }
         Court court = Court.builder()
                 .stadium(parentStadium)
                 .name(request.getName())

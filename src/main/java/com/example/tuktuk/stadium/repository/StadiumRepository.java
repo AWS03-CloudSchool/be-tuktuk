@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface StadiumRepository extends JpaRepository<Stadium, Long> {
 
-    @Query("SELECT s FROM Stadium s WHERE s.id = :id")
     public Optional<Stadium> findById(Long id);
 
     @Query("SELECT s FROM Stadium s WHERE s.ownerId.id = :id")
