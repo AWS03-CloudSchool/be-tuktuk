@@ -1,4 +1,4 @@
-package com.example.tuktuk.courttimeslot;
+package com.example.tuktuk.schedule.domain;
 
 public enum ReservationStatus {
 

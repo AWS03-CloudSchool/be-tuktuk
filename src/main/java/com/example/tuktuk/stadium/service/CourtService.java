@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,26 +27,42 @@ import java.util.List;
 @Slf4j
 public class CourtService {
 
+
   @Autowired
   private CourtRepository courtRepository;
 
   @Autowired
   ObjectStorageFunction storageManager;
 
-  @Autowired
-  private StadiumRepository stadiumRepository;
+    @Autowired
+    private CourtRepository courtRepository;
 
-  @Transactional(readOnly = true)
-  public CourtReadResponseDto findByCourtId(Long courtId) {
-    return CourtReadResponseDto.from(courtRepository.findById(courtId).get());
-  }
+    @Autowired
+    private StadiumRepository stadiumRepository;
 
-  @Transactional
-  public CourtCreateResponseDto saveCourt(CourtCreateRequestDto request,
-      List<MultipartFile> images) {
-    Stadium parentStadium = stadiumRepository.findById(request.getStadiumId())
-        .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+    @Transactional(readOnly = true)
+    public CourtReadResponseDto findByCourtId(Long courtId) {
+        return CourtReadResponseDto.from(courtRepository.findById(courtId).get());
+    }
 
+
+    @Transactional(readOnly = true)
+    public List<CourtReadResponseDto> findByStadiumId(Long stadiumId) {
+        List<Court> courts = courtRepository.findByStadiumId(stadiumId);
+
+        return courts.stream()
+                .map(CourtReadResponseDto::from)
+                .toList();
+
+    }
+
+    @Transactional
+    public CourtCreateResponseDto saveCourt(CourtCreateRequestDto request,
+                                            List<MultipartFile> images) {
+        Stadium parentStadium = stadiumRepository.findById(request.getStadiumId())
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+
+        
     List<String> imagePaths;
 
     if(images != null && !images.isEmpty()){
@@ -60,54 +77,53 @@ public class CourtService {
     } else {
       imagePaths = new ArrayList<>();
     }
+        Court court = Court.builder()
+                .stadium(parentStadium)
+                .name(request.getName())
+                .courtType(CourtType.valueOf(request.getCourtType()))
+                .hourlyRentFee(request.getHourlyRentFee())
+                .images(imagePaths)
+                .build();
 
-    Court court = Court.builder()
-        .stadium(parentStadium)
-        .name(request.getName())
-        .courtType(CourtType.valueOf(request.getCourtType()))
-        .hourlyRentFee(request.getHourlyRentFee())
-        .images(imagePaths)
-        .build();
+        Court savedCourt = courtRepository.save(court);
 
-    Court savedCourt = courtRepository.save(court);
+        return CourtCreateResponseDto.from(savedCourt);
+    }
 
-    return CourtCreateResponseDto.from(savedCourt);
-  }
-
-  @Transactional
-  public CourtUpdateResponseDto updateCourt(Long courtId,
-      CourtUpdateRequestDto request,
-      List<MultipartFile> images
-  ) {
-    Court oldCourt = courtRepository.findById(courtId)
-        .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+    @Transactional
+    public CourtUpdateResponseDto updateCourt(Long courtId,
+                                              CourtUpdateRequestDto request,
+                                              List<MultipartFile> images
+    ) {
+        Court oldCourt = courtRepository.findById(courtId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
     /*
       To do : 이미지 수정 기능 구현
     */
 
-    Court newCourt = Court.builder()
-        .id(oldCourt.getId())
-        .name(request.getName())
-        .courtType(CourtType.valueOf(request.getCourtType()))
-        .hourlyRentFee(request.getHourlyRentFee())
-        .stadium(oldCourt.getStadium())
-        .images(oldCourt.getImages())
-        .build();
+        Court newCourt = Court.builder()
+                .id(oldCourt.getId())
+                .name(request.getName())
+                .courtType(CourtType.valueOf(request.getCourtType()))
+                .hourlyRentFee(request.getHourlyRentFee())
+                .stadium(oldCourt.getStadium())
+                .images(oldCourt.getImages())
+                .build();
 
-    Court updatedCourt = courtRepository.save(newCourt);
+        Court updatedCourt = courtRepository.save(newCourt);
 
-    return CourtUpdateResponseDto.from(updatedCourt);
-  }
+        return CourtUpdateResponseDto.from(updatedCourt);
+    }
 
-  @Transactional
-  public CourtDeleteResponseDto deleteCourt(long courtId) {
+    @Transactional
+    public CourtDeleteResponseDto deleteCourt(long courtId) {
 
-    Court court = courtRepository.findById(courtId)
-        .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+        Court court = courtRepository.findById(courtId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
 
-    courtRepository.delete(court);
+        courtRepository.delete(court);
 
-    return CourtDeleteResponseDto.from(court);
-  }
+        return CourtDeleteResponseDto.from(court);
+    }
 }

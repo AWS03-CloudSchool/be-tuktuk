@@ -1,4 +1,4 @@
-package com.example.tuktuk.global;
+package com.example.tuktuk.schedule.domain;
 
 public enum DayType {
 
