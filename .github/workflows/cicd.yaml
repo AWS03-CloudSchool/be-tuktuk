@@ -2,13 +2,13 @@ name: CI/CD
 
 on:
   push:
-    branches: [ 45-feat-prod-dev-cicd, dev ]
+    branches: [ dev, 45-feat-prod-dev-cicd ]
     paths-ignore:
      - '.gitignore'
      - '.dockerignore'
      - 'README.md'
   pull_request:
-    branches: [ 45-feat-prod-dev-cicd, dev ]
+    branches: [ dev, 45-feat-prod-dev-cicd ]
 
 jobs:
   ci:
