@@ -14,7 +14,7 @@ jobs:
   ci:
     runs-on: ubuntu-latest
 
-    # image tag 별
+    # image tag 별 outputs
     outputs:
       IMAGE_TAG_DEV: ${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }}
       IMAGE_TAG_PROD: ${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
