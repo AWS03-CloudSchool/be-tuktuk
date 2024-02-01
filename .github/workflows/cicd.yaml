@@ -120,39 +120,91 @@ jobs:
         docker push ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
 
 
-  # cd:
-  #   needs: [ ci ]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Target Repository
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #         repository: AWS03-CloudSchool/dev_be_gitops
-  #         ref: main
-  #         lfs: true
-  #         token: ${{ secrets.CICD }}
+  cd:
+    needs: [ ci ]
+    runs-on: ubuntu-latest
+    steps:
+      # dev용 github checkout
+      - name: Checkout Target Repository to dev
+        if: contains(github.ref, 'dev')
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: AWS03-CloudSchool/dev_be_gitops
+          ref: dev
+          lfs: true
+          token: ${{ secrets.CICD }}
 
-  #     - name: Replace image tag in helm values (LOCAL)
-  #       uses: mikefarah/yq@master
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
-  #       with:
-  #         cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+      # prod용 github checkout 
+      - name: Checkout Target Repository to prod
+        if: contains(github.ref, '45-feat-prod-dev-cicd')
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: AWS03-CloudSchool/dev_be_gitops
+          ref: main
+          lfs: true
+          token: ${{ secrets.CICD }}
 
-  #     - name: Commit helm chart changes
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
-  #       run: |
-  #         cd backtukktukk
-  #         git config --global user.email "yeoncomp@gmail.com"
-  #         git config --global user.name "KM-Yeon"
+      # dev용 replace image tag
+      - name: Replace image tag in helm values (LOCAL) to dev (REMOTE)
+        if: contains(github.ref, 'dev')
+        uses: mikefarah/yq@master
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
+        with:
+          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
 
-  #         git add values.yaml
-  #         git commit --message "ci: Update backtukktukk image tag to $IMAGE_TAG"
+      # prod용 replace image tag
+      - name: Replace image tag in helm values (LOCAL) to prod (REMOTE)
+        if: contains(github.ref, '45-feat-prod-dev-cicd')
+        uses: mikefarah/yq@master
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
+        with:
+          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
 
-  #     - name: Push commit
-  #       uses: ad-m/github-push-action@master
-  #       with:
-  #         github_token: ${{ secrets.CICD }}
-  #         repository: AWS03-CloudSchool/dev_be_gitops
+      # dev용 commit helm chart changes
+      - name: Commit helm chart changes to dev
+        if: contains(github.ref, 'dev')
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
+        run: |
+          cd backtukktukk
+          git config --global user.email "yeoncomp@gmail.com"
+          git config --global user.name "KM-Yeon"
+
+          git add values.yaml
+          git commit --message "ci: Update dev image tag to $IMAGE_TAG"
+
+      # prod용 commit helm chart changes
+      - name: Commit helm chart changes to prod
+        if: contains(github.ref, '45-feat-prod-dev-cicd')
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
+        run: |
+          cd backtukktukk
+          git config --global user.email "yeoncomp@gmail.com"
+          git config --global user.name "KM-Yeon"
+
+          git add values.yaml
+          git commit --message "ci: Update prod image tag to $IMAGE_TAG"
+
+      # dev용 push commit
+      - name: Push commit to dev
+        if: contains(github.ref, 'dev')
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CICD }}
+          repository: AWS03-CloudSchool/dev_be_gitops
+          branch: dev
+      
+      # prod용 push commit
+      - name: Push commit to prod
+        if: contains(github.ref, '45-feat-prod-dev-cicd')
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CICD }}
+          repository: AWS03-CloudSchool/dev_be_gitops
+          branch: main
+
