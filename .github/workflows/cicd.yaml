@@ -16,8 +16,7 @@ jobs:
 
     # image tag 별 outputs
     outputs:
-      IMAGE_TAG_DEV: ${{ steps.set-var.outputs.IMAGE_TAG_DEV }}
-      IMAGE_TAG_PROD: ${{ steps.set-var.outputs.IMAGE_TAG_PROD }}
+      IMAGE_TAG: ${{ steps.set-var.outputs.IMAGE_TAG }}
     steps :
     - uses: actions/checkout@v2
       with:
@@ -38,14 +37,13 @@ jobs:
     - name: Set var
       id: set-var
       run: |
+        echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
         if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
-          echo ::set-output name=ECR_REPOSITORY_DEV::dev-be-tukktukk
-          echo ::set-output name=IMAGE_TAG_DEV::"v$(date +'%Y%m%d%H%M%S')"
+          echo ::set-output name=ECR_REPOSITORY::dev-be-tukktukk
+          echo ::set-output name=IMAGE_TAG::"v$(date +'%Y%m%d%H%M%S')"
         elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
-          echo ::set-output name=ECR_REPOSITORY_PROD::prod-be-tukktukk
-          echo ::set-output name=IMAGE_TAG_PROD::"v$(date +'%Y%m%d%H%M%S')"
+          echo ::set-output name=ECR_REPOSITORY::prod-be-tukktukk
+          echo ::set-output name=IMAGE_TAG::"v$(date +'%Y%m%d%H%M%S')"
         fi
 
     # Set Spring active profile
@@ -90,9 +88,9 @@ jobs:
       id: build-image
       run: |
         if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var.outputs.IMAGE_TAG_DEV }} .
+          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }} .
         elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var.outputs.IMAGE_TAG_PROD }} .
+          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }} .
         fi
 
     # image push
@@ -100,96 +98,75 @@ jobs:
       id: push-image
       run: |
         if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var.outputs.IMAGE_TAG_DEV }}
+          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
         elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var.outputs.IMAGE_TAG_PROD }}
+          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
         fi
 
-  # cd:
-  #   needs: [ ci ]
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     # dev용 github checkout
-  #     - name: Checkout Target Repository to dev
-  #       if: contains(github.ref, 'dev')
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #         repository: AWS03-CloudSchool/dev_be_gitops
-  #         ref: dev
-  #         lfs: true
-  #         token: ${{ secrets.CICD }}
+  cd:
+    needs: [ ci ]
+    runs-on: ubuntu-latest
+    steps:
+      # github checkout
+      - name: Checkout Target Repository
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+            repository: AWS03-CloudSchool/dev_be_gitops
+            ref: dev
+            lfs: true
+            token: ${{ secrets.CICD }}
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+            repository: AWS03-CloudSchool/dev_be_gitops
+            ref: main
+            lfs: true
+            token: ${{ secrets.CICD }}
+        fi
 
-  #     # prod용 github checkout 
-  #     - name: Checkout Target Repository to prod
-  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
-  #       uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #         repository: AWS03-CloudSchool/dev_be_gitops
-  #         ref: main
-  #         lfs: true
-  #         token: ${{ secrets.CICD }}
+      # replace image tag
+      - name: Replace image tag in helm values (LOCAL)
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          uses: mikefarah/yq@master
+          env:
+            IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+          with:
+            cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          uses: mikefarah/yq@master
+          env:
+            IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+          with:
+            cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+        fi
 
-  #     # dev용 replace image tag
-  #     - name: Replace image tag in helm values (LOCAL) to dev (REMOTE)
-  #       if: contains(github.ref, 'dev')
-  #       uses: mikefarah/yq@master
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
-  #       with:
-  #         cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+      # commit helm chart changes
+      - name: Commit helm chart changes
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+        run: |
+          cd backtukktukk
+          git config --global user.email "yeoncomp@gmail.com"
+          git config --global user.name "KM-Yeon"
 
-  #     # prod용 replace image tag
-  #     - name: Replace image tag in helm values (LOCAL) to prod (REMOTE)
-  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
-  #       uses: mikefarah/yq@master
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
-  #       with:
-  #         cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+          git add values.yaml
+          git commit --message "ci: Update dev image tag to $IMAGE_TAG"
 
-  #     # dev용 commit helm chart changes
-  #     - name: Commit helm chart changes to dev
-  #       if: contains(github.ref, 'dev')
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
-  #       run: |
-  #         cd backtukktukk
-  #         git config --global user.email "yeoncomp@gmail.com"
-  #         git config --global user.name "KM-Yeon"
-
-  #         git add values.yaml
-  #         git commit --message "ci: Update dev image tag to $IMAGE_TAG"
-
-  #     # prod용 commit helm chart changes
-  #     - name: Commit helm chart changes to prod
-  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
-  #       env:
-  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
-  #       run: |
-  #         cd backtukktukk
-  #         git config --global user.email "yeoncomp@gmail.com"
-  #         git config --global user.name "KM-Yeon"
-
-  #         git add values.yaml
-  #         git commit --message "ci: Update prod image tag to $IMAGE_TAG"
-
-  #     # dev용 push commit
-  #     - name: Push commit to dev
-  #       if: contains(github.ref, 'dev')
-  #       uses: ad-m/github-push-action@master
-  #       with:
-  #         github_token: ${{ secrets.CICD }}
-  #         repository: AWS03-CloudSchool/dev_be_gitops
-  #         branch: dev
-      
-  #     # prod용 push commit
-  #     - name: Push commit to prod
-  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
-  #       uses: ad-m/github-push-action@master
-  #       with:
-  #         github_token: ${{ secrets.CICD }}
-  #         repository: AWS03-CloudSchool/dev_be_gitops
-  #         branch: main
-
+      # dev용 push commit
+      - name: Push commit
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.CICD }}
+            repository: AWS03-CloudSchool/dev_be_gitops
+            branch: dev
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          uses: ad-m/github-push-action@master
+          with:
+            github_token: ${{ secrets.CICD }}
+            repository: AWS03-CloudSchool/dev_be_gitops
+            branch: main
+        fi
