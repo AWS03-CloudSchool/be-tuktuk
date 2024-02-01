@@ -87,21 +87,13 @@ jobs:
     - name: Docker image Build
       id: build-image
       run: |
-        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }} .
-        elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }} .
-        fi
+        docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }} .
 
     # image push
     - name: Docker image Push
       id: push-image
       run: |
-        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
-        elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
-        fi
+        docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY }}:${{ steps.set-var.outputs.IMAGE_TAG }}
 
   cd:
     needs: [ ci ]
