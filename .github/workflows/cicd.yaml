@@ -16,8 +16,8 @@ jobs:
 
     # image tag 별 outputs
     outputs:
-      IMAGE_TAG_DEV: ${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }}
-      IMAGE_TAG_PROD: ${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
+      IMAGE_TAG_DEV: ${{ steps.set-var.outputs.IMAGE_TAG_DEV }}
+      IMAGE_TAG_PROD: ${{ steps.set-var.outputs.IMAGE_TAG_PROD }}
     steps :
     - uses: actions/checkout@v2
       with:
@@ -90,9 +90,9 @@ jobs:
       id: build-image
       run: |
         if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }} .
+          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var.outputs.IMAGE_TAG_DEV }} .
         elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          docker build -f Dockerfile -t ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }} .
+          docker build -f Dockerfile -t ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var.outputs.IMAGE_TAG_PROD }} .
         fi
 
     # image push
@@ -100,9 +100,9 @@ jobs:
       id: push-image
       run: |
         if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          docker push ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }}
+          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var.outputs.IMAGE_TAG_DEV }}
         elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          docker push ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
+          docker push ${{ steps.set-var.outputs.ECR_REGISTRY }}/${{ steps.set-var.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var.outputs.IMAGE_TAG_PROD }}
         fi
 
   # cd:
