@@ -107,41 +107,35 @@ jobs:
     needs: [ ci ]
     runs-on: ubuntu-latest
     steps:
-      # github checkout
-      - name: Checkout Target Repository
-        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-            repository: AWS03-CloudSchool/dev_be_gitops
-            ref: dev
-            lfs: true
-            token: ${{ secrets.CICD }}
-        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-            repository: AWS03-CloudSchool/dev_be_gitops
-            ref: main
-            lfs: true
-            token: ${{ secrets.CICD }}
-        fi
+      # dev용 github checkout
+      - name: Checkout Target Repository to dev
+        if: github.ref == 'dev'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: AWS03-CloudSchool/dev_be_gitops
+          ref: dev
+          lfs: true
+          token: ${{ secrets.CICD }}
+
+      # prod용 github checkout 
+      - name: Checkout Target Repository to prod
+        if: github.ref == '45-feat-prod-dev-cicd'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          repository: AWS03-CloudSchool/dev_be_gitops
+          ref: main
+          lfs: true
+          token: ${{ secrets.CICD }}
 
       # replace image tag
       - name: Replace image tag in helm values (LOCAL)
-        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          uses: mikefarah/yq@master
-          env:
-            IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
-          with:
-            cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
-        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          uses: mikefarah/yq@master
-          env:
-            IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
-          with:
-            cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
-        fi
+        uses: mikefarah/yq@master
+        env:
+          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG }}
+        with:
+          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
 
       # commit helm chart changes
       - name: Commit helm chart changes
@@ -153,20 +147,22 @@ jobs:
           git config --global user.name "KM-Yeon"
 
           git add values.yaml
-          git commit --message "ci: Update dev image tag to $IMAGE_TAG"
+          git commit --message "ci: Update docker image tag to $IMAGE_TAG"
 
       # dev용 push commit
-      - name: Push commit
-        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-          uses: ad-m/github-push-action@master
-          with:
-            github_token: ${{ secrets.CICD }}
-            repository: AWS03-CloudSchool/dev_be_gitops
-            branch: dev
-        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
-          uses: ad-m/github-push-action@master
-          with:
-            github_token: ${{ secrets.CICD }}
-            repository: AWS03-CloudSchool/dev_be_gitops
-            branch: main
-        fi
+      - name: Push commit to dev
+        if: contains(github.ref, 'dev')
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CICD }}
+          repository: AWS03-CloudSchool/dev_be_gitops
+          branch: dev
+      
+      # prod용 push commit
+      - name: Push commit to prod
+        if: github.ref == '45-feat-prod-dev-cicd'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.CICD }}
+          repository: AWS03-CloudSchool/dev_be_gitops
+          branch: main
