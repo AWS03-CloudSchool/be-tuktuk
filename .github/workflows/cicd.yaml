@@ -109,7 +109,7 @@ jobs:
     steps:
       # dev용 github checkout
       - name: Checkout Target Repository to dev
-        if: github.ref == 'dev'
+        if: github.ref == 'refs/heads/dev'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -120,7 +120,7 @@ jobs:
 
       # prod용 github checkout 
       - name: Checkout Target Repository to prod
-        if: github.ref == '45-feat-prod-dev-cicd'
+        if: github.ref == 'refs/heads/45-feat-prod-dev-cicd'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -151,7 +151,7 @@ jobs:
 
       # dev용 push commit
       - name: Push commit to dev
-        if: contains(github.ref, 'dev')
+        if: github.ref == 'refs/heads/dev'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.CICD }}
@@ -160,7 +160,7 @@ jobs:
       
       # prod용 push commit
       - name: Push commit to prod
-        if: github.ref == '45-feat-prod-dev-cicd'
+        if: github.ref == 'refs/heads/45-feat-prod-dev-cicd'
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.CICD }}
