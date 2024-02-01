@@ -34,36 +34,30 @@ jobs:
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
 
-    # dev용 변수 설정
-    - name: Set var to dev
-      id: set-var-dev
-      if: contains(github.ref, 'dev')
+    # 변수 설정
+    - name: Set var
+      id: set-var
       run: |
-        echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
-        echo ::set-output name=ECR_REPOSITORY_DEV::dev-be-tukktukk
-        echo ::set-output name=IMAGE_TAG_DEV::"v$(date +'%Y%m%d%H%M%S')"
-    
-    # prod용 변수 설정
-    - name: Set var to prod
-      id: set-var-prod
-      if: contains(github.ref, '45-feat-prod-dev-cicd')
-      run: |
-        echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
-        echo ::set-output name=ECR_REPOSITORY_PROD::prod-be-tukktukk
-        echo ::set-output name=IMAGE_TAG_PROD::"v$(date +'%Y%m%d%H%M%S')"
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
+          echo ::set-output name=ECR_REPOSITORY_DEV::dev-be-tukktukk
+          echo ::set-output name=IMAGE_TAG_DEV::"v$(date +'%Y%m%d%H%M%S')"
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          echo ::set-output name=ECR_REGISTRY::${{ steps.login-ecr.outputs.registry }}
+          echo ::set-output name=ECR_REPOSITORY_PROD::prod-be-tukktukk
+          echo ::set-output name=IMAGE_TAG_PROD::"v$(date +'%Y%m%d%H%M%S')"
+        fi
 
-    # dev용 Set Spring active profile
-    - name: Set Spring active profile to dev
-      if: contains(github.ref, 'dev')
+    # Set Spring active profile
+    - name: Set Spring active profile
       run: |
-        sed -i 's/active: .*/active: dev/' src/main/resources/application.yaml
-
-    # prod용 Set Spring active profile
-    - name: Set Spring active profile to prod
-      if: contains(github.ref, '45-feat-prod-dev-cicd')
-      run: |
-        sed -i 's/active: .*/active: dev/' src/main/resources/application.yaml # 수정해야함
-
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          sed -i 's/active: .*/active: dev/' src/main/resources/application.yaml
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          sed -i 's/active: .*/active: dev/' src/main/resources/application.yaml # 수정해야함
+        fi
+        
+    # JDK 설정
     - name: JDK setting
       uses: actions/setup-java@v2
       with:
@@ -91,120 +85,111 @@ jobs:
         ./gradlew clean bootJar --no-daemon
       shell: bash
 
-    # dev용 image build
-    - name: Docker image Build to dev
-      id: build-image-dev
-      if: contains(github.ref, 'dev')
+    # image build
+    - name: Docker image Build
+      id: build-image
       run: |
-        docker build -f Dockerfile -t ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }} .
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          docker build -f Dockerfile -t ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }} .
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          docker build -f Dockerfile -t ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }} .
+        fi
 
-    # prod용 image build
-    - name: Docker image Build to prod
-      id: build-image-prod
-      if: contains(github.ref, '45-feat-prod-dev-cicd')
+    # image push
+    - name: Docker image Push
+      id: push-image
       run: |
-        docker build -f Dockerfile -t ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }} .
+        if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          docker push ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }}
+        elif [[ "${{ github.ref }}" == "refs/heads/45-feat-prod-dev-cicd" ]]; then
+          docker push ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
+        fi
 
-    # dev용 image push
-    - name: Docker image Push to dev
-      id: push-image-dev
-      if: contains(github.ref, 'dev')
-      run: |
-        docker push ${{ steps.set-var-dev.outputs.ECR_REGISTRY }}/${{ steps.set-var-dev.outputs.ECR_REPOSITORY_DEV }}:${{ steps.set-var-dev.outputs.IMAGE_TAG_DEV }}
+  # cd:
+  #   needs: [ ci ]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # dev용 github checkout
+  #     - name: Checkout Target Repository to dev
+  #       if: contains(github.ref, 'dev')
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #         repository: AWS03-CloudSchool/dev_be_gitops
+  #         ref: dev
+  #         lfs: true
+  #         token: ${{ secrets.CICD }}
 
-    # prod용 image push 
-    - name: Docker image Push to prod
-      id: push-image-prod
-      if: contains(github.ref, '45-feat-prod-dev-cicd')
-      run: |
-        docker push ${{ steps.set-var-prod.outputs.ECR_REGISTRY }}/${{ steps.set-var-prod.outputs.ECR_REPOSITORY_PROD }}:${{ steps.set-var-prod.outputs.IMAGE_TAG_PROD }}
+  #     # prod용 github checkout 
+  #     - name: Checkout Target Repository to prod
+  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #         repository: AWS03-CloudSchool/dev_be_gitops
+  #         ref: main
+  #         lfs: true
+  #         token: ${{ secrets.CICD }}
 
+  #     # dev용 replace image tag
+  #     - name: Replace image tag in helm values (LOCAL) to dev (REMOTE)
+  #       if: contains(github.ref, 'dev')
+  #       uses: mikefarah/yq@master
+  #       env:
+  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
+  #       with:
+  #         cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
 
-  cd:
-    needs: [ ci ]
-    runs-on: ubuntu-latest
-    steps:
-      # dev용 github checkout
-      - name: Checkout Target Repository to dev
-        if: contains(github.ref, 'dev')
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          repository: AWS03-CloudSchool/dev_be_gitops
-          ref: dev
-          lfs: true
-          token: ${{ secrets.CICD }}
+  #     # prod용 replace image tag
+  #     - name: Replace image tag in helm values (LOCAL) to prod (REMOTE)
+  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
+  #       uses: mikefarah/yq@master
+  #       env:
+  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
+  #       with:
+  #         cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
 
-      # prod용 github checkout 
-      - name: Checkout Target Repository to prod
-        if: contains(github.ref, '45-feat-prod-dev-cicd')
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          repository: AWS03-CloudSchool/dev_be_gitops
-          ref: main
-          lfs: true
-          token: ${{ secrets.CICD }}
+  #     # dev용 commit helm chart changes
+  #     - name: Commit helm chart changes to dev
+  #       if: contains(github.ref, 'dev')
+  #       env:
+  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
+  #       run: |
+  #         cd backtukktukk
+  #         git config --global user.email "yeoncomp@gmail.com"
+  #         git config --global user.name "KM-Yeon"
 
-      # dev용 replace image tag
-      - name: Replace image tag in helm values (LOCAL) to dev (REMOTE)
-        if: contains(github.ref, 'dev')
-        uses: mikefarah/yq@master
-        env:
-          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
-        with:
-          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+  #         git add values.yaml
+  #         git commit --message "ci: Update dev image tag to $IMAGE_TAG"
 
-      # prod용 replace image tag
-      - name: Replace image tag in helm values (LOCAL) to prod (REMOTE)
-        if: contains(github.ref, '45-feat-prod-dev-cicd')
-        uses: mikefarah/yq@master
-        env:
-          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
-        with:
-          cmd: yq eval -i '.image.tag = env(IMAGE_TAG)' 'backtukktukk/values.yaml'
+  #     # prod용 commit helm chart changes
+  #     - name: Commit helm chart changes to prod
+  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
+  #       env:
+  #         IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
+  #       run: |
+  #         cd backtukktukk
+  #         git config --global user.email "yeoncomp@gmail.com"
+  #         git config --global user.name "KM-Yeon"
 
-      # dev용 commit helm chart changes
-      - name: Commit helm chart changes to dev
-        if: contains(github.ref, 'dev')
-        env:
-          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_DEV }}
-        run: |
-          cd backtukktukk
-          git config --global user.email "yeoncomp@gmail.com"
-          git config --global user.name "KM-Yeon"
+  #         git add values.yaml
+  #         git commit --message "ci: Update prod image tag to $IMAGE_TAG"
 
-          git add values.yaml
-          git commit --message "ci: Update dev image tag to $IMAGE_TAG"
-
-      # prod용 commit helm chart changes
-      - name: Commit helm chart changes to prod
-        if: contains(github.ref, '45-feat-prod-dev-cicd')
-        env:
-          IMAGE_TAG: ${{ needs.ci.outputs.IMAGE_TAG_PROD }}
-        run: |
-          cd backtukktukk
-          git config --global user.email "yeoncomp@gmail.com"
-          git config --global user.name "KM-Yeon"
-
-          git add values.yaml
-          git commit --message "ci: Update prod image tag to $IMAGE_TAG"
-
-      # dev용 push commit
-      - name: Push commit to dev
-        if: contains(github.ref, 'dev')
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.CICD }}
-          repository: AWS03-CloudSchool/dev_be_gitops
-          branch: dev
+  #     # dev용 push commit
+  #     - name: Push commit to dev
+  #       if: contains(github.ref, 'dev')
+  #       uses: ad-m/github-push-action@master
+  #       with:
+  #         github_token: ${{ secrets.CICD }}
+  #         repository: AWS03-CloudSchool/dev_be_gitops
+  #         branch: dev
       
-      # prod용 push commit
-      - name: Push commit to prod
-        if: contains(github.ref, '45-feat-prod-dev-cicd')
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.CICD }}
-          repository: AWS03-CloudSchool/dev_be_gitops
-          branch: main
+  #     # prod용 push commit
+  #     - name: Push commit to prod
+  #       if: contains(github.ref, '45-feat-prod-dev-cicd')
+  #       uses: ad-m/github-push-action@master
+  #       with:
+  #         github_token: ${{ secrets.CICD }}
+  #         repository: AWS03-CloudSchool/dev_be_gitops
+  #         branch: main
 
