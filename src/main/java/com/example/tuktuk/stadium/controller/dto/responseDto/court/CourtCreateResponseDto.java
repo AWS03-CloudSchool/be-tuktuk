@@ -23,13 +23,17 @@ public class CourtCreateResponseDto {
   private List<String> images;
 
   public static CourtCreateResponseDto from(Court court) {
+    List<String> imagePaths = court.getImages().stream().map(
+        courtImage -> courtImage.getImagePath()
+    ).toList();
+
     return CourtCreateResponseDto.builder()
         .courtId(court.getId())
         .courtName(court.getName())
         .stadiumName(court.getStadium().getName())
         .courtType(court.getCourtType().name())
         .hourlyRentFee(court.getHourlyRentFee())
-        .images(court.getImages())
+        .images(imagePaths)
         .build();
   }
 }

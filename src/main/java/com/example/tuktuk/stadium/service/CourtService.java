@@ -7,8 +7,10 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtDeleteRe
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.court.Court;
+import com.example.tuktuk.stadium.domain.court.CourtImage;
 import com.example.tuktuk.stadium.domain.court.CourtType;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
+import com.example.tuktuk.stadium.repository.CourtImageRepository;
 import com.example.tuktuk.stadium.repository.CourtRepository;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
 import com.example.tuktuk.stadium.util.image.ObjectStorageFunction;
@@ -36,6 +38,9 @@ public class CourtService {
   @Autowired
   private StadiumRepository stadiumRepository;
 
+  @Autowired
+  CourtImageRepository courtImageRepository;
+
   @Transactional(readOnly = true)
   public CourtReadResponseDto findByCourtId(Long courtId) {
     return CourtReadResponseDto.from(courtRepository.findById(courtId).get());
@@ -49,40 +54,60 @@ public class CourtService {
     return courts.stream()
         .map(CourtReadResponseDto::from)
         .toList();
-
   }
 
   @Transactional
   public CourtCreateResponseDto saveCourt(CourtCreateRequestDto request,
       List<MultipartFile> images) {
+    Court savedCourt;
+
     Stadium parentStadium = stadiumRepository.findById(request.getStadiumId())
         .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
 
-    List<String> imagePaths;
+    if (images == null || images.isEmpty()) {
+      Court court = Court.builder()
+          .stadium(parentStadium)
+          .name(request.getName())
+          .courtType(CourtType.valueOf(request.getCourtType()))
+          .images(new ArrayList<>())
+          .hourlyRentFee(request.getHourlyRentFee())
+          .build();
 
-    if (images != null && !images.isEmpty()) {
-      /*
-        이미지를 S3에 저장하고, 저장된 이미지의 HTTPS URL을 반환
-      */
-      imagePaths = images.stream().map(image -> {
-            String savedObjectName = storageManager.putObject(image);
-            return storageManager.getObject(savedObjectName);
-          }
-      ).toList();
+      savedCourt = courtRepository.save(court);
     } else {
-      imagePaths = new ArrayList<>();
-    }
-    Court court = Court.builder()
-        .stadium(parentStadium)
-        .name(request.getName())
-        .courtType(CourtType.valueOf(request.getCourtType()))
-        .hourlyRentFee(request.getHourlyRentFee())
-        .images(imagePaths)
-        .build();
+      Court court = Court.builder()
+          .stadium(parentStadium)
+          .name(request.getName())
+          .courtType(CourtType.valueOf(request.getCourtType()))
+          .images(new ArrayList<>())
+          .hourlyRentFee(request.getHourlyRentFee())
+          .build();
 
-    Court savedCourt = courtRepository.save(court);
+      savedCourt = courtRepository.save(court);
+
+      List<CourtImage> savedImages = insertCourtImages(savedCourt, images);
+      savedCourt.setImages(savedImages);
+    }
 
     return CourtCreateResponseDto.from(savedCourt);
+  }
+
+  @Transactional
+  private List<CourtImage> insertCourtImages(Court court, List<MultipartFile> images) {
+    List<CourtImage> courtImages = images.stream().map(image -> {
+          String savedObjectName = storageManager.putObject(image);
+          String objectPath = storageManager.getObject(savedObjectName);
+
+          return CourtImage.builder()
+              .court(court)
+              .imagePath(objectPath)
+              .build();
+        }
+    ).toList();
+
+    List<CourtImage> savedCourtImages = courtImageRepository.saveAll(courtImages);
+
+    return savedCourtImages;
   }
 
   @Transactional
