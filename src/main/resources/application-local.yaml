@@ -11,6 +11,23 @@ spring:
     username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
 logging:
   level:
-    root: TRACE
+    root: INFO
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_SERVICE_REGION}
+    s3:
+      bucket: ${S3_BUCKET_NAME}
+    stack:
+      auto: false
