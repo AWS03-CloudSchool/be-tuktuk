@@ -24,13 +24,17 @@ public class CourtReadResponseDto {
     private final List<String> images;
 
     public static CourtReadResponseDto from(Court court) {
+        List<String> imagePaths = court.getImages().stream().map(
+            courtImage -> courtImage.getImagePath()
+        ).toList();
+
         return CourtReadResponseDto.builder()
                 .courtId(court.getId())
                 .stadiumName(court.getStadium().getName())
                 .courtName(court.getName())
                 .courtType(court.getCourtType().toString())
                 .hourlyRentFee(court.getHourlyRentFee())
-                .images(court.getImages())
+                .images(imagePaths)
                 .build();
     }
 }

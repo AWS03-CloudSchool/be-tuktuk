@@ -38,10 +38,8 @@ public class Court {
     @Column(name = "hourly_rate", nullable = false)
     private int hourlyRentFee;
 
-    @ElementCollection
-    @CollectionTable(name = "court_images", joinColumns = @JoinColumn(name = "court_id"))
-    @Column(name = "image_path")
-    private List<String> images = new ArrayList<>();
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CourtImage> images = new ArrayList<>();
 
     public int getMinParticipants() {
         return courtType.getMinParticipants();
@@ -49,5 +47,9 @@ public class Court {
 
     public int getMaxParticipants() {
         return courtType.getMaxParticipants();
+    }
+
+    public void setImages(List<CourtImage> images){
+        this.images = images;
     }
 }
