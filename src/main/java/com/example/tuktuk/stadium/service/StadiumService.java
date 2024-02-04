@@ -34,10 +34,7 @@ public class StadiumService {
     }
 
     @Transactional(readOnly = true)
-    public List<StadiumReadResponseDto> findByOwnerId(final long ownerId) {
-        /*
-            To do : 예외 처리 추가
-        */
+    public List<StadiumReadResponseDto> findByOwnerId(long ownerId) {
         List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
         return stadiums.stream()
                 .map(StadiumReadResponseDto::from)
