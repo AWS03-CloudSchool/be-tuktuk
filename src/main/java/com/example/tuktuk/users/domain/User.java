@@ -29,8 +29,8 @@ public class User {
     @Column(name = "nick_name", nullable = false, length = 16)
     private String nickName;
 
-    @Column(name = "gender", nullable = false, length = 3)
-    private String gender;
+    @Column(name = "gender", nullable = false)
+    private boolean gender;
 
     @Column(name = "tel_no", nullable = false, length = 36)
     private String telNo;

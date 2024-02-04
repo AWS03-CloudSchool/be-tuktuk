@@ -14,7 +14,7 @@ public class UserCreateReqDto {
 
     private String nickName;
 
-    private String gender;
+    private boolean gender;
 
     private String telNo;
 
