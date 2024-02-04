@@ -1,4 +1,4 @@
-package com.example.tuktuk.user.domain;
+package com.example.tuktuk.users.domain;
 
 public enum Role {
 

@@ -14,7 +14,7 @@ public class StadiumDeleteResponseDto {
 
   private final String name;
 
-  private final long ownerId;
+  private final String ownerId;
 
   private final String roadAddress;
 

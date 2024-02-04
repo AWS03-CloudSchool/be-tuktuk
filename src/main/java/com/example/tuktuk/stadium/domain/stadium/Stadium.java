@@ -3,7 +3,7 @@ package com.example.tuktuk.stadium.domain.stadium;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.court.Court;
-import com.example.tuktuk.user.domain.UserId;
+import com.example.tuktuk.users.domain.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +30,7 @@ public class Stadium {
     private String name;
 
     @Embedded
-    @AttributeOverride(name = "id", column = @Column(name = "owner_id"))
+    @AttributeOverride(name = "userId", column = @Column(name = "owner_id"))
     private UserId ownerId;
 
     @Embedded
