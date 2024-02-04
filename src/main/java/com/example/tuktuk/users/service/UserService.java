@@ -1,7 +1,10 @@
 package com.example.tuktuk.users.service;
 
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.users.controller.dto.requestDto.UserCreateReqDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserCreateResDto;
+import com.example.tuktuk.users.controller.dto.responseDto.UserReadResDto;
 import com.example.tuktuk.users.domain.Provider;
 import com.example.tuktuk.users.domain.Residence;
 import com.example.tuktuk.users.domain.Role;
@@ -20,6 +23,12 @@ import java.time.LocalDateTime;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    @Transactional(readOnly = true)
+    public UserReadResDto findByUserId(final String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+        return UserReadResDto.from(user);
+    }
 
     @Transactional
     public UserCreateResDto saveUser(UserCreateReqDto request) {
