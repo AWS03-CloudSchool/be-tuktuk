@@ -36,9 +36,6 @@ public class CourtController {
         return courtService.saveCourt(request, images);
     }
 
-    /*
-        Court 정보만 수정
-    */
     @PatchMapping(value = "/{courtId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public CourtUpdateResponseDto updateCourtInfo(
             @PathVariable("courtId") long courtId,
@@ -47,15 +44,13 @@ public class CourtController {
         return courtService.updateCourtInfo(courtId, request);
     }
 
-    /*
-        이미지만 수정
-    */
     @PatchMapping(value = "/{courtId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CourtUpdateResponseDto updateCourtImages(
             @PathVariable("courtId") long courtId,
             @RequestPart(value = "courtUpdateRequest") CourtImageUpdateRequestDto request,
             @RequestPart(value = "updateImages") List<MultipartFile> images
-    ){
+    ) {
+
         return courtService.updateCourtImages(courtId, request, images);
     }
 

@@ -70,6 +70,8 @@ public class CourtService {
 
             savedCourt = courtRepository.save(court);
         } else {
+            if (images.size() > 3) throw new RuntimeException("사진은 최대 3장까지 등록할 수 있습니다.");
+
             Court court = Court.builder()
                     .stadium(parentStadium)
                     .name(request.getName())
@@ -85,6 +87,79 @@ public class CourtService {
         }
 
         return CourtCreateResponseDto.from(savedCourt);
+    }
+
+    @Transactional
+    public CourtUpdateResponseDto updateCourtInfo(Long courtId,
+                                                  CourtUpdateRequestDto request) {
+
+        Court oldCourt = courtRepository.findById(courtId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
+
+        Court court = Court.builder()
+                .id(oldCourt.getId())
+                .name(request.getName())
+                .courtType(CourtType.valueOf(request.getCourtType()))
+                .hourlyRentFee(request.getHourlyRentFee())
+                .stadium(oldCourt.getStadium())
+                .images(oldCourt.getImages())
+                .build();
+
+        Court updatedCourt = courtRepository.save(court);
+
+        return CourtUpdateResponseDto.from(updatedCourt);
+    }
+
+    @Transactional
+    public CourtUpdateResponseDto updateCourtImages(Long courtId,
+                                                    CourtImageUpdateRequestDto request,
+                                                    List<MultipartFile> images) {
+
+        Court oldCourt = courtRepository.findById(courtId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+
+        List<CourtImage> updateImages = updateCourtImages(courtId, request.getImagePaths(), images);
+
+        oldCourt.setImages(updateImages);
+
+        Court updatedCourt = courtRepository.save(oldCourt);
+
+        return CourtUpdateResponseDto.from(updatedCourt);
+    }
+
+    /*
+        deleteImagePaths : 수정할 이미지의 S3 URL 주소
+        images : 새롭게 등록할 이미지
+
+        S3에 저장되어 있는 이미지를 덮어쓰는 것이 아니라, deleteImagePaths에 있는 이미지들을
+        먼저 지우고 난 이후에 images에 있는 이미지들을 S3에 저장한다.
+
+        경우에 따라 이미지만 추가로 등록하는 것도 가능하다.
+    */
+    @Transactional
+    private List<CourtImage> updateCourtImages(Long courtId,
+                                               List<String> deleteImagePaths,
+                                               List<MultipartFile> images) {
+
+        deleteCourtImage(deleteImagePaths);
+        return insertCourtImages(courtRepository.findById(courtId).get(), images);
+    }
+
+    @Transactional
+    public CourtDeleteResponseDto deleteCourt(long courtId) {
+
+        Court court = courtRepository.findById(courtId)
+                .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+
+        List<String> deleteImagePaths = court.getImages()
+                .stream()
+                .map(CourtImage::getImagePath)
+                .toList();
+
+        deleteCourtImage(deleteImagePaths);
+        courtRepository.delete(court);
+
+        return CourtDeleteResponseDto.from(court);
     }
 
     @Transactional
@@ -106,83 +181,12 @@ public class CourtService {
     }
 
     @Transactional
-    public CourtUpdateResponseDto updateCourtInfo(Long courtId,
-                                              CourtUpdateRequestDto request) {
-
-        Court oldCourt = courtRepository.findById(courtId)
-                .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
-
-        Court court = Court.builder()
-                .id(oldCourt.getId())
-                .name(request.getName())
-                .courtType(CourtType.valueOf(request.getCourtType()))
-                .hourlyRentFee(request.getHourlyRentFee())
-                .stadium(oldCourt.getStadium())
-                .images(oldCourt.getImages())
-                .build();
-
-        Court updatedCourt = courtRepository.save(court);
-
-        return CourtUpdateResponseDto.from(updatedCourt);
-    }
-
-    @Transactional
-    public CourtUpdateResponseDto updateCourtImages(Long courtId,
-                                              CourtImageUpdateRequestDto request,
-                                              List<MultipartFile> images){
-
-        if (request.getImagePaths().size() != images.size()) {
-            throw new RuntimeException("수정하려는 이미지 중에 누락된 이미지가 있습니다.");
-        }
-
-        Court oldCourt = courtRepository.findById(courtId)
-                .orElseThrow(() -> new RuntimeException("찾을 수 없는 경기장입니다."));
-
-        List<CourtImage> updateImages = updateCourtImages(request.getImagePaths(), images);
-
-        oldCourt.setImages(updateImages);
-
-        Court updatedCourt = courtRepository.save(oldCourt);
-
-        return CourtUpdateResponseDto.from(updatedCourt);
-    }
-
-
-    @Transactional
-    private List<CourtImage> updateCourtImages(List<String> imagePaths,
-                                               List<MultipartFile> images) {
-
-        List<CourtImage> updatedImages = new ArrayList<>();
-        int imageCount = imagePaths.size();
-
-        for (int i = 0; i < imageCount; i++) {
-            String imagePath = imagePaths.get(i);
-            MultipartFile image = images.get(i);
-
-            CourtImage oldCourtImage = courtImageRepository.findByImagePath(imagePath);
-
-            String updatedObjectPath = storageManager.getObject(
-                    storageManager.updateObject(imagePath, image)
-            );
-
-            oldCourtImage.setImagePath(updatedObjectPath);
-
-            CourtImage updatedCourtImage = courtImageRepository.save(oldCourtImage);
-
-            updatedImages.add(updatedCourtImage);
-        }
-
-        return updatedImages;
-    }
-
-    @Transactional
-    public CourtDeleteResponseDto deleteCourt(long courtId) {
-
-        Court court = courtRepository.findById(courtId)
-                .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
-
-        courtRepository.delete(court);
-
-        return CourtDeleteResponseDto.from(court);
+    private void deleteCourtImage(List<String> deleteImagePaths){
+        deleteImagePaths.forEach(deleteImagePath -> {
+                    CourtImage oldCourtImage = courtImageRepository.findByImagePath(deleteImagePath);
+                    courtImageRepository.delete(oldCourtImage);
+                    storageManager.deleteObject(deleteImagePath);
+                }
+        );
     }
 }

@@ -79,8 +79,7 @@ public class S3Manager implements ObjectStorageFunction {
     }
 
     @Override
-    public String updateObject(String objectUrl, MultipartFile file) {
-        String updatedObjectName = "";
+    public void deleteObject(String objectUrl) {
         String objectName = extractObjectNameFromURL(objectUrl);
 
         try {
@@ -90,21 +89,10 @@ public class S3Manager implements ObjectStorageFunction {
                     .build();
 
             s3Client.deleteObject(deleteRequest);
-
-            updatedObjectName = createFileName(file.getOriginalFilename());
-
-            PutObjectRequest request = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(updatedObjectName)
-                    .build();
-
-            s3Client.putObject(request, convertMultipartFileToPath(file));
         } catch (Exception e) {
             e.printStackTrace();
-            throw new RuntimeException("파일 수정 중에 에러가 발생하였습니다.");
+            throw new RuntimeException("파일 삭제 중에 에러가 발생하였습니다.");
         }
-
-        return updatedObjectName;
     }
 
     private String createFileName(String originalFileName) {

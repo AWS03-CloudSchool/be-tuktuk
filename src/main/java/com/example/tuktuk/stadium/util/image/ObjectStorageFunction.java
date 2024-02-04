@@ -8,5 +8,5 @@ public interface ObjectStorageFunction {
 
   public String getObject(String objectName);
 
-  public String updateObject(String objectURL, MultipartFile file);
+  public void deleteObject(String objectURL);
 }
