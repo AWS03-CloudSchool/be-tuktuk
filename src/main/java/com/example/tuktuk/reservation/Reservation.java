@@ -2,7 +2,7 @@ package com.example.tuktuk.reservation;
 
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.schedule.domain.ScheduleId;
-import com.example.tuktuk.user.domain.UserId;
+import com.example.tuktuk.users.domain.UserId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +23,7 @@ public class Reservation {
     private Long id;
 
     @Embedded
+    @AttributeOverride(name = "userId", column = @Column(name = "member_id"))
     private UserId memberId;
 
     @Embedded

@@ -1,6 +1,6 @@
 package com.example.tuktuk.schedule.domain;
 
-import com.example.tuktuk.user.domain.UserId;
+import com.example.tuktuk.users.domain.UserId;
 import jakarta.persistence.*;
 
 @Embeddable

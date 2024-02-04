@@ -11,6 +11,6 @@ public interface StadiumRepository extends JpaRepository<Stadium, Long> {
 
     public Optional<Stadium> findById(Long id);
 
-    @Query("SELECT s FROM Stadium s WHERE s.ownerId.id = :id")
-    public List<Stadium> findByOwnerId(Long id);
+    @Query("SELECT s FROM Stadium s WHERE s.ownerId.userId = :id")
+    public List<Stadium> findByOwnerId(String id);
 }

@@ -17,7 +17,7 @@ public class StadiumCreateResponseDto {
 
   private final String roadAddress;
 
-  private final long ownerId;
+  private final String ownerId;
 
   private final String specificInfo;
 
