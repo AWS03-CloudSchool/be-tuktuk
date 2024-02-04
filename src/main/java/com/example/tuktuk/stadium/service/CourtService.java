@@ -1,12 +1,10 @@
 package com.example.tuktuk.stadium.service;
 
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtCreateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtImageDeleteRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtImageUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtCreateResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtDeleteResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtUpdateResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.court.*;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.domain.court.CourtImage;
 import com.example.tuktuk.stadium.domain.court.CourtType;
@@ -111,9 +109,9 @@ public class CourtService {
     }
 
     @Transactional
-    public CourtUpdateResponseDto updateCourtImages(Long courtId,
-                                                    CourtImageUpdateRequestDto request,
-                                                    List<MultipartFile> images) {
+    public CourtImageUpdateResponseDto updateCourtImages(Long courtId,
+                                                         CourtImageUpdateRequestDto request,
+                                                         List<MultipartFile> images) {
 
         Court oldCourt = courtRepository.findById(courtId)
                 .orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
@@ -124,7 +122,7 @@ public class CourtService {
 
         Court updatedCourt = courtRepository.save(oldCourt);
 
-        return CourtUpdateResponseDto.from(updatedCourt);
+        return CourtImageUpdateResponseDto.from(updatedCourt);
     }
 
     /*
@@ -181,12 +179,19 @@ public class CourtService {
     }
 
     @Transactional
-    private void deleteCourtImage(List<String> deleteImagePaths){
+    private void deleteCourtImage(List<String> deleteImagePaths) {
         deleteImagePaths.forEach(deleteImagePath -> {
                     CourtImage oldCourtImage = courtImageRepository.findByImagePath(deleteImagePath);
                     courtImageRepository.delete(oldCourtImage);
                     storageManager.deleteObject(deleteImagePath);
                 }
         );
+    }
+
+    public CourtImageDeleteResponseDto deleteCourtImage(Long courtId,
+                                                        CourtImageDeleteRequestDto request) {
+        deleteCourtImage(request.getDeleteImagePaths());
+        Court court = courtRepository.findById(courtId).orElseThrow(() -> new RuntimeException("찾을 수 없는 코트입니다."));
+        return CourtImageDeleteResponseDto.from(court);
     }
 }
