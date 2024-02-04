@@ -38,7 +38,7 @@ public class Court {
     @Column(name = "hourly_rate", nullable = false)
     private int hourlyRentFee;
 
-    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
     private List<CourtImage> images = new ArrayList<>();
 
     public int getMinParticipants() {

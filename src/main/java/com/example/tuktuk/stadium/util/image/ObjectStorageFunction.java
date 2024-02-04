@@ -7,4 +7,6 @@ public interface ObjectStorageFunction {
   public String putObject(MultipartFile file);
 
   public String getObject(String objectName);
+
+  public void deleteObject(String objectURL);
 }
