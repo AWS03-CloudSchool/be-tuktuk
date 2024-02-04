@@ -12,7 +12,7 @@ public class UserCreateResDto {
 
     private final String email;
 
-    private final String gender;
+    private final boolean gender;
 
     private final String telNo;
 
@@ -26,7 +26,7 @@ public class UserCreateResDto {
         return UserCreateResDto.builder()
                 .nickName(user.getNickName())
                 .email(user.getEmail())
-                .gender(user.getGender())
+                .gender(user.isGender())
                 .telNo(user.getTelNo())
                 .residenceResDto(ResidenceResDto.from(user.getResidence()))
                 .role(user.getRole().name())

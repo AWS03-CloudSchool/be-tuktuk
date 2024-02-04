@@ -28,7 +28,7 @@ public class UserService {
                 .id(request.getId())
                 .email(request.getEmail())
                 .nickName(request.getNickName())
-                .gender(request.getGender())
+                .gender(request.isGender())
                 .telNo(request.getTelNo())
                 .createdAt(LocalDateTime.now())
                 .residence(Residence.of(request.getResidenceReqDto()))
