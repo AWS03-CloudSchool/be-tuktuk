@@ -1,6 +1,7 @@
 package com.example.tuktuk.users.domain;
 
 
+import com.example.tuktuk.global.Province;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,7 +45,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Comment("This column is social login provider (kakao, google, naver)")
-    @Column(name = "provider", nullable = true, length = 36)
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", length = 36)
+    private Provider provider;
 }

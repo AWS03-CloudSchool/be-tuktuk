@@ -30,7 +30,7 @@ public class UserCreateResDto {
                 .telNo(user.getTelNo())
                 .residenceResDto(ResidenceResDto.from(user.getResidence()))
                 .role(user.getRole().name())
-                .provider(user.getProvider())
+                .provider(user.getProvider().name())
                 .build();
     }
 

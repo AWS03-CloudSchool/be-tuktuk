@@ -17,7 +17,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-//@Component
+@Component
 @Getter
 @RequiredArgsConstructor
 public class S3Manager implements ObjectStorageFunction {

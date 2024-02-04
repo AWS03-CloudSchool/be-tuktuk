@@ -1,8 +1,8 @@
 package com.example.tuktuk.users.service;
 
-import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
 import com.example.tuktuk.users.controller.dto.requestDto.UserCreateReqDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserCreateResDto;
+import com.example.tuktuk.users.domain.Provider;
 import com.example.tuktuk.users.domain.Residence;
 import com.example.tuktuk.users.domain.Role;
 import com.example.tuktuk.users.domain.User;
@@ -33,7 +33,7 @@ public class UserService {
                 .createdAt(LocalDateTime.now())
                 .residence(Residence.of(request.getResidenceReqDto()))
                 .role(Role.valueOf(request.getRole()))
-                .provider(request.getProvider())
+                .provider(Provider.valueOf(request.getProvider()))
                 .build();
 
         User savedUser = userRepository.save(user);
