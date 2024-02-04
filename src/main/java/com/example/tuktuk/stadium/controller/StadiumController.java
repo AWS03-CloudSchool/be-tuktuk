@@ -44,7 +44,7 @@ public class StadiumController {
     }
 
     @GetMapping()
-    public List<StadiumReadResponseDto> getStadiumsByOwnerId(@RequestParam(name = "ownerId") long ownerId) {
+    public List<StadiumReadResponseDto> getStadiumsByOwnerId(@RequestParam(name = "ownerId") String ownerId) {
         return stadiumService.findByOwnerId(ownerId);
     }
 

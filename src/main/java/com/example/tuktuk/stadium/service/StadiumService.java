@@ -9,7 +9,7 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpda
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
-import com.example.tuktuk.user.domain.UserId;
+import com.example.tuktuk.users.domain.UserId;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class StadiumService {
     }
 
     @Transactional(readOnly = true)
-    public List<StadiumReadResponseDto> findByOwnerId(final long ownerId) {
+    public List<StadiumReadResponseDto> findByOwnerId(final String ownerId) {
         List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
         return stadiums.stream()
                 .map(StadiumReadResponseDto::from)
@@ -46,7 +46,7 @@ public class StadiumService {
 
         Stadium stadium = Stadium.builder()
                 .name(request.getName())
-                .ownerId(new UserId(1L))
+                .ownerId(new UserId("hdfisjfw-ef"))
                 .location(Location.of(request.getLocationReqDto()))
                 .specificInfo(request.getSpecificInfo())
                 .build();

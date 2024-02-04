@@ -1,6 +1,7 @@
-package com.example.tuktuk.user.domain;
+package com.example.tuktuk.users.domain;
 
 
+import com.example.tuktuk.global.Province;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,20 +21,13 @@ public class User {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "email", nullable = false, length = 255)
+    @Column(name = "email", nullable = false, length = 50)
     private String email;
-
-    @Embedded
-    private Password password;
 
     @Column(name = "nick_name", nullable = false, length = 16)
     private String nickName;
-
-    @Column(name = "profile_birth", nullable = false, length = 16)
-    private String profileBirth;
 
     @Column(name = "gender", nullable = false, length = 3)
     private String gender;
@@ -51,7 +45,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Comment("This column is social login provider (kakao, google, naver)")
-    @Column(name = "provider", nullable = false, length = 36)
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", length = 36)
+    private Provider provider;
 }
