@@ -20,7 +20,5 @@ public class UserCreateReqDto {
 
     private ResidenceReqDto residenceReqDto;
 
-    private String role;
-
     private String provider;
 }

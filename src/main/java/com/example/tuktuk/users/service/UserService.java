@@ -1,7 +1,5 @@
 package com.example.tuktuk.users.service;
 
-import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
-import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.users.controller.dto.requestDto.UserCreateReqDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserCreateResDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserReadResDto;
@@ -16,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class UserService {
                 .telNo(request.getTelNo())
                 .createdAt(LocalDateTime.now())
                 .residence(Residence.of(request.getResidenceReqDto()))
-                .role(Role.valueOf(request.getRole()))
+                .roles(Collections.singletonList(Role.USER))
                 .provider(Provider.valueOf(request.getProvider()))
                 .build();
 

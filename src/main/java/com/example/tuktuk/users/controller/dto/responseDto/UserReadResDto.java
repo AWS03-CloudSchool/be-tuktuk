@@ -21,7 +21,7 @@ public class UserReadResDto {
         return UserReadResDto.builder()
                 .nickName(user.getNickName())
                 .residenceResDto(ResidenceResDto.from(user.getResidence()))
-                .role(user.getRole().name())
+                .role(user.getRoles())
                 .provider(user.getProvider().name())
                 .build();
     }
