@@ -50,10 +50,4 @@ public class User {
     @Column(name = "provider", length = 36)
     private Provider provider;
 
-    public String getRoles() {
-        StringJoiner rolesString = new StringJoiner(",");
-        roles.forEach(role -> rolesString.add(role.name()));
-
-        return rolesString.toString();
-    }
 }

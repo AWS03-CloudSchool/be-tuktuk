@@ -30,11 +30,11 @@ public class UserService {
     }
 
     @Transactional
-    public UserCreateResDto saveUser(UserCreateReqDto request) {
+    public UserCreateResDto saveUser(String userId, String email, UserCreateReqDto request) {
 
         User user = User.builder()
-                .id(request.getId())
-                .email(request.getEmail())
+                .id(userId)
+                .email(email)
                 .nickName(request.getNickName())
                 .gender(request.isGender())
                 .telNo(request.getTelNo())

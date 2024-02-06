@@ -23,9 +23,22 @@ public class UserController {
         String userId = request.getHeader("tuktuk");
         return userService.findByUserId(userId);
     }
+
+    @GetMapping("/login")
+    public UserReadResDto login(HttpServletRequest request) {
+
+        String userId = (String) request.getAttribute("sub");
+        return userService.findByUserId(userId);
+    }
+
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserCreateResDto createUser(@RequestBody UserCreateReqDto request) {
-        return userService.saveUser(request);
+    public UserCreateResDto createUser(@RequestBody UserCreateReqDto createReqDto, HttpServletRequest request) {
+        log.info("회원가입 로직 들어옴");
+
+        String userId = (String) request.getAttribute("sub");
+        String email = (String) request.getAttribute("email");
+
+        return userService.saveUser(userId, email, createReqDto);
     }
 
 }
