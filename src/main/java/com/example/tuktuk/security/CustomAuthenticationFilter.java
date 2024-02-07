@@ -1,6 +1,7 @@
 package com.example.tuktuk.security;
 
 import com.example.tuktuk.users.auth.UserInfo;
+import com.example.tuktuk.users.auth.UserInfoProvider;
 import com.example.tuktuk.users.domain.Provider;
 import com.example.tuktuk.users.repository.UserRepository;
 import jakarta.servlet.FilterChain;
@@ -10,12 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.filter.OncePerRequestFilter;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.GetUserRequest;
-import software.amazon.awssdk.services.cognitoidentityprovider.model.GetUserResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,10 +20,13 @@ import java.util.List;
 public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
+
+    private final UserInfoProvider userInfoProvider;
     private final UserRepository userRepository;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserInfoProvider userInfoProvider, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
+        this.userInfoProvider = userInfoProvider;
         this.userRepository = userRepository;
     }
 
@@ -38,18 +37,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         // HTTPS 헤더에서 토큰을
         String accessToken = request.getHeader("Authorization");
 
-        CognitoIdentityProviderClient cognitoClient = CognitoIdentityProviderClient.builder()
-                .region(Region.AP_NORTHEAST_2)
-                .credentialsProvider(DefaultCredentialsProvider.create())
-                .build();
-
-        //accesstoken 바탕으로 user정보 가져오는 내용
-        GetUserResponse userResponse = cognitoClient.getUser(GetUserRequest.builder()
-                .accessToken(accessToken)
-                .build());
-
-        //사용자 정보 출력
-        List<AttributeType> attributeTypes = userResponse.userAttributes();
+        List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
         UserInfo userInfo = new UserInfo(attributeTypes);
 
         String id = userInfo.getId();
