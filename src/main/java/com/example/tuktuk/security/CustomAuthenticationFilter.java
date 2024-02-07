@@ -2,7 +2,7 @@ package com.example.tuktuk.security;
 
 import com.example.tuktuk.users.auth.UserInfo;
 import com.example.tuktuk.users.auth.UserInfoProvider;
-import com.example.tuktuk.users.domain.Provider;
+import com.example.tuktuk.users.domain.User;
 import com.example.tuktuk.users.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,39 +32,41 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        if ("/login".equals(request.getRequestURI()) || "/users".equals(request.getRequestURI())) {
+        //회원가입과 로그인은 토큰 유효성 검사 절차를 안 밟는다.
+        if (("GET".equals(request.getMethod()) && "/login".equals(request.getRequestURI())) ||
+                (("POST".equals(request.getMethod())) && "/users".equals(request.getRequestURI()))) {
             filterChain.doFilter(request, response);
             return;
         }
+
         log.info("CustomAuthenticationFilter accessed");
-
-
-
-        // HTTPS 헤더에서 토큰을
+        //토큰 유효성 검사
         String accessToken = request.getHeader("Authorization");
 
-        List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
-        UserInfo userInfo = new UserInfo(attributeTypes);
+        if (accessToken != null) {//토큰 유효성 검사를 해야하는 경우
+            if (isValidToken(request, accessToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            throw new IllegalStateException("토큰을 재발급받아야 합니다.");
+        }
+    }
 
-        String id = userInfo.getId();
-        String email = userInfo.getEmail();
-        Provider provider = userInfo.getProvider();
-
-        log.info("id={}",id);
-        log.info("email={}",email);
-        log.info("provider={}",provider.name());
-
-        //유효하지 않은 토큰의 경우
-        if(id == null && email == null){
-            throw new IllegalStateException("토큰을 재발급 해주세요");
+    private boolean isValidToken(HttpServletRequest request,String accessToken) {
+        String id=null;
+        try {
+            List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
+            UserInfo userInfo = new UserInfo(attributeTypes);
+            id = userInfo.getId();
+        } catch (Exception e) {
+            return false;
         }
 
-
-        request.setAttribute("id",id);
-        request.setAttribute("email",email);
-        request.setAttribute("provider",provider);
-
-        filterChain.doFilter(request, response);
+        User user = userRepository.findById(id).get();
+        request.setAttribute("id",user.getId());
+        request.setAttribute("role",user.getRoles());
+        log.info("id={}", id);
+        log.info("role={}", user.getRoles());
+        return true;
     }
 }
