@@ -19,6 +19,4 @@ public class UserCreateReqDto {
     private String telNo;
 
     private ResidenceReqDto residenceReqDto;
-
-    private String provider;
 }

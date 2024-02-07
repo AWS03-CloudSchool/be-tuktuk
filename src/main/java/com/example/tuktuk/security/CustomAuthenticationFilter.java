@@ -1,5 +1,7 @@
 package com.example.tuktuk.security;
 
+import com.example.tuktuk.users.auth.UserInfo;
+import com.example.tuktuk.users.domain.Provider;
 import com.example.tuktuk.users.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -48,26 +50,25 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
         //사용자 정보 출력
         List<AttributeType> attributeTypes = userResponse.userAttributes();
-        String sub = null;
-        String email = null;
-        for(AttributeType attribute: attributeTypes){
-            if("sub".equals(attribute.name())){
-                sub = attribute.value();
-            }else if("email".equals(attribute.name())){
-                email = attribute.value();
-            }
-        }
-        log.info("sub={}",sub);
+        UserInfo userInfo = new UserInfo(attributeTypes);
+
+        String id = userInfo.getId();
+        String email = userInfo.getEmail();
+        Provider provider = userInfo.getProvider();
+
+        log.info("id={}",id);
         log.info("email={}",email);
+        log.info("provider={}",provider.name());
 
         //유효하지 않은 토큰의 경우
-        if(sub == null && email == null){
+        if(id == null && email == null){
             throw new IllegalStateException("토큰을 재발급 해주세요");
         }
 
 
-        request.setAttribute("sub",sub);
+        request.setAttribute("id",id);
         request.setAttribute("email",email);
+        request.setAttribute("provider",provider);
 
         filterChain.doFilter(request, response);
     }

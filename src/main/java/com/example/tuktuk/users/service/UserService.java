@@ -30,7 +30,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserCreateResDto saveUser(String userId, String email, UserCreateReqDto request) {
+    public UserCreateResDto saveUser(String userId, String email,Provider provider, UserCreateReqDto request) {
 
         User user = User.builder()
                 .id(userId)
@@ -41,7 +41,7 @@ public class UserService {
                 .createdAt(LocalDateTime.now())
                 .residence(Residence.of(request.getResidenceReqDto()))
                 .roles(Collections.singletonList(Role.USER))
-                .provider(Provider.valueOf(request.getProvider()))
+                .provider(provider)
                 .build();
 
         User savedUser = userRepository.save(user);
