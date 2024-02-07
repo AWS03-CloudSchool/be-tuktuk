@@ -34,7 +34,7 @@ public class StadiumService {
     }
 
     @Transactional(readOnly = true)
-    public List<StadiumReadResponseDto> findByOwnerId(long ownerId) {
+    public List<StadiumReadResponseDto> findByOwnerId(final String ownerId) {
         List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
         return stadiums.stream()
                 .map(StadiumReadResponseDto::from)
