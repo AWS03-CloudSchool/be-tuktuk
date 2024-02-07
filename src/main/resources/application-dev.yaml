@@ -11,6 +11,25 @@ spring:
     username: ${MYSQL_ROOT_USERNAME}
     password: ${MYSQL_ROOT_PASSWORD}
 
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: ${COGNITO_CLIENT_ID}
+            client-secret: ${COGNITO_CLIENT_SECRET}
+            client-name: ${COGNITO_CLIENT_NAME}
+            scope:
+              - openid
+              - email
+              - aws.cognito.signin.user.admin
+            redirect-uri: http://localhost:3000
+        provider:
+          cognito:
+            issuer-uri: ${COGNITO_ISSUER_URI}
+            user-name-attribute: cognito:username
+
+
   servlet:
     multipart:
       max-file-size: 10MB

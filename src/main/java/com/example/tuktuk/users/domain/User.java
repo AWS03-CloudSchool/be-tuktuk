@@ -1,15 +1,16 @@
 package com.example.tuktuk.users.domain;
 
 
-import com.example.tuktuk.global.Province;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
 @Getter
 @Builder
@@ -43,9 +44,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role;
+    private List<Role> roles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", length = 36)
     private Provider provider;
+
 }
