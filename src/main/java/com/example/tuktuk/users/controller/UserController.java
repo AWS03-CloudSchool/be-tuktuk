@@ -1,9 +1,9 @@
 package com.example.tuktuk.users.controller;
 
+import com.example.tuktuk.users.auth.UserInfo;
 import com.example.tuktuk.users.controller.dto.requestDto.UserCreateReqDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserCreateResDto;
 import com.example.tuktuk.users.controller.dto.responseDto.UserReadResDto;
-import com.example.tuktuk.users.domain.Provider;
 import com.example.tuktuk.users.service.LoginService;
 import com.example.tuktuk.users.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,20 +33,18 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<UserReadResDto> login(@RequestParam String code, HttpServletRequest request,
-                                                HttpServletResponse response) {
+    public ResponseEntity<UserReadResDto> login(@RequestParam String code, HttpServletResponse response) {
 
-        UserReadResDto userReadResDto = loginService.socialLogin(code, response);
+        UserReadResDto userReadResDto = loginService.login(code, response);
         return new ResponseEntity<>(userReadResDto, HttpStatus.OK);
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserCreateResDto createUser(@RequestBody UserCreateReqDto createReqDto, HttpServletRequest request) {
-        String userId = (String) request.getAttribute("id");
-        String email = (String) request.getAttribute("email");
-        Provider provider = (Provider) request.getAttribute("provider");
+    public UserCreateResDto createUser(@RequestBody UserCreateReqDto createReqDto) {
+        String code = createReqDto.getCode();
+        UserInfo userInfo = loginService.createUser(code);
 
-        return userService.saveUser(userId, email, provider, createReqDto);
+        return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(), createReqDto);
     }
 
 }

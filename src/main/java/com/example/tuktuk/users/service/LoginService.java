@@ -25,7 +25,7 @@ public class LoginService {
 
     private final UserInfoProvider userInfoProvider;
 
-    public UserReadResDto socialLogin(String code, HttpServletResponse response) {
+    public UserReadResDto login(String code, HttpServletResponse response) {
 
         TokenInfo tokenInfo = tokenProvider.getToken(code);
         String accessToken = tokenInfo.getAccess_token();
@@ -37,5 +37,13 @@ public class LoginService {
 
         response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
         return UserReadResDto.from(user);
+    }
+
+    public UserInfo createUser(String code) {
+
+        TokenInfo tokenInfo = tokenProvider.getToken(code);
+        String accessToken = tokenInfo.getAccess_token();
+        List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
+        return new UserInfo(attributeTypes);
     }
 }

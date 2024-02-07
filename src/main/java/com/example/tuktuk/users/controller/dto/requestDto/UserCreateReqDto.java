@@ -7,10 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserCreateReqDto {
-
-    private String id;
-
-    private String email;
+    private String code;
 
     private String nickName;
 
