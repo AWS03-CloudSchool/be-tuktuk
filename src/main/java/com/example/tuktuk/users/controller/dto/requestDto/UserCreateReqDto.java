@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class UserCreateReqDto {
-    private String code;
 
     private String nickName;
 

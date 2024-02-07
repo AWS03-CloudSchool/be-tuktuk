@@ -40,8 +40,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserCreateResDto createUser(@RequestBody UserCreateReqDto createReqDto) {
-        String code = createReqDto.getCode();
+    public UserCreateResDto createUser(@RequestParam String code, @RequestBody UserCreateReqDto createReqDto) {
         UserInfo userInfo = loginService.createUser(code);
 
         return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(), createReqDto);
