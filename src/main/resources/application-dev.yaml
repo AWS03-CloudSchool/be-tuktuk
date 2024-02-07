@@ -23,10 +23,11 @@ spring:
               - openid
               - email
               - aws.cognito.signin.user.admin
-            redirect-uri: http://localhost:3000
+            redirect-uri: ${COGNITO_REDIRECT_URI}
         provider:
           cognito:
             issuer-uri: ${COGNITO_ISSUER_URI}
+            token-uri: ${COGNITO_TOKEN_ENDPOINT}
             user-name-attribute: cognito:username
 
 
