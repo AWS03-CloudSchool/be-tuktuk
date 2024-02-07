@@ -42,11 +42,11 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
+    public StadiumCreateResponseDto saveStadium(String ownerId, StadiumCreateRequestDto request) {
 
         Stadium stadium = Stadium.builder()
                 .name(request.getName())
-                .ownerId(new UserId("hdfisjfw-ef"))
+                .ownerId(new UserId(ownerId))
                 .location(Location.of(request.getLocationReqDto()))
                 .specificInfo(request.getSpecificInfo())
                 .build();
@@ -56,9 +56,12 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumUpdateResponseDto updateStadium(final long stadiumId, StadiumUpdateRequestDto request) {
+    public StadiumUpdateResponseDto updateStadium(final String ownerId, final long stadiumId, StadiumUpdateRequestDto request) {
 
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+        if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
+            throw new IllegalStateException("수정할 권한이 없습니다.");
+        }
         stadium.update(request);
         Stadium updatedStadium = stadiumRepository.save(stadium);
         return StadiumUpdateResponseDto.from(updatedStadium);
