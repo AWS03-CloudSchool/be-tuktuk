@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -29,8 +31,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
-        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(authenticationManager, userInfoProvider, userRepository);
+        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(userInfoProvider, userRepository);
 
         http
                 .csrf().disable()
@@ -44,8 +45,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationManager authenticationManager, UserInfoProvider userInfoProvider, UserRepository userRepository) {
-        return new CustomAuthenticationFilter(authenticationManager, userInfoProvider, userRepository);
+    public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider, UserRepository userRepository) {
+        return new CustomAuthenticationFilter(userInfoProvider, userRepository);
     }
 
     @Bean

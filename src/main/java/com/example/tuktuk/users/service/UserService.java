@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 
 @Service
@@ -30,7 +31,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserCreateResDto saveUser(String userId, String email,Provider provider, UserCreateReqDto request) {
+    public UserCreateResDto saveUser(String userId, String email, Provider provider, UserCreateReqDto request) {
 
         User user = User.builder()
                 .id(userId)
@@ -45,6 +46,25 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(user);
+        return UserCreateResDto.from(savedUser);
+    }
+
+    @Transactional
+    public UserCreateResDto saveFieldOwner(String ownerId, String email, Provider provider, UserCreateReqDto request) {
+
+        User fieldOwner = User.builder()
+                .id(ownerId)
+                .email(email)
+                .nickName(request.getNickName())
+                .gender(request.isGender())
+                .telNo(request.getTelNo())
+                .createdAt(LocalDateTime.now())
+                .residence(Residence.of(request.getResidenceReqDto()))
+                .roles(Arrays.asList(Role.USER, Role.FIELD_OWNER))
+                .provider(provider)
+                .build();
+
+        User savedUser = userRepository.save(fieldOwner);
         return UserCreateResDto.from(savedUser);
     }
 

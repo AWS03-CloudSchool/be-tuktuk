@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -43,11 +43,17 @@ public class User {
     private Residence residence;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "roles", nullable = false)
     private List<Role> roles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "provider", length = 36)
     private Provider provider;
+
+    public String getRolesAsString() {
+        return roles.stream()
+                .map(Enum::toString)
+                .collect(Collectors.joining(", "));
+    }
 
 }

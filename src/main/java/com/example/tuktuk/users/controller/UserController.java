@@ -46,4 +46,10 @@ public class UserController {
         return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(), createReqDto);
     }
 
+    @PostMapping(value = "/fieldowners", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserCreateResDto createFieldOwner(@RequestParam String code, @RequestBody UserCreateReqDto createReqDto) {
+        UserInfo ownerInfo = loginService.createUser(code);
+        return userService.saveFieldOwner(ownerInfo.getId(), ownerInfo.getEmail(), ownerInfo.getProvider(), createReqDto);
+    }
+
 }
