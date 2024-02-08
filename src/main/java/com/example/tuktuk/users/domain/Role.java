@@ -10,4 +10,5 @@ public enum Role {
     Role(String roleName) {
         this.roleName = roleName;
     }
+
 }

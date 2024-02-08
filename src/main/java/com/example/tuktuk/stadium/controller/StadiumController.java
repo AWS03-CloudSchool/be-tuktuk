@@ -14,10 +14,9 @@ import com.example.tuktuk.security.SecurityContextHolderUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -35,6 +34,7 @@ public class StadiumController {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
+
     @GetMapping("/{stadiumId}/courts")
     public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
         StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
@@ -47,16 +47,25 @@ public class StadiumController {
     }
 
     @GetMapping()
-    public List<StadiumReadResponseDto> getStadiumsByOwnerId(@RequestParam(name = "ownerId") String ownerId) {
+    public List<StadiumReadResponseDto> getAllStadiums() {
+        return stadiumService.findAll();
+    }
+
+    @Secured("FIELD_OWNER")
+    @GetMapping("/mystadiums")
+    public List<StadiumReadResponseDto> getMyStadiums() {
+        String ownerId = SecurityContextHolderUtil.getUserId();
         return stadiumService.findByOwnerId(ownerId);
     }
 
+    @Secured("FIELD_OWNER")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public StadiumCreateResponseDto createStadium(@RequestBody StadiumCreateRequestDto requestDto) {
         String ownerId = SecurityContextHolderUtil.getUserId();
         return stadiumService.saveStadium(ownerId, requestDto);
     }
 
+    @Secured("FIELD_OWNER")
     @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public StadiumUpdateResponseDto updateStadium(@PathVariable(name = "stadiumId") long stadiumId,
                                                   @RequestBody StadiumUpdateRequestDto requestDto) {
@@ -64,8 +73,10 @@ public class StadiumController {
         return stadiumService.updateStadium(ownerId, stadiumId, requestDto);
     }
 
+    @Secured("FIELD_OWNER")
     @DeleteMapping("/{stadiumId}")
     public StadiumDeleteResponseDto deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
-        return stadiumService.deleteStadium(stadiumId);
+        String ownerId = SecurityContextHolderUtil.getUserId();
+        return stadiumService.deleteStadium(ownerId, stadiumId);
     }
 }

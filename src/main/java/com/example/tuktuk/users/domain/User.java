@@ -43,7 +43,7 @@ public class User {
     private Residence residence;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @Column(name = "roles", nullable = false)
     private List<Role> roles = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

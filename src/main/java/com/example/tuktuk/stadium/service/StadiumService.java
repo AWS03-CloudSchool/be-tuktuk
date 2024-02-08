@@ -41,6 +41,14 @@ public class StadiumService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<StadiumReadResponseDto> findAll() {
+        List<Stadium> stadiums = stadiumRepository.findAll();
+        return stadiums.stream()
+                .map(StadiumReadResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public StadiumCreateResponseDto saveStadium(String ownerId, StadiumCreateRequestDto request) {
 
@@ -68,8 +76,11 @@ public class StadiumService {
     }
 
     @Transactional
-    public StadiumDeleteResponseDto deleteStadium(final long stadiumId) {
+    public StadiumDeleteResponseDto deleteStadium(final String ownerId, final long stadiumId) {
         Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+        if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
+            throw new IllegalStateException("삭제할 권한이 없습니다.");
+        }
         stadiumRepository.delete(stadium);
 
         return StadiumDeleteResponseDto.from(stadium);

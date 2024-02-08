@@ -63,6 +63,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         }
 
         User user = userRepository.findById(id).get();
+        log.info("user.roles={}",user.getRoles());
         this.saveAuthenticationToSecurityContextHolder(user);//securityContext에 유저 저장
 
         return true;
