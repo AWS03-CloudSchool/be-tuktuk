@@ -9,7 +9,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 
@@ -19,13 +21,10 @@ import java.util.List;
 @Slf4j
 public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
-    private final AuthenticationManager authenticationManager;
-
     private final UserInfoProvider userInfoProvider;
     private final UserRepository userRepository;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, UserInfoProvider userInfoProvider, UserRepository userRepository) {
-        this.authenticationManager = authenticationManager;
+    public CustomAuthenticationFilter(UserInfoProvider userInfoProvider, UserRepository userRepository) {
         this.userInfoProvider = userInfoProvider;
         this.userRepository = userRepository;
     }
@@ -34,7 +33,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //회원가입과 로그인은 토큰 유효성 검사 절차를 안 밟는다.
         if (("GET".equals(request.getMethod()) && "/login".equals(request.getRequestURI())) ||
-                (("POST".equals(request.getMethod())) && "/users".equals(request.getRequestURI()))) {
+                (("POST".equals(request.getMethod())) && "/users".equals(request.getRequestURI())) ||
+                ("POST".equals(request.getMethod())) && "/fieldowners".equals(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -44,7 +44,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = request.getHeader("Authorization");
 
         if (accessToken != null) {//토큰 유효성 검사를 해야하는 경우
-            if (isValidToken(request, accessToken)) {
+            if (isValidToken(accessToken)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -52,8 +52,8 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean isValidToken(HttpServletRequest request,String accessToken) {
-        String id=null;
+    private boolean isValidToken(String accessToken) {
+        String id = null;
         try {
             List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
             UserInfo userInfo = new UserInfo(attributeTypes);
@@ -63,10 +63,16 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         }
 
         User user = userRepository.findById(id).get();
-        request.setAttribute("id",user.getId());
-        request.setAttribute("role",user.getRoles());
-        log.info("id={}", id);
-        log.info("role={}", user.getRoles());
+        this.saveAuthenticationToSecurityContextHolder(user);//securityContext에 유저 저장
+
         return true;
+    }
+
+    private void saveAuthenticationToSecurityContextHolder(User user) {
+        CustomUserDetails userDetails = new CustomUserDetails(user);
+
+        // 인가 처리가 정상적으로 완료된다면 Authentication 객체 생성
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

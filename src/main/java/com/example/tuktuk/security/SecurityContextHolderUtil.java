@@ -1,7 +1,9 @@
-package com.example.tuktuk.users.util;
+package com.example.tuktuk.security;
 
-import com.example.tuktuk.security.CustomUserDetails;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.Collection;
 
 public class SecurityContextHolderUtil {
 
@@ -13,5 +15,10 @@ public class SecurityContextHolderUtil {
     public static String getUsername() {
         CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return principal.getUsername();
+    }
+
+    public static Collection<? extends GrantedAuthority> getAuthorities() {
+        CustomUserDetails principal = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal.getAuthorities();
     }
 }

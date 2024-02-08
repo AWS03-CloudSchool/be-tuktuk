@@ -29,8 +29,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = authenticationManager(http.getSharedObject(AuthenticationConfiguration.class));
-        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(authenticationManager, userInfoProvider, userRepository);
+        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(userInfoProvider, userRepository);
 
         http
                 .csrf().disable()
@@ -44,8 +43,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(AuthenticationManager authenticationManager, UserInfoProvider userInfoProvider, UserRepository userRepository) {
-        return new CustomAuthenticationFilter(authenticationManager, userInfoProvider, userRepository);
+    public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider, UserRepository userRepository) {
+        return new CustomAuthenticationFilter(userInfoProvider, userRepository);
     }
 
     @Bean

@@ -26,7 +26,7 @@ public class UserCreateResDto {
                 .gender(user.isGender())
                 .telNo(user.getTelNo())
                 .residenceResDto(ResidenceResDto.from(user.getResidence()))
-                .role("USER")
+                .role(user.getRolesAsString())
                 .provider(user.getProvider().name())
                 .build();
     }
