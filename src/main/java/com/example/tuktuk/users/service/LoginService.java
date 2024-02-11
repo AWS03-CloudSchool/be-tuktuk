@@ -35,7 +35,8 @@ public class LoginService {
         String id = userInfo.getId();
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalStateException("회원가입 되지 않은 사용자입니다."));
 
-        response.setHeader(HttpHeaders.AUTHORIZATION, accessToken);
+
+        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
         return UserReadResDto.from(user);
     }
 
