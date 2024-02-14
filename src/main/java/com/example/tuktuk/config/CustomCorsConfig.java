@@ -28,12 +28,15 @@ public class CustomCorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8080", "http://localhost:3000", "https://www.tukktukk.com")
                 .allowedMethods("POST", "PATCH", "OPTIONS")
                 .allowedHeaders("Content-Type")
+                .allowedHeaders("Authorization")
                 .allowCredentials(true) // 쿠키 인증 요청 허용
                 .maxAge(3000); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
 
         registry.addMapping("/courts")
                 .allowedOrigins("http://localhost:8080", "http://localhost:3000", "https://www.tukktukk.com")
-                .allowedMethods("POST", "OPTIONS") // POST 메소드만 허용
+                .allowedMethods("POST", "PATCH", "OPTIONS") // POST 메소드만 허용
+                .allowedHeaders("Content-Type")
+                .allowedHeaders("Authorization")
                 .allowCredentials(true) // 쿠키 인증 요청 허용
                 .maxAge(3000); // 원하는 시간만큼 pre-flight 리퀘스트를 캐싱
 
