@@ -44,7 +44,8 @@ public class Stadium {
     private List<Court> courts = new ArrayList<>();
 
     public void update(StadiumUpdateRequestDto requestDto){
-        this.name=requestDto.getName();
-        this.specificInfo=requestDto.getSpecificInfo();
+        this.name = requestDto.getName();
+        this.location.update(requestDto.getLocationReqDto());
+        this.specificInfo = requestDto.getSpecificInfo();
     }
 }

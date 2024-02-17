@@ -41,4 +41,10 @@ public class Location {
                 .roadNameAddress(reqDto.getRoadNameAddress())
                 .build();
     }
+
+    public void update(LocationReqDto reqDto){
+        this.province = Province.valueOf(reqDto.getProvince());
+        this.city = City.valueOf(reqDto.getCity());
+        this.roadNameAddress = reqDto.getRoadNameAddress();
+    }
 }
