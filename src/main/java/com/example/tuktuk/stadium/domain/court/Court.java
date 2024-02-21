@@ -24,7 +24,7 @@ public class Court {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stadium_id", nullable = false)
     private Stadium stadium;
 

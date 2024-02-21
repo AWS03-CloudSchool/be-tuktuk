@@ -46,7 +46,6 @@ public class ScheduleService {
         Court court = courtRepository.findById(courtId).orElseThrow(() -> new IllegalStateException("잘못된 코트 참조입니다."));
         Stadium stadium = court.getStadium();
         Province province = stadium.getLocation().getProvince();
-        //stadium까지 조회하는 문제가 생김..
 
         Time time = Time.builder()
                 .playDate(requestDto.getPlayDate())

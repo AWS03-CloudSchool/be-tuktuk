@@ -18,7 +18,7 @@ public class ScheduleCreateReqDto {
 
     private LocalTime endTime;
 
-    private String type;//매치 or 대여 or both
+    private String type;
 }
 
 

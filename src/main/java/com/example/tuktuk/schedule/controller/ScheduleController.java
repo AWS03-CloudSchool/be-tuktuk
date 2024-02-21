@@ -25,7 +25,6 @@ public class ScheduleController {
         return scheduleService.findByScheduleId(scheduleId);
     }
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ScheduleCreateResDto createSchedule(@RequestBody ScheduleCreateReqDto requestDto) {
         return scheduleService.saveSchedule(requestDto);

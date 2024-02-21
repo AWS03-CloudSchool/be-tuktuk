@@ -35,7 +35,7 @@ public class Schedule {
     @Column(name = "type", nullable = false)
     private Type type;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "participants",
             joinColumns = @JoinColumn(name = "id"))
     @OrderColumn(name = "participant_idx")
@@ -53,10 +53,10 @@ public class Schedule {
 
     public void update(ScheduleUpdateReqDto reqDto){
         this.type = Type.valueOf(reqDto.getType());
+        this.time.update(reqDto);
     }
 
     public void delete(){
         this.isDeleted=true;
     }
-
 }

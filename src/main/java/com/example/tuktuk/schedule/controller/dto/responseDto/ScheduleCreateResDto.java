@@ -23,7 +23,6 @@ public class ScheduleCreateResDto {
 
     private final int matchRegularFee;
 
-
     public static ScheduleCreateResDto from(Schedule courtTimeSlot) {
         return ScheduleCreateResDto.builder()
                 .courtId(courtTimeSlot.getCourtId().getValue())
