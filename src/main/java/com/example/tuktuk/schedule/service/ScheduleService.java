@@ -36,7 +36,8 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleReadResponseDto findByScheduleId(long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("존재하지 않는 경기입니다."));
-        return ScheduleReadResponseDto.from(schedule);
+        int hourlyRentFee = courtRepository.findHourlyRentFeeById(schedule.getCourtId().getValue());
+        return ScheduleReadResponseDto.from(schedule, hourlyRentFee);
     }
 
     @Transactional
@@ -55,6 +56,8 @@ public class ScheduleService {
 
         int matchRegularFee = MatchRegularFeeManager.calculateRegularFee(province, time.getPlayDate());
 
+        int hourlyRentFee = court.getHourlyRentFee();
+
         Schedule courtTimeSlot = Schedule.builder()
                 .courtId(new CourtId(courtId))
                 .time(time)
@@ -65,7 +68,7 @@ public class ScheduleService {
                 .build();
 
         Schedule savedCourtTimeSlot = scheduleRepository.save(courtTimeSlot);
-        return ScheduleCreateResDto.from(savedCourtTimeSlot);
+        return ScheduleCreateResDto.from(savedCourtTimeSlot, hourlyRentFee);
     }
 
     @Transactional
@@ -73,7 +76,8 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
         schedule.update(requestDto);
         Schedule updatedSchedule = scheduleRepository.save(schedule);
-        return ScheduleUpdateResDto.from(updatedSchedule);
+        int hourlyRentFee = courtRepository.findHourlyRentFeeById(schedule.getCourtId().getValue());
+        return ScheduleUpdateResDto.from(updatedSchedule, hourlyRentFee);
     }
 
     @Transactional

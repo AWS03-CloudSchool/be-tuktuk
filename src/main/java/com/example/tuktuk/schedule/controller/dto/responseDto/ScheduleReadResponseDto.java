@@ -12,27 +12,30 @@ import java.util.List;
 @Builder
 public class ScheduleReadResponseDto {
 
-    private long courtId;
+  private long courtId;
 
-    private TimeResponseDto timeResponseDto;
+  private TimeResponseDto timeResponseDto;
 
-    private String type;
+  private String type;
 
-    private List<Participant> participants;
+  private List<Participant> participants;
 
-    private String reservationStatus;
+  private String reservationStatus;
 
-    private long matchRegularFee;
+  private int matchRegularFee;
 
-    public static ScheduleReadResponseDto from(Schedule schedule) {
-        return ScheduleReadResponseDto.builder()
-                .courtId(schedule.getCourtId().getValue())
-                .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
-                .type(schedule.getType().name())
-                .participants(schedule.getParticipants())
-                .reservationStatus(schedule.getReservationStatus().name())
-                .matchRegularFee(schedule.getMatchRegularFee().getValue())
-                .build();
-    }
+  private int hourlyRentFee;
+
+  public static ScheduleReadResponseDto from(Schedule schedule, int hourlyRentFee) {
+    return ScheduleReadResponseDto.builder()
+        .courtId(schedule.getCourtId().getValue())
+        .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
+        .type(schedule.getType().name())
+        .participants(schedule.getParticipants())
+        .reservationStatus(schedule.getReservationStatus().name())
+        .matchRegularFee(schedule.getMatchRegularFee().getValue())
+        .hourlyRentFee(hourlyRentFee)
+        .build();
+  }
 
 }
