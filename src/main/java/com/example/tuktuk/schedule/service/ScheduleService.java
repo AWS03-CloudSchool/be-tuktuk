@@ -5,6 +5,7 @@ import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.domain.*;
@@ -81,15 +82,11 @@ public class ScheduleService {
     }
 
     @Transactional
-    public Message deleteSchedule(long scheduleId) {
+    public ScheduleDeleteResDto deleteSchedule(long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
         schedule.delete();
         Schedule saved = scheduleRepository.save(schedule);
 
-        return Message.builder()
-                .code(0)
-                .status(HttpStatus.OK)
-                .message("정상 삭제되었습니다.")
-                .build();
+        return ScheduleDeleteResDto.from(saved);
     }
 }

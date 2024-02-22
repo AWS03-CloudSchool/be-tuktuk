@@ -4,6 +4,7 @@ import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.service.ScheduleService;
@@ -41,7 +42,7 @@ public class ScheduleController {
 
     @Secured("FIELD_OWNER")
     @DeleteMapping(value = "/{scheduleId}")
-    public Message deleteSchedule(@PathVariable(name = "scheduleId") long scheduleId) {
+    public ScheduleDeleteResDto deleteSchedule(@PathVariable(name = "scheduleId") long scheduleId) {
         return scheduleService.deleteSchedule(scheduleId);
     }
 }
