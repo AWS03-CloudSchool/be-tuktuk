@@ -1,5 +1,6 @@
 package com.example.tuktuk.schedule.domain;
 
+import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -30,4 +32,10 @@ public class Time {
 
     @Column(name = "end_time", columnDefinition = "TIME")
     private LocalTime endTime;
+
+    public void update(ScheduleUpdateReqDto request){
+        this.playDate = request.getPlayDate();
+        this.startTime = request.getStartTime();
+        this.endTime = request.getEndTime();
+    }
 }

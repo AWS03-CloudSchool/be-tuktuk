@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ScheduleRepository extends JpaRepository<Schedule,Long> {
 
-    @Query("SELECT s FROM Schedule s WHERE s.id = :id")
+    @Query("SELECT s FROM Schedule s WHERE s.id = :id AND s.isDeleted = false")
     public Optional<Schedule> findById(Long id);
 
 }

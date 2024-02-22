@@ -5,6 +5,7 @@ import com.example.tuktuk.global.Message;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.domain.*;
@@ -36,7 +37,8 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleReadResponseDto findByScheduleId(long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("존재하지 않는 경기입니다."));
-        return ScheduleReadResponseDto.from(schedule);
+        int hourlyRentFee = courtRepository.findHourlyRentFeeById(schedule.getCourtId().getValue());
+        return ScheduleReadResponseDto.from(schedule, hourlyRentFee);
     }
 
     @Transactional
@@ -46,7 +48,6 @@ public class ScheduleService {
         Court court = courtRepository.findById(courtId).orElseThrow(() -> new IllegalStateException("잘못된 코트 참조입니다."));
         Stadium stadium = court.getStadium();
         Province province = stadium.getLocation().getProvince();
-        //stadium까지 조회하는 문제가 생김..
 
         Time time = Time.builder()
                 .playDate(requestDto.getPlayDate())
@@ -55,6 +56,8 @@ public class ScheduleService {
                 .build();
 
         int matchRegularFee = MatchRegularFeeManager.calculateRegularFee(province, time.getPlayDate());
+
+        int hourlyRentFee = court.getHourlyRentFee();
 
         Schedule courtTimeSlot = Schedule.builder()
                 .courtId(new CourtId(courtId))
@@ -66,7 +69,7 @@ public class ScheduleService {
                 .build();
 
         Schedule savedCourtTimeSlot = scheduleRepository.save(courtTimeSlot);
-        return ScheduleCreateResDto.from(savedCourtTimeSlot);
+        return ScheduleCreateResDto.from(savedCourtTimeSlot, hourlyRentFee);
     }
 
     @Transactional
@@ -74,19 +77,16 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
         schedule.update(requestDto);
         Schedule updatedSchedule = scheduleRepository.save(schedule);
-        return ScheduleUpdateResDto.from(updatedSchedule);
+        int hourlyRentFee = courtRepository.findHourlyRentFeeById(schedule.getCourtId().getValue());
+        return ScheduleUpdateResDto.from(updatedSchedule, hourlyRentFee);
     }
 
     @Transactional
-    public Message deleteSchedule(long scheduleId) {
+    public ScheduleDeleteResDto deleteSchedule(long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new IllegalStateException("Schedule을 찾을 수 없습니다."));
         schedule.delete();
         Schedule saved = scheduleRepository.save(schedule);
 
-        return Message.builder()
-                .code(0)
-                .status(HttpStatus.OK)
-                .message("정상 삭제되었습니다.")
-                .build();
+        return ScheduleDeleteResDto.from(saved);
     }
 }
