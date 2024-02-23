@@ -8,6 +8,8 @@ import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResD
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
 import com.example.tuktuk.schedule.service.ScheduleService;
+import com.example.tuktuk.security.SecurityContextHolderUtil;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -44,5 +46,12 @@ public class ScheduleController {
     @DeleteMapping(value = "/{scheduleId}")
     public ScheduleDeleteResDto deleteSchedule(@PathVariable(name = "scheduleId") long scheduleId) {
         return scheduleService.deleteSchedule(scheduleId);
+    }
+
+    @Secured("FIELD_OWNER")
+    @GetMapping
+    public List<ScheduleReadResponseDto> findAllScheduleByOwner(){
+        String ownerId = SecurityContextHolderUtil.getUserId();
+        return scheduleService.findAllByOwnerId(ownerId);
     }
 }
