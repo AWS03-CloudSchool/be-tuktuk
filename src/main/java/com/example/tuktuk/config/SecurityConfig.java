@@ -23,41 +23,44 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
+  private final CustomUserDetailsService customUserDetailsService;
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    private final UserInfoProvider userInfoProvider;
+  private final UserInfoProvider userInfoProvider;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(userInfoProvider, userRepository);
+  @Bean
+  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(
+        userInfoProvider, userRepository);
 
-        http
-                .csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    http.csrf()
+        .disable()
+        .authorizeHttpRequests(authorize -> authorize
+            .anyRequest().permitAll()
+        )
+        .httpBasic(Customizer.withDefaults())
+        .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        return http.build();
-    }
+    return http.build();
+  }
 
-    @Bean
-    public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider, UserRepository userRepository) {
-        return new CustomAuthenticationFilter(userInfoProvider, userRepository);
-    }
+  @Bean
+  public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider,
+      UserRepository userRepository) {
+    return new CustomAuthenticationFilter(userInfoProvider, userRepository);
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
-    @Bean
-    public CustomAuthenticationProvider customAuthenticationProvider() {
-        return new CustomAuthenticationProvider(customUserDetailsService);
-    }
+  @Bean
+  public CustomAuthenticationProvider customAuthenticationProvider() {
+    return new CustomAuthenticationProvider(customUserDetailsService);
+  }
 
 
 }
