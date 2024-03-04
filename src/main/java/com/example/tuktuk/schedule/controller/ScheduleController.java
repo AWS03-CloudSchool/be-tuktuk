@@ -2,12 +2,12 @@ package com.example.tuktuk.schedule.controller;
 
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.*;
 import com.example.tuktuk.schedule.service.ScheduleService;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +26,13 @@ public class ScheduleController {
     @GetMapping(value = "/{scheduleId}")
     public ScheduleReadResponseDto findByScheduleId(@PathVariable(name = "scheduleId") long scheduleId) {
         return scheduleService.findByScheduleId(scheduleId);
+    }
+
+    @GetMapping("/search")
+    public List<ScheduleSimpleReadResDto> findByProvince(
+            @RequestParam(name = "province") String province,
+            @RequestParam(name = "date") LocalDate date){
+        return scheduleService.findByProvince(province, date);
     }
 
     @Secured("FIELD_OWNER")
@@ -50,7 +57,6 @@ public class ScheduleController {
     @Secured("FIELD_OWNER")
     @GetMapping
     public List<ScheduleReadResponseDto> findAllScheduleByOwner(){
-        String ownerId = SecurityContextHolderUtil.getUserId();
-        return scheduleService.findAllByOwnerId(ownerId);
+        return scheduleService.findAllByOwnerId();
     }
 }

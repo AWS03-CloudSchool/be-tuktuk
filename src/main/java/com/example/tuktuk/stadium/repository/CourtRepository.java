@@ -14,6 +14,9 @@ public interface CourtRepository extends JpaRepository<Court, Long> {
     @Query("SELECT c FROM Court c WHERE c.stadium.id = :stadiumId")
     public List<Court> findByStadiumId(Long stadiumId);
 
-    @Query("SELECT c.hourlyRentFee  FROM Court c WHERE c.id = :id")
+    @Query("SELECT c.hourlyRentFee FROM Court c WHERE c.id = :id")
     public int findHourlyRentFeeById(Long id);
+
+    @Query("SELECT c.name FROM Court c WHERE c.id = :id")
+    public String findByName(Long id);
 }

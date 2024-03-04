@@ -37,7 +37,6 @@ public class StadiumController {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
-
     @GetMapping("/{stadiumId}/courts")
     public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
         StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
@@ -47,11 +46,6 @@ public class StadiumController {
                 .stadiumReadResDto(stadiumResDto)
                 .courtReadResDto(courtResDto)
                 .build();
-    }
-
-    @GetMapping()
-    public List<StadiumReadResponseDto> getAllStadiums() {
-        return stadiumService.findAll();
     }
 
     @Secured("FIELD_OWNER")
