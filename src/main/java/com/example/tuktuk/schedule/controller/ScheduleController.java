@@ -4,10 +4,7 @@ import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDt
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.*;
 import com.example.tuktuk.schedule.service.ScheduleService;
-import com.example.tuktuk.security.SecurityContextHolderUtil;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

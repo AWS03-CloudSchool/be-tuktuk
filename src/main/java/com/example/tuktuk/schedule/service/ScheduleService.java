@@ -16,6 +16,7 @@ import com.example.tuktuk.stadium.repository.StadiumRepository;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -49,21 +50,26 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public List<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date) {
         List<ScheduleSimpleReadResDto> response = new ArrayList<>();
+        HashMap<Long, String> courtIdAndStadiumNames = new HashMap<>();
 
-        List<Long> courtIds = stadiumRepository.findByProvince(Province.valueOf(province))
-                .stream()
-                .flatMap(stadium -> stadium.getCourts()
-                        .stream()
-                        .map(Court::getId))
-                .toList();
+        stadiumRepository.findByProvince(Province.valueOf(province))
+                .forEach(stadium -> stadium.getCourts()
+                        .forEach(court -> courtIdAndStadiumNames.put(
+                                court.getId(),
+                                stadium.getName()
+                        )));
 
-        for (Long courtId : courtIds) {
+
+        for (Long courtId : courtIdAndStadiumNames.keySet()) {
             String courtName = courtRepository.findByName(courtId);
+            String stadiumName = courtIdAndStadiumNames.get(courtId);
+            String stadiumWithCourtName = stadiumName + " " + courtName;
 
             scheduleRepository.findByCourtIdAndDate(courtId, date)
-                    .stream()
                     .forEach(schedule ->
-                            response.add(ScheduleSimpleReadResDto.from(schedule, courtName))
+                            response.add(
+                                    ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName)
+                            )
                     );
         }
 

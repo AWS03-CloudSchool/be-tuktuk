@@ -10,15 +10,15 @@ import java.time.LocalTime;
 @Builder
 public class ScheduleSimpleReadResDto {
 
-    private String courtName;
+    private String stadiumWithCourtName;
 
     private TimeResponseDto timeResponseDto;
 
     private String type;
 
-    public static ScheduleSimpleReadResDto from(Schedule schedule, String courtName){
+    public static ScheduleSimpleReadResDto from(Schedule schedule, String stadiumWithCourtName){
         return ScheduleSimpleReadResDto.builder()
-                .courtName(courtName)
+                .stadiumWithCourtName(stadiumWithCourtName)
                 .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
                 .type(schedule.getType().name())
                 .build();
