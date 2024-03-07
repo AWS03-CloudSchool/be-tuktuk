@@ -10,17 +10,20 @@ import java.time.LocalTime;
 @Builder
 public class ScheduleSimpleReadResDto {
 
-    private String stadiumWithCourtName;
+  private String stadiumWithCourtName;
 
-    private TimeResponseDto timeResponseDto;
+  private TimeResponseDto timeResponseDto;
 
-    private String type;
+  private int participants;
 
-    public static ScheduleSimpleReadResDto from(Schedule schedule, String stadiumWithCourtName){
-        return ScheduleSimpleReadResDto.builder()
-                .stadiumWithCourtName(stadiumWithCourtName)
-                .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
-                .type(schedule.getType().name())
-                .build();
-    }
+  private String reservationStatus;
+
+  public static ScheduleSimpleReadResDto from(Schedule schedule, String stadiumWithCourtName) {
+    return ScheduleSimpleReadResDto.builder()
+        .stadiumWithCourtName(stadiumWithCourtName)
+        .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
+        .participants(schedule.getParticipants().size())
+        .reservationStatus(schedule.getReservationStatus().name())
+        .build();
+  }
 }

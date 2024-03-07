@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +30,8 @@ public class ScheduleController {
     @GetMapping("/search")
     public List<ScheduleSimpleReadResDto> findByProvince(
             @RequestParam(name = "province") String province,
-            @RequestParam(name = "date") LocalDate date){
+            @RequestParam(name = "date") LocalDate date
+        ){
         return scheduleService.findByProvince(province, date);
     }
 

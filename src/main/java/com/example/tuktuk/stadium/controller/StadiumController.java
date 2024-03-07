@@ -11,6 +11,7 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpda
 import com.example.tuktuk.stadium.service.CourtService;
 import com.example.tuktuk.stadium.service.StadiumService;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -33,11 +34,13 @@ public class StadiumController {
     private final CourtService courtService;
 
     @GetMapping("/{stadiumId}")
+    @PermitAll
     public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
     @GetMapping("/{stadiumId}/courts")
+    @PermitAll
     public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
         StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
         List<CourtReadResponseDto> courtResDto = courtService.findByStadiumId(stadiumId);
