@@ -33,16 +33,13 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<UserReadResDto> login(@RequestParam String code, HttpServletResponse response) {
-
-        UserReadResDto userReadResDto = loginService.login(code, response);
-        return new ResponseEntity<>(userReadResDto, HttpStatus.OK);
+    public UserReadResDto login(@RequestParam String code, HttpServletResponse response) {
+        return loginService.login(code, response);
     }
 
     @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserCreateResDto createUser(@RequestParam String code, @RequestBody UserCreateReqDto createReqDto) {
         UserInfo userInfo = loginService.createUser(code);
-
         return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(), createReqDto);
     }
 

@@ -7,6 +7,7 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResp
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.service.CourtService;
 import com.example.tuktuk.stadium.service.StadiumService;
@@ -34,13 +35,11 @@ public class StadiumController {
     private final CourtService courtService;
 
     @GetMapping("/{stadiumId}")
-    @PermitAll
     public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
     @GetMapping("/{stadiumId}/courts")
-    @PermitAll
     public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
         StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
         List<CourtReadResponseDto> courtResDto = courtService.findByStadiumId(stadiumId);
@@ -49,6 +48,11 @@ public class StadiumController {
                 .stadiumReadResDto(stadiumResDto)
                 .courtReadResDto(courtResDto)
                 .build();
+    }
+
+    @GetMapping("/search")
+    public List<StadiumSimpleReadResDto> getByKeyword(@RequestParam(name = "keyword") String keyword){
+        return stadiumService.findByKeyword(keyword);
     }
 
     @Secured("FIELD_OWNER")
