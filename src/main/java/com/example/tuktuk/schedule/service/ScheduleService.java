@@ -2,23 +2,26 @@ package com.example.tuktuk.schedule.service;
 
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleCreateResDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleDeleteResDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleReadResponseDto;
-import com.example.tuktuk.schedule.controller.dto.responseDto.ScheduleUpdateResDto;
+import com.example.tuktuk.schedule.controller.dto.responseDto.*;
 import com.example.tuktuk.schedule.domain.*;
 import com.example.tuktuk.schedule.repository.ScheduleRepository;
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.global.Province;
+import com.example.tuktuk.security.SecurityContextHolderUtil;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.domain.court.CourtId;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.CourtRepository;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +45,31 @@ public class ScheduleService {
         .orElseThrow(() -> new IllegalStateException("존재하지 않는 경기입니다."));
     int hourlyRentFee = courtRepository.findHourlyRentFeeById(schedule.getCourtId().getValue());
     return ScheduleReadResponseDto.from(schedule, hourlyRentFee);
+  }
+
+  @Transactional(readOnly = true)
+  public List<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date) {
+    List<ScheduleSimpleReadResDto> response = new ArrayList<>();
+    HashMap<Long, String> courtIdAndStadiumNames = new HashMap<>();
+
+    stadiumRepository.findByProvince(Province.valueOf(province))
+        .forEach(stadium -> stadium.getCourts()
+            .forEach(court -> courtIdAndStadiumNames.put(
+                court.getId(),
+                stadium.getName()
+            )));
+
+    for (Long courtId : courtIdAndStadiumNames.keySet()) {
+      String courtName = courtRepository.findByName(courtId);
+      String stadiumName = courtIdAndStadiumNames.get(courtId);
+      String stadiumWithCourtName = stadiumName + " " + courtName;
+
+      scheduleRepository.findByCourtIdAndDate(courtId, date)
+          .forEach(schedule -> response.add(
+              ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName)));
+    }
+
+    return response;
   }
 
   @Transactional
@@ -97,7 +125,8 @@ public class ScheduleService {
   }
 
   @Transactional
-  public List<ScheduleReadResponseDto> findAllByOwnerId(String ownerId) {
+  public List<ScheduleReadResponseDto> findAllByOwnerId() {
+    String ownerId = SecurityContextHolderUtil.getUserId();
     List<ScheduleReadResponseDto> scheduleReadResponse = new ArrayList<>();
 
     List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);

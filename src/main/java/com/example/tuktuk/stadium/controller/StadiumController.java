@@ -7,10 +7,12 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResp
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.service.CourtService;
 import com.example.tuktuk.stadium.service.StadiumService;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +39,6 @@ public class StadiumController {
         return stadiumService.findByStadiumId(stadiumId);
     }
 
-
     @GetMapping("/{stadiumId}/courts")
     public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
         StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
@@ -49,9 +50,9 @@ public class StadiumController {
                 .build();
     }
 
-    @GetMapping()
-    public List<StadiumReadResponseDto> getAllStadiums() {
-        return stadiumService.findAll();
+    @GetMapping("/search")
+    public List<StadiumSimpleReadResDto> getByKeyword(@RequestParam(name = "keyword") String keyword){
+        return stadiumService.findByKeyword(keyword);
     }
 
     @Secured("FIELD_OWNER")

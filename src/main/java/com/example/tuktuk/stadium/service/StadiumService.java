@@ -5,11 +5,13 @@ import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdat
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
 import com.example.tuktuk.stadium.domain.Location;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import com.example.tuktuk.stadium.repository.StadiumRepository;
 import com.example.tuktuk.users.domain.UserId;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +86,14 @@ public class StadiumService {
         stadiumRepository.delete(stadium);
 
         return StadiumDeleteResponseDto.from(stadium);
+    }
+
+    public List<StadiumSimpleReadResDto> findByKeyword(String keyword) {
+        List<StadiumSimpleReadResDto> response = new ArrayList<>();
+        stadiumRepository.findByKeyword(keyword).forEach(
+            stadium -> response.add(StadiumSimpleReadResDto.from(stadium))
+        );
+
+        return response;
     }
 }
