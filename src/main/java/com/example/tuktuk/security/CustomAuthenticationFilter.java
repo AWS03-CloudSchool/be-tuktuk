@@ -35,6 +35,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         if (("GET".equals(request.getMethod()) && "/login".equals(request.getRequestURI())) ||
                 (("POST".equals(request.getMethod())) && "/users".equals(request.getRequestURI())) ||
                 ("POST".equals(request.getMethod())) && "/fieldowners".equals(request.getRequestURI())) {
+            log.info("Sign up, Login");
             filterChain.doFilter(request, response);
             return;
         }
