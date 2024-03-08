@@ -40,7 +40,6 @@ public class LoginService {
     }
 
     public UserInfo createUser(String code) {
-
         TokenInfo tokenInfo = tokenProvider.getToken(code);
         String accessToken = tokenInfo.getAccess_token();
         List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);

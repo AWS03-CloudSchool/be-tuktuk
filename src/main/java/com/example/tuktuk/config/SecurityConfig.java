@@ -34,7 +34,8 @@ public class SecurityConfig {
     CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(
         userInfoProvider, userRepository);
 
-    http.csrf()
+    http
+        .csrf()
         .disable()
         .authorizeHttpRequests(authorize -> authorize
             .anyRequest().permitAll()
@@ -61,6 +62,4 @@ public class SecurityConfig {
   public CustomAuthenticationProvider customAuthenticationProvider() {
     return new CustomAuthenticationProvider(customUserDetailsService);
   }
-
-
 }

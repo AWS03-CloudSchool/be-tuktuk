@@ -50,7 +50,9 @@ public class UserController {
   @PostMapping(value = "/fieldowners", consumes = MediaType.APPLICATION_JSON_VALUE)
   public UserCreateResDto createFieldOwner(@RequestParam String code,
       @RequestBody UserCreateReqDto createReqDto) {
+    log.info("field owner create api call");
     UserInfo ownerInfo = loginService.createUser(code);
+    log.info("field owner create api success");
     return userService.saveFieldOwner(ownerInfo.getId(), ownerInfo.getEmail(),
         ownerInfo.getProvider(), createReqDto);
   }
