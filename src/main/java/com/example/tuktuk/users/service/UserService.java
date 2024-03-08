@@ -51,7 +51,6 @@ public class UserService {
 
     @Transactional
     public UserCreateResDto saveFieldOwner(String ownerId, String email, Provider provider, UserCreateReqDto request) {
-        log.info("field owner database save method call");
         User fieldOwner = User.builder()
                 .id(ownerId)
                 .email(email)
@@ -65,7 +64,6 @@ public class UserService {
                 .build();
 
         User savedUser = userRepository.save(fieldOwner);
-        log.info("field owner create database save method success");
         return UserCreateResDto.from(savedUser);
     }
 
