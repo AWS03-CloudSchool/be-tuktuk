@@ -21,32 +21,37 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    private final LoginService loginService;
+  private final LoginService loginService;
 
-    @GetMapping("/mypage")
-    public UserReadResDto getMyProfile(HttpServletRequest request) {
-        String userId = request.getHeader("tuktuk");
+  @GetMapping("/mypage")
+  public UserReadResDto getMyProfile(HttpServletRequest request) {
+    String userId = request.getHeader("tuktuk");
 
-        return userService.findByUserId(userId);
-    }
+    return userService.findByUserId(userId);
+  }
 
-    @GetMapping("/login")
-    public UserReadResDto login(@RequestParam String code, HttpServletResponse response) {
-        return loginService.login(code, response);
-    }
+  @GetMapping("/login")
+  public ResponseEntity<UserReadResDto> login(@RequestParam String code,
+      HttpServletResponse response) {
+    UserReadResDto userReadResDto = loginService.login(code, response);
+    return new ResponseEntity<>(userReadResDto, HttpStatus.OK);
+  }
 
-    @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserCreateResDto createUser(@RequestParam String code, @RequestBody UserCreateReqDto createReqDto) {
-        UserInfo userInfo = loginService.createUser(code);
-        return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(), createReqDto);
-    }
+  @PostMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public UserCreateResDto createUser(@RequestParam String code,
+      @RequestBody UserCreateReqDto createReqDto) {
+    UserInfo userInfo = loginService.createUser(code);
+    return userService.saveUser(userInfo.getId(), userInfo.getEmail(), userInfo.getProvider(),
+        createReqDto);
+  }
 
-    @PostMapping(value = "/fieldowners", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserCreateResDto createFieldOwner(@RequestParam String code, @RequestBody UserCreateReqDto createReqDto) {
-        UserInfo ownerInfo = loginService.createUser(code);
-        return userService.saveFieldOwner(ownerInfo.getId(), ownerInfo.getEmail(), ownerInfo.getProvider(), createReqDto);
-    }
-
+  @PostMapping(value = "/fieldowners", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public UserCreateResDto createFieldOwner(@RequestParam String code,
+      @RequestBody UserCreateReqDto createReqDto) {
+    UserInfo ownerInfo = loginService.createUser(code);
+    return userService.saveFieldOwner(ownerInfo.getId(), ownerInfo.getEmail(),
+        ownerInfo.getProvider(), createReqDto);
+  }
 }
