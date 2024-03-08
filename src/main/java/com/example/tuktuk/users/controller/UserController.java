@@ -35,6 +35,8 @@ public class UserController {
   @GetMapping("/login")
   public ResponseEntity<UserReadResDto> login(@RequestParam String code,
       HttpServletResponse response) {
+    log.info("Client Code : " + code);
+    System.out.println("Client Code : " + code);
     UserReadResDto userReadResDto = loginService.login(code, response);
     return new ResponseEntity<>(userReadResDto, HttpStatus.OK);
   }
