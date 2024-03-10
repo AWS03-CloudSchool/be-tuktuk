@@ -31,11 +31,10 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //회원가입과 로그인은 토큰 유효성 검사 절차를 안 밟는다.
-        if (("GET".equals(request.getMethod()) && "/login".equals(request.getRequestURI())) ||
-                (("POST".equals(request.getMethod())) && "/users".equals(request.getRequestURI())) ||
-                ("POST".equals(request.getMethod())) && "/fieldowners".equals(request.getRequestURI())) {
-
+        /*
+            회원가입 및 로그인, 조회 요청은 토큰 유효성 검사를 실시하지 않는다.
+        */
+        if (checkPassUrl(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -76,5 +75,27 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
         // 인가 처리가 정상적으로 완료된다면 Authentication 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
+
+    private boolean checkPassUrl(HttpServletRequest request){
+        String requestHttpMethod = request.getMethod();
+        String requestURI = request.getRequestURI();
+
+        if (("GET".equals(requestHttpMethod) && "/login".equals(requestURI)) ||
+                ("POST".equals(requestHttpMethod) && "/users".equals(requestURI)) ||
+                ("POST".equals(requestHttpMethod) && "/fieldowners".equals(requestURI))) {
+            return true;
+        }
+
+//        if(("GET".equals(requestHttpMethod) && requestURI.contains("/schedules")))
+//            return true;
+//
+//        if(("GET".equals(requestHttpMethod) && requestURI.contains("/courts")))
+//            return true;
+//
+//        if(("GET".equals(requestHttpMethod) && requestURI.contains("/stadiums")))
+//            return true;
+
+        return false;
     }
 }
