@@ -8,6 +8,7 @@ import com.example.tuktuk.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,14 +35,10 @@ public class SecurityConfig {
     CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(
         userInfoProvider, userRepository);
 
-    http
-        .csrf()
-        .disable()
-        .authorizeHttpRequests(authorize -> authorize
-            .anyRequest().permitAll()
-        )
+    http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+        .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .httpBasic(Customizer.withDefaults())
-        .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        .csrf().disable();
 
     return http.build();
   }

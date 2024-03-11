@@ -89,7 +89,7 @@ public class StadiumService {
     }
 
     public List<StadiumSimpleReadResDto> findByKeyword(String keyword) {
-        List<StadiumSimpleReadResDto> response = new ArrayList<>();
+        List<StadiumSimpleReadResDto> response = new ArrayList<StadiumSimpleReadResDto>();
         stadiumRepository.findByKeyword(keyword).forEach(
             stadium -> response.add(StadiumSimpleReadResDto.from(stadium))
         );
