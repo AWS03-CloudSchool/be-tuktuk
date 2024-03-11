@@ -27,9 +27,7 @@ public class LoginService {
 
     public UserReadResDto login(String code, HttpServletResponse response) {
         TokenInfo tokenInfo = tokenProvider.getToken(code);
-        System.out.println("Get Token success");
         String accessToken = tokenInfo.getAccess_token();
-        System.out.println("Access token : " + accessToken);
         List<AttributeType> attributeTypes = userInfoProvider.getUserInfoFromAuthServer(accessToken);
         UserInfo userInfo = new UserInfo(attributeTypes);
 

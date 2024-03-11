@@ -4,7 +4,9 @@ import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtCreateReq
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtImageDeleteRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtImageUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.court.CourtUpdateRequestDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumWithCourtsResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.court.*;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.domain.court.CourtImage;
 import com.example.tuktuk.stadium.domain.court.CourtType;
@@ -16,6 +18,9 @@ import com.example.tuktuk.stadium.util.image.ObjectStorageFunction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,13 +36,13 @@ public class CourtService {
     private CourtRepository courtRepository;
 
     @Autowired
-    ObjectStorageFunction storageManager;
+    private ObjectStorageFunction storageManager;
 
     @Autowired
     private StadiumRepository stadiumRepository;
 
     @Autowired
-    CourtImageRepository courtImageRepository;
+    private CourtImageRepository courtImageRepository;
 
     @Transactional(readOnly = true)
     public CourtReadResponseDto findByCourtId(Long courtId) {
@@ -45,10 +50,13 @@ public class CourtService {
     }
 
     @Transactional(readOnly = true)
-    public List<CourtReadResponseDto> findByStadiumId(Long stadiumId) {
-        List<Court> courts = courtRepository.findByStadiumId(stadiumId);
+    public StadiumWithCourtsResDto findByStadiumId(Long stadiumId, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        return courts.stream().map(CourtReadResponseDto::from).toList();
+        Stadium stadium = stadiumRepository.findById(stadiumId).get();
+
+        return StadiumWithCourtsResDto.from(StadiumReadResponseDto.from(stadium),
+                courtRepository.findByStadiumId(stadiumId, pageRequest));
     }
 
     @Transactional

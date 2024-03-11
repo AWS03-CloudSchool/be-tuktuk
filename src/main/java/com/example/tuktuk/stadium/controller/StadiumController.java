@@ -9,12 +9,14 @@ import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDele
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
+import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.service.CourtService;
 import com.example.tuktuk.stadium.service.StadiumService;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,14 +42,10 @@ public class StadiumController {
     }
 
     @GetMapping("/{stadiumId}/courts")
-    public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId) {
-        StadiumReadResponseDto stadiumResDto = stadiumService.findByStadiumId(stadiumId);
-        List<CourtReadResponseDto> courtResDto = courtService.findByStadiumId(stadiumId);
-
-        return StadiumWithCourtsResDto.builder()
-                .stadiumReadResDto(stadiumResDto)
-                .courtReadResDto(courtResDto)
-                .build();
+    public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId,
+                                                        @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+                                                        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        return courtService.findByStadiumId(stadiumId, pageNumber, pageSize);
     }
 
     @GetMapping("/search")
@@ -56,7 +54,7 @@ public class StadiumController {
     }
 
     @Secured("FIELD_OWNER")
-    @GetMapping("/mystadiums")
+    @GetMapping("/my-stadiums")
     public List<StadiumReadResponseDto> getMyStadiums() {
         String ownerId = SecurityContextHolderUtil.getUserId();
         return stadiumService.findByOwnerId(ownerId);
