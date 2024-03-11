@@ -1,22 +1,19 @@
 package com.example.tuktuk.stadium.controller;
 
+import com.example.tuktuk.global.page.PageResponse;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.StadiumWithCourtsResDto;
-import com.example.tuktuk.stadium.controller.dto.responseDto.court.CourtReadResponseDto;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumWithCourtsResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumDeleteResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumReadResponseDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumUpdateResponseDto;
-import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.service.CourtService;
 import com.example.tuktuk.stadium.service.StadiumService;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
-import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,8 +46,10 @@ public class StadiumController {
     }
 
     @GetMapping("/search")
-    public List<StadiumSimpleReadResDto> getByKeyword(@RequestParam(name = "keyword") String keyword){
-        return stadiumService.findByKeyword(keyword);
+    public PageResponse<StadiumSimpleReadResDto> getByKeyword(@RequestParam(name = "keyword") String keyword,
+                                                              @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+                                                              @RequestParam(name = "pageSize", defaultValue = "5") int pageSize){
+        return stadiumService.findByKeyword(keyword, pageNumber, pageSize);
     }
 
     @Secured("FIELD_OWNER")

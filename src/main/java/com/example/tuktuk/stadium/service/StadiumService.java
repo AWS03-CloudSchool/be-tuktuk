@@ -1,5 +1,7 @@
 package com.example.tuktuk.stadium.service;
 
+import com.example.tuktuk.global.page.PageInfo;
+import com.example.tuktuk.global.page.PageResponse;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,12 +92,16 @@ public class StadiumService {
         return StadiumDeleteResponseDto.from(stadium);
     }
 
-    public List<StadiumSimpleReadResDto> findByKeyword(String keyword) {
-        List<StadiumSimpleReadResDto> response = new ArrayList<StadiumSimpleReadResDto>();
-        stadiumRepository.findByKeyword(keyword).forEach(
-            stadium -> response.add(StadiumSimpleReadResDto.from(stadium))
-        );
+    public PageResponse<StadiumSimpleReadResDto> findByKeyword(String keyword, int pageNumber, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        return response;
+        Page<Stadium> stadiumPage = stadiumRepository.findByKeyword(keyword, pageRequest);
+
+        List<StadiumSimpleReadResDto> stadiums = stadiumPage.get()
+                .map(StadiumSimpleReadResDto::from)
+                .toList();
+
+
+        return new PageResponse<StadiumSimpleReadResDto>(stadiums, PageInfo.from(stadiumPage));
     }
 }

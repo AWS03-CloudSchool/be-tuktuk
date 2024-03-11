@@ -1,13 +1,11 @@
 package com.example.tuktuk.stadium.controller.dto.responseDto.court;
 
-import com.example.tuktuk.global.PageInfo;
 import com.example.tuktuk.stadium.domain.court.Court;
 
 import java.util.List;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 @Getter
 @Builder
