@@ -15,6 +15,7 @@ public class ApiAllowMap {
     allowMap.add("GET", "/schedule");
     allowMap.add("GET", "/courts");
     allowMap.add("GET", "/stadiums");
+    allowMap.add("GET", "/login");
     allowMap.add("POST", "/users");
     allowMap.add("POST", "/fieldowners");
   }
