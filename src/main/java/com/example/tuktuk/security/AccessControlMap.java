@@ -24,9 +24,11 @@ public class AccessControlMap {
 
     public boolean checkURI(String httpMethod, String requestUri) {
         for (AccessControlRecord record : accessControlMap.keySet().stream().toList()) {
-            if (record.getHttpMethod().equals(httpMethod) && requestUri.contains(record.getUri())) {
+            if (requestUri.contains("my-stadiums") || requestUri.contains("my-schedules")) {
                 return accessControlMap.get(record);
-            } else if (requestUri.contains("my-stadiums") || requestUri.contains("my-schedules")) {
+            }
+
+            if (record.getHttpMethod().equals(httpMethod) && requestUri.contains(record.getUri())) {
                 return accessControlMap.get(record);
             }
         }
