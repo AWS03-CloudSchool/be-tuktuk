@@ -18,16 +18,12 @@ public class AccessControlMap {
         accessControlMap.put(AccessControlRecord.from("GET", "/login"), Boolean.TRUE);
         accessControlMap.put(AccessControlRecord.from("POST", "/users"), Boolean.TRUE);
         accessControlMap.put(AccessControlRecord.from("POST", "/fieldowners"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/stadiums/my-stadiums"), Boolean.FALSE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/schedules/my-schedules"), Boolean.FALSE);
+        accessControlMap.put(AccessControlRecord.from("GET", "/my-stadiums"), Boolean.FALSE);
+        accessControlMap.put(AccessControlRecord.from("GET", "/my-schedules"), Boolean.FALSE);
     }
 
     public boolean checkURI(String httpMethod, String requestUri) {
         for (AccessControlRecord record : accessControlMap.keySet().stream().toList()) {
-            if (requestUri.contains("my-stadiums") || requestUri.contains("my-schedules")) {
-                return accessControlMap.get(record);
-            }
-
             if (record.getHttpMethod().equals(httpMethod) && requestUri.contains(record.getUri())) {
                 return accessControlMap.get(record);
             }
