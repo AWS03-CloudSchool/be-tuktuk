@@ -2,6 +2,7 @@ package com.example.tuktuk.stadium.service;
 
 import com.example.tuktuk.global.page.PageInfo;
 import com.example.tuktuk.global.page.PageResponse;
+import com.example.tuktuk.security.SecurityContextHolderUtil;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumCreateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.requestDto.stadium.StadiumUpdateRequestDto;
 import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumCreateResponseDto;
@@ -30,78 +31,86 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class StadiumService {
-    @Autowired
-    private final StadiumRepository stadiumRepository;
 
-    @Transactional(readOnly = true)
-    public StadiumReadResponseDto findByStadiumId(final long stadiumId) {
-        Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
-        return StadiumReadResponseDto.from(stadium);
+  @Autowired
+  private final StadiumRepository stadiumRepository;
+
+  @Transactional(readOnly = true)
+  public StadiumReadResponseDto findByStadiumId(final long stadiumId) {
+    Stadium stadium = stadiumRepository.findById(stadiumId)
+        .orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+    return StadiumReadResponseDto.from(stadium);
+  }
+
+  @Transactional(readOnly = true)
+  public PageResponse<StadiumReadResponseDto> findByOwnerId(int pageNumber, int pageSize) {
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+    String ownerId = SecurityContextHolderUtil.getUserId();
+    Page<Stadium> stadiumPage = stadiumRepository.findByOwnerId(ownerId, pageRequest);
+
+    return new PageResponse(stadiumPage
+        .map(stadium -> StadiumReadResponseDto.from(stadium)).toList(),
+        PageInfo.from(stadiumPage));
+  }
+
+  @Transactional(readOnly = true)
+  public List<StadiumReadResponseDto> findAll() {
+    List<Stadium> stadiums = stadiumRepository.findAll();
+    return stadiums.stream()
+        .map(StadiumReadResponseDto::from)
+        .collect(Collectors.toList());
+  }
+
+  @Transactional
+  public StadiumCreateResponseDto saveStadium(String ownerId, StadiumCreateRequestDto request) {
+
+    Stadium stadium = Stadium.builder()
+        .name(request.getName())
+        .ownerId(new UserId(ownerId))
+        .location(Location.of(request.getLocationReqDto()))
+        .specificInfo(request.getSpecificInfo())
+        .build();
+
+    Stadium savedStadium = stadiumRepository.save(stadium);
+    return StadiumCreateResponseDto.from(savedStadium);
+  }
+
+  @Transactional
+  public StadiumUpdateResponseDto updateStadium(final String ownerId, final long stadiumId,
+      StadiumUpdateRequestDto request) {
+
+    Stadium stadium = stadiumRepository.findById(stadiumId)
+        .orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+    if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
+      throw new IllegalStateException("수정할 권한이 없습니다.");
     }
+    stadium.update(request);
+    Stadium updatedStadium = stadiumRepository.save(stadium);
+    return StadiumUpdateResponseDto.from(updatedStadium);
+  }
 
-    @Transactional(readOnly = true)
-    public List<StadiumReadResponseDto> findByOwnerId(final String ownerId) {
-        List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
-        return stadiums.stream()
-                .map(StadiumReadResponseDto::from)
-                .collect(Collectors.toList());
+  @Transactional
+  public StadiumDeleteResponseDto deleteStadium(final String ownerId, final long stadiumId) {
+    Stadium stadium = stadiumRepository.findById(stadiumId)
+        .orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+    if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
+      throw new IllegalStateException("삭제할 권한이 없습니다.");
     }
+    stadiumRepository.delete(stadium);
 
-    @Transactional(readOnly = true)
-    public List<StadiumReadResponseDto> findAll() {
-        List<Stadium> stadiums = stadiumRepository.findAll();
-        return stadiums.stream()
-                .map(StadiumReadResponseDto::from)
-                .collect(Collectors.toList());
-    }
+    return StadiumDeleteResponseDto.from(stadium);
+  }
 
-    @Transactional
-    public StadiumCreateResponseDto saveStadium(String ownerId, StadiumCreateRequestDto request) {
+  public PageResponse<StadiumSimpleReadResDto> findByKeyword(String keyword, int pageNumber,
+      int pageSize) {
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-        Stadium stadium = Stadium.builder()
-                .name(request.getName())
-                .ownerId(new UserId(ownerId))
-                .location(Location.of(request.getLocationReqDto()))
-                .specificInfo(request.getSpecificInfo())
-                .build();
+    Page<Stadium> stadiumPage = stadiumRepository.findByKeyword(keyword, pageRequest);
 
-        Stadium savedStadium = stadiumRepository.save(stadium);
-        return StadiumCreateResponseDto.from(savedStadium);
-    }
+    List<StadiumSimpleReadResDto> stadiums = stadiumPage.get()
+        .map(StadiumSimpleReadResDto::from)
+        .toList();
 
-    @Transactional
-    public StadiumUpdateResponseDto updateStadium(final String ownerId, final long stadiumId, StadiumUpdateRequestDto request) {
-
-        Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
-        if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
-            throw new IllegalStateException("수정할 권한이 없습니다.");
-        }
-        stadium.update(request);
-        Stadium updatedStadium = stadiumRepository.save(stadium);
-        return StadiumUpdateResponseDto.from(updatedStadium);
-    }
-
-    @Transactional
-    public StadiumDeleteResponseDto deleteStadium(final String ownerId, final long stadiumId) {
-        Stadium stadium = stadiumRepository.findById(stadiumId).orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
-        if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
-            throw new IllegalStateException("삭제할 권한이 없습니다.");
-        }
-        stadiumRepository.delete(stadium);
-
-        return StadiumDeleteResponseDto.from(stadium);
-    }
-
-    public PageResponse<StadiumSimpleReadResDto> findByKeyword(String keyword, int pageNumber, int pageSize) {
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-
-        Page<Stadium> stadiumPage = stadiumRepository.findByKeyword(keyword, pageRequest);
-
-        List<StadiumSimpleReadResDto> stadiums = stadiumPage.get()
-                .map(StadiumSimpleReadResDto::from)
-                .toList();
-
-
-        return new PageResponse<StadiumSimpleReadResDto>(stadiums, PageInfo.from(stadiumPage));
-    }
+    return new PageResponse<StadiumSimpleReadResDto>(stadiums, PageInfo.from(stadiumPage));
+  }
 }

@@ -15,8 +15,6 @@ public class StadiumSimpleReadResDto {
 
   private String roadNameAddress;
 
-  private PageInfo pageInfo;
-
   public static StadiumSimpleReadResDto from(Stadium stadium){
     return StadiumSimpleReadResDto.builder()
         .stadiumId(stadium.getId())

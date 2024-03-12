@@ -29,65 +29,71 @@ import java.util.List;
 @Slf4j
 public class StadiumController {
 
-    private final StadiumService stadiumService;
+  private final StadiumService stadiumService;
 
-    private final CourtService courtService;
+  private final CourtService courtService;
 
-    @GetMapping("/{stadiumId}")
-    public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
-        return stadiumService.findByStadiumId(stadiumId);
-    }
+  @GetMapping("/{stadiumId}")
+  public StadiumReadResponseDto getStadiumById(@PathVariable(name = "stadiumId") long stadiumId) {
+    return stadiumService.findByStadiumId(stadiumId);
+  }
 
-    @GetMapping("/{stadiumId}/courts")
-    public StadiumWithCourtsResDto getStadiumWithCourts(@PathVariable(name = "stadiumId") long stadiumId,
-                                                        @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
-                                                        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
-        return courtService.findByStadiumId(stadiumId, pageNumber, pageSize);
-    }
+  @GetMapping("/{stadiumId}/courts")
+  public StadiumWithCourtsResDto getStadiumWithCourts(
+      @PathVariable(name = "stadiumId") long stadiumId,
+      @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+      @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize) {
+    return courtService.findByStadiumId(stadiumId, pageNumber, pageSize);
+  }
 
-    @GetMapping("/search")
-    public PageResponse<StadiumSimpleReadResDto> getByKeyword(@RequestParam(name = "keyword") String keyword,
-                                                              @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
-                                                              @RequestParam(name = "pageSize", defaultValue = "5") int pageSize){
-        return stadiumService.findByKeyword(keyword, pageNumber, pageSize);
-    }
+  @GetMapping("/search")
+  public PageResponse<StadiumSimpleReadResDto> getByKeyword(
+      @RequestParam(name = "keyword") String keyword,
+      @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+      @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
+    return stadiumService.findByKeyword(keyword, pageNumber, pageSize);
+  }
 
-    @Secured("FIELD_OWNER")
-    @GetMapping("/my-stadiums")
-    public List<StadiumReadResponseDto> getMyStadiums() {
-        String ownerId = SecurityContextHolderUtil.getUserId();
-        return stadiumService.findByOwnerId(ownerId);
-    }
+  @Secured("FIELD_OWNER")
+  @GetMapping("/my-stadiums")
+  public PageResponse<StadiumReadResponseDto> getMyStadiums(
+      @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+      @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
+    return stadiumService.findByOwnerId(pageNumber, pageSize);
+  }
 
-    @Secured("FIELD_OWNER")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StadiumCreateResponseDto> createStadium(@RequestBody StadiumCreateRequestDto requestDto) {
-        String ownerId = SecurityContextHolderUtil.getUserId();
-        StadiumCreateResponseDto responseDto = stadiumService.saveStadium(ownerId, requestDto);
+  @Secured("FIELD_OWNER")
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StadiumCreateResponseDto> createStadium(
+      @RequestBody StadiumCreateRequestDto requestDto) {
+    String ownerId = SecurityContextHolderUtil.getUserId();
+    StadiumCreateResponseDto responseDto = stadiumService.saveStadium(ownerId, requestDto);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return new ResponseEntity<>(responseDto, headers, HttpStatus.CREATED);
-    }
+    return new ResponseEntity<>(responseDto, headers, HttpStatus.CREATED);
+  }
 
-    @Secured("FIELD_OWNER")
-    @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StadiumUpdateResponseDto> updateStadium(@PathVariable(name = "stadiumId") long stadiumId,
-                                                                  @RequestBody StadiumUpdateRequestDto requestDto) {
-        String ownerId = SecurityContextHolderUtil.getUserId();
-        StadiumUpdateResponseDto responseDto = stadiumService.updateStadium(ownerId, stadiumId, requestDto);
+  @Secured("FIELD_OWNER")
+  @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StadiumUpdateResponseDto> updateStadium(
+      @PathVariable(name = "stadiumId") long stadiumId,
+      @RequestBody StadiumUpdateRequestDto requestDto) {
+    String ownerId = SecurityContextHolderUtil.getUserId();
+    StadiumUpdateResponseDto responseDto = stadiumService.updateStadium(ownerId, stadiumId,
+        requestDto);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
 
-        return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
+  }
 
-    @Secured("FIELD_OWNER")
-    @DeleteMapping("/{stadiumId}")
-    public StadiumDeleteResponseDto deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
-        String ownerId = SecurityContextHolderUtil.getUserId();
-        return stadiumService.deleteStadium(ownerId, stadiumId);
-    }
+  @Secured("FIELD_OWNER")
+  @DeleteMapping("/{stadiumId}")
+  public StadiumDeleteResponseDto deleteStadium(@PathVariable(name = "stadiumId") long stadiumId) {
+    String ownerId = SecurityContextHolderUtil.getUserId();
+    return stadiumService.deleteStadium(ownerId, stadiumId);
+  }
 }
