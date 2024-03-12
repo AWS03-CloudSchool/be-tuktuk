@@ -18,6 +18,9 @@ public interface StadiumRepository extends JpaRepository<Stadium, Long> {
     @Query("SELECT s FROM Stadium s WHERE s.ownerId.userId = :id")
     public Page<Stadium> findByOwnerId(String id, Pageable page);
 
+    @Query("SELECT s FROM Stadium s WHERE s.ownerId.userId = :ownerId AND s.id = :stadiumId")
+    public Stadium findByOwnerIdAndStadiumId(String ownerId, long stadiumId);
+
     @Query("SELECT s FROM Stadium s WHERE s.location.province = :province")
     public List<Stadium> findByProvince(Province province);
 

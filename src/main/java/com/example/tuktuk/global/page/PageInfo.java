@@ -1,10 +1,12 @@
 package com.example.tuktuk.global.page;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 
 @Getter
+@AllArgsConstructor
 @Builder
 public class PageInfo {
     private int pageNumber;

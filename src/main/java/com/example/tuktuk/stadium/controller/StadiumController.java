@@ -53,7 +53,7 @@ public class StadiumController {
       @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
     return stadiumService.findByKeyword(keyword, pageNumber, pageSize);
   }
-
+  
   @Secured("FIELD_OWNER")
   @GetMapping("/my-stadiums")
   public PageResponse<StadiumReadResponseDto> getMyStadiums(
@@ -64,30 +64,17 @@ public class StadiumController {
 
   @Secured("FIELD_OWNER")
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<StadiumCreateResponseDto> createStadium(
-      @RequestBody StadiumCreateRequestDto requestDto) {
-    String ownerId = SecurityContextHolderUtil.getUserId();
-    StadiumCreateResponseDto responseDto = stadiumService.saveStadium(ownerId, requestDto);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    return new ResponseEntity<>(responseDto, headers, HttpStatus.CREATED);
+  public StadiumCreateResponseDto createStadium(@RequestBody StadiumCreateRequestDto requestDto) {
+    return stadiumService.saveStadium(requestDto);
   }
 
   @Secured("FIELD_OWNER")
   @PatchMapping(value = "/{stadiumId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<StadiumUpdateResponseDto> updateStadium(
+  public StadiumUpdateResponseDto updateStadium(
       @PathVariable(name = "stadiumId") long stadiumId,
       @RequestBody StadiumUpdateRequestDto requestDto) {
-    String ownerId = SecurityContextHolderUtil.getUserId();
-    StadiumUpdateResponseDto responseDto = stadiumService.updateStadium(ownerId, stadiumId,
-        requestDto);
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-
-    return new ResponseEntity<>(responseDto, headers, HttpStatus.OK);
+    return stadiumService.updateStadium(stadiumId, requestDto);
   }
 
   @Secured("FIELD_OWNER")

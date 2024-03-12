@@ -62,7 +62,8 @@ public class StadiumService {
   }
 
   @Transactional
-  public StadiumCreateResponseDto saveStadium(String ownerId, StadiumCreateRequestDto request) {
+  public StadiumCreateResponseDto saveStadium(StadiumCreateRequestDto request) {
+    String ownerId = SecurityContextHolderUtil.getUserId();
 
     Stadium stadium = Stadium.builder()
         .name(request.getName())
@@ -76,14 +77,18 @@ public class StadiumService {
   }
 
   @Transactional
-  public StadiumUpdateResponseDto updateStadium(final String ownerId, final long stadiumId,
+  public StadiumUpdateResponseDto updateStadium(long stadiumId,
       StadiumUpdateRequestDto request) {
+
+    String ownerId = SecurityContextHolderUtil.getUserId();
 
     Stadium stadium = stadiumRepository.findById(stadiumId)
         .orElseThrow(() -> new IllegalStateException("잘못된 접근입니다."));
+
     if (!stadium.getOwnerId().getUserId().equals(ownerId)) {
       throw new IllegalStateException("수정할 권한이 없습니다.");
     }
+
     stadium.update(request);
     Stadium updatedStadium = stadiumRepository.save(stadium);
     return StadiumUpdateResponseDto.from(updatedStadium);
