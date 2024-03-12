@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,39 +25,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final CustomUserDetailsService customUserDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  private final UserInfoProvider userInfoProvider;
+    private final UserInfoProvider userInfoProvider;
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(
-        userInfoProvider, userRepository);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        CustomAuthenticationFilter customAuthenticationFilter = customAuthenticationFilter(
+                userInfoProvider, userRepository);
 
-    http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
-        .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .httpBasic(Customizer.withDefaults())
-        .csrf().disable();
+        return http.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .addFilterBefore(customAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable).build();
+    }
 
-    return http.build();
-  }
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider,
+                                                                 UserRepository userRepository) {
+        return new CustomAuthenticationFilter(userInfoProvider, userRepository);
+    }
 
-  @Bean
-  public CustomAuthenticationFilter customAuthenticationFilter(UserInfoProvider userInfoProvider,
-      UserRepository userRepository) {
-    return new CustomAuthenticationFilter(userInfoProvider, userRepository);
-  }
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-  @Bean
-  public AuthenticationManager authenticationManager(
-      AuthenticationConfiguration authenticationConfiguration) throws Exception {
-    return authenticationConfiguration.getAuthenticationManager();
-  }
-
-  @Bean
-  public CustomAuthenticationProvider customAuthenticationProvider() {
-    return new CustomAuthenticationProvider(customUserDetailsService);
-  }
+    @Bean
+    public CustomAuthenticationProvider customAuthenticationProvider() {
+        return new CustomAuthenticationProvider(customUserDetailsService);
+    }
 }

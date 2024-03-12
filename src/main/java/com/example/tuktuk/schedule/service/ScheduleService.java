@@ -51,7 +51,8 @@ public class ScheduleService {
   }
 
   @Transactional(readOnly = true)
-  public List<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date) {
+  public PageResponse<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date, int pageNumber, int pageSize) {
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
     List<ScheduleSimpleReadResDto> response = new ArrayList<>();
     HashMap<Long, String> courtIdAndStadiumNames = new HashMap<>();
 
@@ -62,17 +63,24 @@ public class ScheduleService {
                 stadium.getName()
             )));
 
+    int totalPage = 0;
+    int totalElements = 0;
+
     for (Long courtId : courtIdAndStadiumNames.keySet()) {
       String courtName = courtRepository.findByName(courtId);
       String stadiumName = courtIdAndStadiumNames.get(courtId);
       String stadiumWithCourtName = stadiumName + " " + courtName;
 
-      scheduleRepository.findByCourtIdAndDate(courtId, date)
-          .forEach(schedule -> response.add(
-              ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName)));
+      Page<Schedule> schedulePage = scheduleRepository.findByCourtIdAndDate(courtId, date, pageRequest);
+      totalPage += schedulePage.getTotalPages();
+      totalElements += (int) schedulePage.getTotalElements();
+
+      schedulePage.forEach(schedule ->
+        response.add(ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName))
+      );
     }
 
-    return response;
+    return new PageResponse<>(response, new PageInfo(pageNumber, pageSize, totalElements, totalPage));
   }
 
   @Transactional

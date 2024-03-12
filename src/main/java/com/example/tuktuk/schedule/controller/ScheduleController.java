@@ -6,7 +6,6 @@ import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDt
 import com.example.tuktuk.schedule.controller.dto.responseDto.*;
 import com.example.tuktuk.schedule.service.ScheduleService;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -28,11 +27,13 @@ public class ScheduleController {
   }
 
   @GetMapping("/search")
-  public List<ScheduleSimpleReadResDto> findByProvince(
+  public PageResponse<ScheduleSimpleReadResDto> findByProvince(
       @RequestParam(name = "province") String province,
-      @RequestParam(name = "date") LocalDate date
+      @RequestParam(name = "date") LocalDate date,
+      @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber,
+      @RequestParam(name = "pageSize", defaultValue = "6") int pageSize
   ) {
-    return scheduleService.findByProvince(province, date);
+    return scheduleService.findByProvince(province, date, pageNumber, pageSize);
   }
 
   @Secured("FIELD_OWNER")

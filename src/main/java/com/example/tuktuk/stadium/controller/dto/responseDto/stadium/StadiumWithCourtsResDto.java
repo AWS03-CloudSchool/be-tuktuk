@@ -23,7 +23,7 @@ public class StadiumWithCourtsResDto {
 
         return StadiumWithCourtsResDto.builder()
                 .stadium(stadium)
-                .courts(new PageResponse(
+                .courts(new PageResponse<>(
                         courtPage
                                 .get()
                                 .map(CourtReadSimpleResDto::from)

@@ -25,5 +25,5 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
             "AND s.type = 'MATCH' " +
             "AND s.isDeleted = false"
     )
-    public List<Schedule> findByCourtIdAndDate(Long courtId, LocalDate date);
+    public Page<Schedule> findByCourtIdAndDate(Long courtId, LocalDate date, Pageable page);
 }
