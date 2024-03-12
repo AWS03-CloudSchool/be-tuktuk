@@ -44,12 +44,13 @@ public class StadiumService {
 
   @Transactional(readOnly = true)
   public PageResponse<StadiumReadResponseDto> findByOwnerId(int pageNumber, int pageSize) {
+
     PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
     String ownerId = SecurityContextHolderUtil.getUserId();
     Page<Stadium> stadiumPage = stadiumRepository.findByOwnerId(ownerId, pageRequest);
 
-    return new PageResponse(stadiumPage
-        .map(stadium -> StadiumReadResponseDto.from(stadium)).toList(),
+    return new PageResponse<>(stadiumPage
+        .map(StadiumReadResponseDto::from).toList(),
         PageInfo.from(stadiumPage));
   }
 

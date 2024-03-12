@@ -53,8 +53,7 @@ public class StadiumController {
       @RequestParam(name = "pageSize", defaultValue = "5", required = false) int pageSize) {
     return stadiumService.findByKeyword(keyword, pageNumber, pageSize);
   }
-  
-  @Secured("FIELD_OWNER")
+
   @GetMapping("/my-stadiums")
   public PageResponse<StadiumReadResponseDto> getMyStadiums(
       @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
