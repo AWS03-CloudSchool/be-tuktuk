@@ -4,8 +4,6 @@ import com.example.tuktuk.schedule.domain.Schedule;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalTime;
-
 @Getter
 @Builder
 public class ScheduleSimpleReadResDto {

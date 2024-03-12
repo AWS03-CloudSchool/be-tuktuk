@@ -1,5 +1,6 @@
 package com.example.tuktuk.stadium.controller.dto.responseDto.stadium;
 
+import com.example.tuktuk.global.page.PageInfo;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
 import lombok.Builder;
 import lombok.Getter;

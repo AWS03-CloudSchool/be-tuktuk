@@ -39,6 +39,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         /*
             회원가입 및 로그인, 조회 요청은 토큰 유효성 검사를 실시하지 않는다.
+            단, 구장 소유주 및 일반 회원만이 할 수 있는 조회 요청은 토큰 유효성 검사를 그대로 실시한다.
         */
         if (apiAllowMap.isAllowURI(request.getMethod(), request.getRequestURI())) {
             filterChain.doFilter(request, response);

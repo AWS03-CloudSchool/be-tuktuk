@@ -1,5 +1,7 @@
 package com.example.tuktuk.schedule.service;
 
+import com.example.tuktuk.global.page.PageInfo;
+import com.example.tuktuk.global.page.PageResponse;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.*;
@@ -8,6 +10,7 @@ import com.example.tuktuk.schedule.repository.ScheduleRepository;
 import com.example.tuktuk.global.Money;
 import com.example.tuktuk.global.Province;
 import com.example.tuktuk.security.SecurityContextHolderUtil;
+import com.example.tuktuk.stadium.controller.dto.responseDto.stadium.StadiumSimpleReadResDto;
 import com.example.tuktuk.stadium.domain.court.Court;
 import com.example.tuktuk.stadium.domain.court.CourtId;
 import com.example.tuktuk.stadium.domain.stadium.Stadium;
@@ -48,7 +51,8 @@ public class ScheduleService {
   }
 
   @Transactional(readOnly = true)
-  public List<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date) {
+  public PageResponse<ScheduleSimpleReadResDto> findByProvince(String province, LocalDate date, int pageNumber, int pageSize) {
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
     List<ScheduleSimpleReadResDto> response = new ArrayList<>();
     HashMap<Long, String> courtIdAndStadiumNames = new HashMap<>();
 
@@ -59,17 +63,24 @@ public class ScheduleService {
                 stadium.getName()
             )));
 
+    int totalPage = 0;
+    int totalElements = 0;
+
     for (Long courtId : courtIdAndStadiumNames.keySet()) {
       String courtName = courtRepository.findByName(courtId);
       String stadiumName = courtIdAndStadiumNames.get(courtId);
       String stadiumWithCourtName = stadiumName + " " + courtName;
 
-      scheduleRepository.findByCourtIdAndDate(courtId, date)
-          .forEach(schedule -> response.add(
-              ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName)));
+      Page<Schedule> schedulePage = scheduleRepository.findByCourtIdAndDate(courtId, date, pageRequest);
+      totalPage += schedulePage.getTotalPages();
+      totalElements += (int) schedulePage.getTotalElements();
+
+      schedulePage.forEach(schedule ->
+        response.add(ScheduleSimpleReadResDto.from(schedule, stadiumWithCourtName))
+      );
     }
 
-    return response;
+    return new PageResponse<>(response, new PageInfo(pageNumber, pageSize, totalElements, totalPage));
   }
 
   @Transactional
@@ -125,22 +136,36 @@ public class ScheduleService {
   }
 
   @Transactional
-  public List<ScheduleReadResponseDto> findAllByOwnerId() {
+  public SchedulePerStadiumResDto findAllByOwnerIdAndStadiumId(long stadiumId,
+      int pageNumber, int pageSize) {
+
     String ownerId = SecurityContextHolderUtil.getUserId();
-    List<ScheduleReadResponseDto> scheduleReadResponse = new ArrayList<>();
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 
-    List<Stadium> stadiums = stadiumRepository.findByOwnerId(ownerId);
+    Stadium stadium = stadiumRepository.findByOwnerIdAndStadiumId(ownerId, stadiumId);
 
-    for (Stadium stadium : stadiums) {
-      for (Court court : stadium.getCourts()) {
-        List<Schedule> schedules = scheduleRepository.findByCourtId(court.getId());
+    List<ScheduleReadResponseDto> scheduleDtos = new ArrayList<>();
 
-        scheduleReadResponse = schedules.stream().map(schedule ->
-            ScheduleReadResponseDto.from(schedule, court.getHourlyRentFee())
-        ).toList();
-      }
+    int totalPage = 0;
+    int totalElements = 0;
+
+    for (Court c : stadium.getCourts()) {
+      int hourlyRentFee = courtRepository.findHourlyRentFeeById(c.getId());
+      Page<Schedule> schedulePage = scheduleRepository.findByCourtId(c.getId(), pageRequest);
+      scheduleDtos.addAll(
+          schedulePage
+              .get()
+              .map(schedule ->
+                  ScheduleReadResponseDto.from(schedule, hourlyRentFee))
+              .toList());
+      totalPage += schedulePage.getTotalPages();
+      totalElements += schedulePage.getTotalElements();
     }
 
-    return scheduleReadResponse;
+    return SchedulePerStadiumResDto
+        .from(StadiumSimpleReadResDto.from(stadium),
+            scheduleDtos,
+            new PageInfo(pageNumber, pageSize, totalElements, totalPage)
+        );
   }
 }
