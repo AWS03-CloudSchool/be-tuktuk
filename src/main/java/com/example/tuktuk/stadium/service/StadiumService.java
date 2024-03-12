@@ -48,8 +48,8 @@ public class StadiumService {
     String ownerId = SecurityContextHolderUtil.getUserId();
     Page<Stadium> stadiumPage = stadiumRepository.findByOwnerId(ownerId, pageRequest);
 
-    return new PageResponse(stadiumPage
-        .map(stadium -> StadiumReadResponseDto.from(stadium)).toList(),
+    return new PageResponse<>(stadiumPage
+        .map(StadiumReadResponseDto::from).toList(),
         PageInfo.from(stadiumPage));
   }
 

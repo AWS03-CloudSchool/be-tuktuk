@@ -36,6 +36,14 @@ public class ScheduleController {
     return scheduleService.findByProvince(province, date, pageNumber, pageSize);
   }
 
+  @GetMapping("/my-schedules")
+  public SchedulePerStadiumResDto findAllScheduleByOwner(
+          @RequestParam(name = "stadiumId") long stadiumId,
+          @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+          @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize) {
+    return scheduleService.findAllByOwnerIdAndStadiumId(stadiumId, pageNumber, pageSize);
+  }
+
   @Secured("FIELD_OWNER")
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ScheduleCreateResDto createSchedule(@RequestBody ScheduleCreateReqDto requestDto) {
@@ -53,13 +61,5 @@ public class ScheduleController {
   @DeleteMapping(value = "/{scheduleId}")
   public ScheduleDeleteResDto deleteSchedule(@PathVariable(name = "scheduleId") long scheduleId) {
     return scheduleService.deleteSchedule(scheduleId);
-  }
-
-  @GetMapping("/my-schedules")
-  public SchedulePerStadiumResDto findAllScheduleByOwner(
-      @RequestParam(name = "stadiumId") long stadiumId,
-      @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-      @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize) {
-    return scheduleService.findAllByOwnerIdAndStadiumId(stadiumId, pageNumber, pageSize);
   }
 }
