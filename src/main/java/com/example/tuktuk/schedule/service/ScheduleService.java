@@ -159,7 +159,7 @@ public class ScheduleService {
                   ScheduleReadResponseDto.from(schedule, hourlyRentFee))
               .toList());
       totalPage += schedulePage.getTotalPages();
-      totalElements += schedulePage.getTotalElements();
+      totalElements += (int) schedulePage.getTotalElements();
     }
 
     return SchedulePerStadiumResDto
