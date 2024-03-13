@@ -18,13 +18,16 @@ public class AccessControlMap {
         accessControlMap.put(AccessControlRecord.from("GET", "/login"), Boolean.TRUE);
         accessControlMap.put(AccessControlRecord.from("POST", "/users"), Boolean.TRUE);
         accessControlMap.put(AccessControlRecord.from("POST", "/fieldowners"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/my-stadiums"), Boolean.FALSE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/my-schedules"), Boolean.FALSE);
+        accessControlMap.put(AccessControlRecord.from("GET", "/my-"), Boolean.FALSE);
     }
 
     public boolean checkURI(String httpMethod, String requestUri) {
         for (AccessControlRecord record : accessControlMap.keySet().stream().toList()) {
             if (record.getHttpMethod().equals(httpMethod) && requestUri.contains(record.getUri())) {
+                System.out.println("HTTP Method : " + httpMethod);
+                System.out.println("Request URI : " + requestUri);
+                System.out.println("Record HTTP Method : " + record.getHttpMethod());
+                System.out.println("Record URI : " + record.getUri());
                 return accessControlMap.get(record);
             }
         }
