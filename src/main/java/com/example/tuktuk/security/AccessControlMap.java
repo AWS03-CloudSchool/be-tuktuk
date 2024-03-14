@@ -13,22 +13,22 @@ public class AccessControlMap {
     private final Map<AccessControlRecord, Boolean> accessControlMap = new HashMap<>();
 
     public AccessControlMap() {
-        accessControlMap.put(AccessControlRecord.from("GET", "/stadiums"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/schedules"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("GET", "/login"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("POST", "/users"), Boolean.TRUE);
-        accessControlMap.put(AccessControlRecord.from("POST", "/fieldowners"), Boolean.TRUE);
         accessControlMap.put(AccessControlRecord.from("GET", "/my-stadiums"), Boolean.FALSE);
         accessControlMap.put(AccessControlRecord.from("GET", "/my-schedules"), Boolean.FALSE);
+        accessControlMap.put(AccessControlRecord.from("GET", "/"), Boolean.TRUE);
+        accessControlMap.put(AccessControlRecord.from("POST", "/users"), Boolean.TRUE);
+        accessControlMap.put(AccessControlRecord.from("POST", "/fieldowners"), Boolean.TRUE);
     }
 
     public boolean checkURI(String httpMethod, String requestUri) {
+        boolean flag = false;
+
         for (AccessControlRecord record : accessControlMap.keySet().stream().toList()) {
-            if (record.getHttpMethod().equals(httpMethod) && requestUri.contains(record.getUri())) {
-                return accessControlMap.get(record);
+            if (requestUri.contains(record.getUrl()) && record.getHttpMethod().equals(httpMethod)) {
+                flag = accessControlMap.get(record);
             }
         }
 
-        return false;
+        return flag;
     }
 }

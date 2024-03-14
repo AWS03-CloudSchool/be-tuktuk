@@ -9,12 +9,12 @@ public class AccessControlRecord {
 
     private String httpMethod;
 
-    private String uri;
+    private String url;
 
-    public static AccessControlRecord from(String httpMethod, String uri){
+    public static AccessControlRecord from(String httpMethod, String url){
         return AccessControlRecord.builder()
                 .httpMethod(httpMethod)
-                .uri(uri)
+                .url(url)
                 .build();
     }
 }

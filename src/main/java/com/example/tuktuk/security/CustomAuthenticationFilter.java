@@ -35,7 +35,6 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("Request URL : " + request.getRequestURL().toString());
         /*
             회원가입 및 로그인, 조회 요청은 토큰 유효성 검사를 실시하지 않는다.
             단, 구장 소유주 및 일반 회원만이 할 수 있는 조회 요청은 토큰 유효성 검사를 그대로 실시한다.
@@ -57,7 +56,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        else throw new IllegalStateException("토큰을 재발급받아야 합니다.");
+        else throw new IllegalStateException("유효하지 않은 토큰입니다.");
     }
 
     private boolean isValidToken(String accessToken) {
