@@ -17,7 +17,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     public Optional<Schedule> findById(Long id);
 
     @Query("SELECT s FROM Schedule s WHERE s.courtId.id = :courtId")
-    public Page<Schedule> findByCourtId(Long courtId);
+    public List<Schedule> findByCourtId(Long courtId);
 
     @Query("SELECT s FROM Schedule s " +
             "WHERE s.courtId.id = :courtId " +
