@@ -38,10 +38,8 @@ public class ScheduleController {
 
   @GetMapping("/my-schedules")
   public SchedulePerStadiumResDto findAllScheduleByOwner(
-          @RequestParam(name = "stadiumId") long stadiumId,
-          @RequestParam(name = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-          @RequestParam(name = "pageSize", defaultValue = "10", required = false) int pageSize) {
-    return scheduleService.findAllByOwnerIdAndStadiumId(stadiumId, pageNumber, pageSize);
+          @RequestParam(name = "stadiumId") long stadiumId) {
+    return scheduleService.findAllByOwnerIdAndStadiumId(stadiumId);
   }
 
   @Secured("FIELD_OWNER")

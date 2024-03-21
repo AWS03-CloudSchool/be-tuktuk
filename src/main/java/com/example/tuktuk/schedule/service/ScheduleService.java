@@ -136,36 +136,29 @@ public class ScheduleService {
   }
 
   @Transactional
-  public SchedulePerStadiumResDto findAllByOwnerIdAndStadiumId(long stadiumId,
-      int pageNumber, int pageSize) {
+  public SchedulePerStadiumResDto findAllByOwnerIdAndStadiumId(long stadiumId) {
 
     String ownerId = SecurityContextHolderUtil.getUserId();
-    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
 
     Stadium stadium = stadiumRepository.findByOwnerIdAndStadiumId(ownerId, stadiumId);
 
     List<ScheduleReadResponseDto> scheduleDtos = new ArrayList<>();
 
-    int totalPage = 0;
-    int totalElements = 0;
-
     for (Court c : stadium.getCourts()) {
       int hourlyRentFee = courtRepository.findHourlyRentFeeById(c.getId());
-      Page<Schedule> schedulePage = scheduleRepository.findByCourtId(c.getId(), pageRequest);
+      Page<Schedule> schedulePage = scheduleRepository.findByCourtId(c.getId());
       scheduleDtos.addAll(
           schedulePage
               .get()
               .map(schedule ->
                   ScheduleReadResponseDto.from(schedule, hourlyRentFee))
               .toList());
-      totalPage += schedulePage.getTotalPages();
-      totalElements += (int) schedulePage.getTotalElements();
     }
 
     return SchedulePerStadiumResDto
         .from(StadiumSimpleReadResDto.from(stadium),
-            scheduleDtos,
-            new PageInfo(pageNumber, pageSize, totalElements, totalPage)
+            scheduleDtos
         );
   }
 }
