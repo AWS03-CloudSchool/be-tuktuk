@@ -27,7 +27,7 @@ public class Reservation {
     private UserId memberId;
 
     @Embedded
-    private ScheduleId sliceId;
+    private ScheduleId scheduleId;
 
     @Embedded
     private Money fee;

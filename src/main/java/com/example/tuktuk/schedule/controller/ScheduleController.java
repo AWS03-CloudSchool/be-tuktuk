@@ -42,6 +42,12 @@ public class ScheduleController {
     return scheduleService.findAllByOwnerIdAndStadiumId(stadiumId);
   }
 
+  @Secured({"USER", "FIELD_OWNER"})
+  @PostMapping(value = "/match", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ScheduleReadResponseDto registryMatch(){
+    return null;
+  }
+
   @Secured("FIELD_OWNER")
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ScheduleCreateResDto createSchedule(@RequestBody ScheduleCreateReqDto requestDto) {
