@@ -43,9 +43,9 @@ public class ScheduleController {
   }
 
   @Secured({"USER", "FIELD_OWNER"})
-  @PostMapping(value = "/match", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ScheduleReadResponseDto registryMatch(){
-    return null;
+  @PostMapping(value = "/match/{scheduleId}")
+  public MatchEnrollResponseDto enrollMatch(@PathVariable long scheduleId){
+    return scheduleService.registryMatch(scheduleId);
   }
 
   @Secured("FIELD_OWNER")

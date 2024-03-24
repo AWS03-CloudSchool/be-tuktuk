@@ -160,4 +160,22 @@ public class ScheduleService {
                         scheduleDtos
                 );
     }
+
+    @Transactional
+    public MatchEnrollResponseDto registryMatch(long scheduleId){
+        Schedule schedule = scheduleRepository.findByIdAndMatch(scheduleId).orElseThrow(
+                () -> new RuntimeException("찾을 수 없는 일정입니다."));
+
+
+        int maxParticipants = courtRepository.findById(schedule.getCourtId().getValue())
+                .get()
+                .getMaxParticipants();
+
+        String userId = SecurityContextHolderUtil.getUserId();
+
+        schedule.enroll(userId, maxParticipants);
+        Schedule enrolledSchedule = scheduleRepository.save(schedule);
+
+        return MatchEnrollResponseDto.from(enrolledSchedule);
+    }
 }
