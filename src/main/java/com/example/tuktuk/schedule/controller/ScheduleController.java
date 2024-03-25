@@ -1,6 +1,7 @@
 package com.example.tuktuk.schedule.controller;
 
 import com.example.tuktuk.global.page.PageResponse;
+import com.example.tuktuk.schedule.controller.dto.requestDto.ReservationRequestDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleCreateReqDto;
 import com.example.tuktuk.schedule.controller.dto.requestDto.ScheduleUpdateReqDto;
 import com.example.tuktuk.schedule.controller.dto.responseDto.*;
@@ -46,6 +47,12 @@ public class ScheduleController {
   @PostMapping(value = "/match/{scheduleId}")
   public MatchEnrollResponseDto enrollMatch(@PathVariable long scheduleId){
     return scheduleService.registryMatch(scheduleId);
+  }
+
+  @Secured({"USER", "FIELD_OWNER"})
+  @PostMapping(value = "/reservate")
+  public ReservationResponseDto reservate(@RequestBody ReservationRequestDto requestDto){
+    return scheduleService.reservate(requestDto);
   }
 
   @Secured("FIELD_OWNER")

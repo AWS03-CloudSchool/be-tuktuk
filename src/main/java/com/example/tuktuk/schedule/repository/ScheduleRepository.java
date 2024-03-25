@@ -2,6 +2,7 @@ package com.example.tuktuk.schedule.repository;
 
 import com.example.tuktuk.schedule.domain.Schedule;
 
+import com.example.tuktuk.schedule.domain.Type;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -18,8 +19,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
 
     @Query("SELECT s FROM Schedule s WHERE s.id = :id AND s.isDeleted = false " +
             "AND s.reservationStatus = 'AVAILABLE' " +
-            "AND s.type = 'MATCH'")
-    public Optional<Schedule> findByIdAndMatch(Long id);
+            "AND s.type = :type")
+    public Optional<Schedule> findByIdAndType(Long id, Type type);
 
     @Query("SELECT s FROM Schedule s WHERE s.courtId.id = :courtId")
     public List<Schedule> findByCourtId(Long courtId);
