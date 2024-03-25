@@ -8,6 +8,8 @@ import lombok.Getter;
 @Builder
 public class ScheduleSimpleReadResDto {
 
+    private long scheduleId;
+
     private String stadiumWithCourtName;
 
     private long courtId;
@@ -20,6 +22,7 @@ public class ScheduleSimpleReadResDto {
 
     public static ScheduleSimpleReadResDto from(Schedule schedule, String stadiumWithCourtName) {
         return ScheduleSimpleReadResDto.builder()
+                .scheduleId(schedule.getId())
                 .stadiumWithCourtName(stadiumWithCourtName)
                 .courtId(schedule.getCourtId().getValue())
                 .timeResponseDto(TimeResponseDto.from(schedule.getTime()))

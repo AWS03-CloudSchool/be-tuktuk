@@ -6,22 +6,22 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ScheduleDeleteResDto {
+public class MatchEnrollResponseDto {
 
     private long scheduleId;
 
     private long courtId;
 
-    private TimeResponseDto timeResponseDto;
+    private TimeResponseDto time;
 
-    private String type;
+    private int matchFee;
 
-    public static ScheduleDeleteResDto from(Schedule schedule) {
-        return ScheduleDeleteResDto.builder()
+    public static MatchEnrollResponseDto from(Schedule schedule) {
+        return MatchEnrollResponseDto.builder()
                 .scheduleId(schedule.getId())
                 .courtId(schedule.getCourtId().getValue())
-                .timeResponseDto(TimeResponseDto.from(schedule.getTime()))
-                .type(schedule.getType().name())
+                .time(TimeResponseDto.from(schedule.getTime()))
+                .matchFee(schedule.getMatchRegularFee().getValue())
                 .build();
     }
 }
